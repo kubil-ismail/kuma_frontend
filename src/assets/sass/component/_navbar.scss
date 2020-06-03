@@ -1,0 +1,40 @@
+header {
+    nav {
+      display: flex;
+      padding: 10px 20px;
+      background-color: white;
+      position: relative;
+        .brand img {
+            width: 50px;
+        }
+    }
+}
+
+.search input {
+  border: 1px solid #cdcdcd;
+  padding: 10px 5px;
+  margin-top: 5px;
+  margin-left: 50px;
+  width: 500px;
+}
+
+.nav-auth {
+  margin-top: 5px;
+  margin-left: auto;
+}
+
+.btn-outline-primary {
+  font-weight: bold;
+  color: #4486f7;
+  background-color: white;
+  border-radius: 5px;
+  padding: 9px 25px;;
+}
+
+.btn-primary {
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 10px 25px;
+  color: white;
+  background-color: #4486f7;
+}

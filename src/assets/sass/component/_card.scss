@@ -1,0 +1,25 @@
+.card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-img img{
+  border-radius: 15px 15px 0px 0px;
+  width: 100%;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.card-text {
+  font-size: 12px;
+  font-weight: lighter;
+}
