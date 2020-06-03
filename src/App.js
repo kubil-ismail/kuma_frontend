@@ -5,12 +5,20 @@ import './app.scss'
 // Pages
 import Home from './page/Home'
 import Detail from './page/Detail'
+import Login from './page/Login'
+import Regist from './page/Regist'
 
 export default class App extends Component {
   render() {
     return (
       <Router>
         <Switch>
+          <Router path='/login'>
+            <Login />
+          </Router>
+          <Router path='/regist'>
+            <Regist />
+          </Router>
           <Router path='/detail'>
             <Detail />
           </Router>
