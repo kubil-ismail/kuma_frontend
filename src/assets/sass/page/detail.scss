@@ -1,0 +1,61 @@
+.details {
+  display: inline;
+}
+.details .half-cover img {
+  width: 100%;
+}
+.details .full-cover img {
+  margin-top: -230px;
+  margin-left: 1100px;
+}
+.details .book-details {
+  width: 700px;
+  margin-left: 50px;
+  margin-top: -60px;
+}
+.details .book-details .tag {
+  background-color: #FBCC38;
+  color: white;
+  border-radius: 15px;
+  width: 70px;
+  height: 25px;
+  padding-top: 5px;
+  padding-left: 25px;
+}
+.details .book-details .info {
+  margin-top: 10px;
+  display: flex;
+}
+.details .book-details .info .title {
+  font-size: 30px;
+  font-weight: bold;
+}
+.details .book-details .info .status {
+  font-size: 25px;
+  line-height: 39px;
+  margin-left: 400px;
+  font-weight: bold;
+  color: #99D815;
+}
+.details .date {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.details .desc {
+  margin-top: 50px;
+  display: flex;
+  margin-bottom: 80px;
+  width: 1240px;
+}
+.details .desc .borrow button {
+  background-color: #FBCC38;
+  color: white;
+  font-weight: bold;
+  width: 150px;
+  height: 60px;
+  border-radius: 10px;
+  border: 0;
+  margin-left: 490px;
+  margin-top: 130px;
+  font-size: 20px;
+}
