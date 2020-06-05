@@ -1,1 +1,6 @@
 @import './variable';
+
+html, body, #root {
+  width: 100%;
+  margin-bottom: 100px;
+}

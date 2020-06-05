@@ -1,111 +1,61 @@
 import React, { Component, Fragment } from 'react'
 import '../assets/sass/page/home.scss'
+import { Container, Row, Col, Spinner } from 'reactstrap';
+import Axios from 'axios'
+
+// Component
+import cover from '../assets/img/covernya.png'
+import Navbar from '../component/Navbar'
+import Sidebar from '../component/Sidebar'
+import Card from '../component/Card'
 
 export default class Home extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: []
+    }
+  }
+  
+  componentDidMount() {
+    Axios.get('http://localhost:8000/book?page=3')
+      .then(res => this.setState({ data: res.data.data }))
+  }
+
   render() {
+    const { data } = this.state
     return (
       <Fragment>
-        <div className="sidebar">
-          <div className="profile">
-            <div className="profile-img">
-              <img src="profil.png" alt="profile picture"/>
-            </div>
-            <div className="profile-name">Nikki</div>
-            <ul className="menu">
-              <li className="item">Explore</li>
-              <li className="item">History</li>
-              <li className="item">Add Book</li>
-            </ul>
-          </div>
-        </div>
-        <div className="content">
-          <div className="navbar">
-            <ul className="navbar-item">
-              <li>All Categories</li>
-              <li>All Time</li>
-            </ul>
-            <div className="search-wrapper">
-              <input className="input-search" placeholder="Search Book..."/>
-            </div>
-            <div className="brand">
-              <img className="icon" src="bookshelf.png" alt="logo"/>
-              <div className="text">Library</div>
-            </div>
-          </div>
-          <div className="container">
-            <h3>List Book</h3>
-            <div className="list-book">
-              <div className="card">
-                <div className="card-image">
+        <Row className='no-gutters'>
+          <Col lg={3}>
+            <Sidebar />
+          </Col>
+          <Col lg={9}>
+            <Navbar />
 
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
+            <Container>
+              <Row className="content">
+                <Col lg={12} className="mb-5">
+                  <img src={cover} className="w-100 rounded"></img>
+                </Col>
+              </Row>
+              <Row>
+                {data.length === 0 && (
+                  <div className="mx-auto">
+                    <Spinner type="grow" color="primary" />
+                    <Spinner type="grow" color="primary" />
+                    <Spinner type="grow" color="primary" />
                   </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-image">
-
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-image">
-
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="list-book">
-              <div className="card">
-                <div className="card-image">
-
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-image">
-
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-image">
-
-                </div>
-                <div className="card-text">
-                  <div className="title">Lorem ipsum</div>
-                  <div className="card-desc">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur quidem, commodi vel repudiandae voluptate eveniet obcaecati laboriosam nostrum ab labore? Maxime odit inventore culpa sequi, hic totam ut id unde?
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                )}
+                {data.map((val, key) => (
+                  <Col lg={4} key={key} className="mb-4">
+                    <Card id={val.id} title={val.name} desc={val.description} cover={val.cover}/>
+                  </Col>
+                ))}
+              </Row>
+            </Container>
+          </Col>
+        </Row>
       </Fragment>
     )
   }

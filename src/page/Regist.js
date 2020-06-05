@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react'
-import '../assets/sass/page/regist.scss'
+import { Row, Col, Form, FormGroup, Input, Label, Button } from 'reactstrap'
+import logo from '../assets/img/logo.png'
+import '../assets/sass/page/login.scss'
+import { Link } from 'react-router-dom'
 
 export default class Regist extends Component {
   constructor(prop) {
@@ -15,61 +18,61 @@ export default class Regist extends Component {
   render() {
     return (
       <Fragment>
-        <div className="register">
-          <div class="cover">
-            <div class="text">
-              <div class="quote">
-                Book is a Window <br /> to the World
-              </div>
-              <div class="watermark">
-                Photo by Mark Pan4ratte on Unsplash
-              </div>
+        <Row className='h-100 no-gutters'>
+          <Col lg={7} className='login-cover'>
+            <div className='d-flex flex-column justify-content-between login-overlay w-100 h-100'>
+              <h1 className='text-white'>Book is a window to the world</h1>
+              <div className='text-white'>Photo by Mark Pan4ratte on Unsplash</div>
             </div>
-          </div>
-          <div class="form">
-            <div class="brand">
-              <div class="logo">
-                <img src="bookshelf.png" alt="logo" />
+          </Col>
+          <Col lg={5}>
+            <div className='d-flex flex-column w-100 h-100'>
+              <div className='d-flex justify-content-end'>
+                <img className='p-3' src={logo} alt='Logo' width="100" />
               </div>
-            </div>
-            <div class="form-register">
-              <div class="greetings">
-                <div class="title">Register</div>
-                <div class="subtitle">Welcome back, <br /> Please Login to Your Account</div>
-                <form class="input">
-                  <label class="username">
-                    <div>User Name</div>
-                    <input type="text" onChange={(e) => this.setState({ username: e.target.value })}/>
-                  </label>
-                  <label class="fullname">
-                    <div>Full Name</div>
-                    <input type="text" onChange={(e) => this.setState({ fullname: e.target.value })}/>
-                  </label>
-                  <label class="email">
-                    <div>Email Address</div>
-                    <input type="email" onChange={(e) => this.setState({ email: e.target.value })}/>
-                  </label>
-                  <label class="password">
-                    <div>Password</div>
-                    <input type="password" onChange={(e) => this.setState({ password: e.target.value })}/>
-                  </label>
-                  <div class="submit">
-                    <button type="submit" class="signup">SignUp</button>
-                    <button type="button" class="login">Login</button>
+              <div className='flex-grow-1 d-flex justify-content-center align-items-center'>
+                <Form>
+                  <h1>Register</h1>
+                  <p>Welcome Back, Please Regist to your account</p>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Fullname</div>
+                      <Input type='text' />
+                    </Label>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Username</div>
+                      <Input type='text' />
+                    </Label>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Email</div>
+                      <Input type='email' />
+                    </Label>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label className='w-100'>
+                      <div>Password</div>
+                      <Input type='password' />
+                    </Label>
+                  </FormGroup>
+                  <div className='mt-2'>
+                    <Button >Sign Up</Button>
+                    <Link to="/login">
+                      <Button outline className='ml-2' href="/login">Login</Button>
+                    </Link>
                   </div>
-                </form>
+                </Form>
+              </div>
+              <div className='d-flex flex-column p-5'>
+                <div>By signing up, you agree to Book’s</div>
+                <div>Terms and Conditions &amp; Privacy Policy</div>
               </div>
             </div>
-            <div class="tnc">
-              <div class="agreement">By signing up, you agree to Book’s</div>
-              <div class="link">
-                <a href="#tnc">Terms and Conditions</a>
-                <a>&</a>
-                <a href="#p">Privacy Policy</a>
-              </div>
-            </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </Fragment>
     )
   }

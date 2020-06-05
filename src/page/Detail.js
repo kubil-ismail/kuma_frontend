@@ -1,38 +1,112 @@
 import React, { Component, Fragment } from 'react'
+import {
+  Navbar,
+  Nav,
+  NavItem,
+  NavLink,
+  Container,
+  Row,
+  Col,
+  Badge,
+  Button
+} from 'reactstrap';
+import Axios from 'axios'
+
 import '../assets/sass/page/detail.scss'
-import cover from '../assets/img/covernya_dilan.png'
 import banner from '../assets/img/covernya.png'
+import { Redirect } from 'react-router-dom';
 
 export default class Detail extends Component {
+  constructor(props) {
+    super(props)
+    const id = props.location.query ? props.location.query.id : null
+    this.state = {
+      id: id,
+      cover: null,
+      title: null,
+      desc: null,
+      genre: null,
+      published: null
+    }
+
+  }
+
+  componentDidMount() {
+    const { id } = this.state
+    if (id) {
+      Axios.get(`http://localhost:8000/book/${id}`)
+        .then(res => this.setState({
+          cover: res.data.data[0].cover,
+          title: res.data.data[0].name,
+          desc: res.data.data[0].description,
+          genre: res.data.data[0].genre,
+          published: res.data.data[0].published
+        }))
+    }
+  }
+
   render() {
+    const { id, cover, title, desc, genre, published } = this.state
+    
+    if (!id) {
+      return <Redirect to="/" />
+    }
+    
     return (
       <Fragment>
-        <div className="details">
-          <div className="half-cover">
-            <img src={banner} alt="half-cover"/>
-          </div>
-            <div className="full-cover">
-              <img src={cover} alt="full-cover"/>
-            </div>
-            <div className="book-details">
-              <div className="tag">
-                <div className="text">Novel</div>
-              </div>
-              <div className="info">
-                <div className="title">DILAN 1990</div>
-                <div className="status">Available</div>
-              </div>
-              <div className="date">30 Juni 2019</div>
-              <div className="desc">
-                <div className="text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac diam eget est rutrum ultrices. Donec laoreet enim a massa dapibus, cursus egestas dui pulvinar. Proin sit amet accumsan lectus. Nullam auctor auctor consequat. Donec semper magna erat, sed fringilla lacus pretium eget. Cras porttitor, nibh sit amet interdum bibendum, nibh velit accumsan tellus, vel vehicula tellus leo vitae ipsum. Praesent sit amet libero sed orci ullamcorper efficitur. Pellentesque in euismod purus, sit amet ultrices tortor. Vestibulum ante dui, tempor at dui id, tincidunt euismod diam. Integer pellentesque massa nibh, ac eleifend odio malesuada sed. Phasellus orci sem, cursus nec orci ut, accumsan facilisis lacus. Nullam at elementum nibh, ac gravida felis. In sagittis rhoncus nisi tempus dignissim. Sed fringilla consequat ante vitae lobortis. Cras posuere ligula vel enim suscipit malesuada. Vivamus non nulla ut ante imperdiet euismod quis nec massa.
-                </div>
-                <div className="borrow">
-                  <button>Borrow</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <Navbar className="detail-navbar" color="transparent" dark expand="md">
+          <Container>
+
+            <Nav className="mr-auto" navbar>
+              <NavItem>
+                <NavLink href="/">
+                  <Button className="shadow back" color="light">Back</Button>
+                </NavLink>
+              </NavItem>
+            </Nav>
+
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/">
+                  <Button className="shadow" color="warning">Edit</Button>
+                </NavLink>
+              </NavItem>
+              <NavItem href="/">
+                <NavLink href="/">
+                  <Button className="shadow" color="danger">Delete</Button>
+                </NavLink>
+              </NavItem>
+            </Nav>
+          </Container>
+        </Navbar>
+
+        <Row className="banner no-gutters">
+          <Col lg={12}>
+            <img className="w-100 banner-img" style={{ backgroundImage: `url(http://localhost:8000/${cover})`}}/>
+          </Col>
+        </Row>
+
+        <Container className="mt-5">
+          <Row>
+            <Col lg={8}>
+              <Badge color="warning" className="py-2 px-3 text-white" pill>{genre}</Badge>
+              <Row>
+                <Col lg={10}>
+                  <h1 className="font-weight-bold">{title}</h1>
+                </Col>
+                <Col lg={2}>
+                  <h3 className="text-success font-weight-bold">Available</h3>
+                </Col>
+              </Row>
+              <p className="font-weight-bold">{published}</p>
+              <p className="text-justify">{desc}</p>
+            </Col>
+            <Col lg={{ size: 3, offset: 1 }}>
+              <img src={`http://localhost:8000/${cover}`} className="w-100 cover shadow rounded img-thumbnail" />
+              <Button className="w-100 text-white shadow borrow" color="warning">Borrow</Button>
+            </Col>
+          </Row>
+        </Container>
       </Fragment>
     )
   }
