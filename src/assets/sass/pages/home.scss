@@ -20,6 +20,8 @@
 
 .genre-cover {
   filter:blur(1px);
+  min-height: 200px;
+  max-height: 200px;
 }
 .genre-text {
   position: absolute;

@@ -1,6 +1,9 @@
 @import './variabel';
 @import './global';
+
+// Pages
 @import './pages/home';
+@import './pages/auth';
 
 $theme-colors: (
     "primary": $primary,
