@@ -20,6 +20,7 @@ export default class Home extends Component {
       books: [],
       genres: []
     }
+
   }
 
   getbook = async () => {

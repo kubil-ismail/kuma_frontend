@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from "react-router-dom"
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
+import axios from 'axios'
+import store from 'store2'
 import Navbar from '../component/Navbar'
 
 export default class Login extends Component {
@@ -12,11 +14,34 @@ export default class Login extends Component {
     }
   }
 
+  onLogin = async () => {
+    const { email, password } = this.state
+    const url = 'http://localhost:8000/auth/login'
+    const login = await axios.post(url, {
+      email: email,
+      password: password
+    })
+
+    const { data } = login.data
+    return data
+  }
+
+  onSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const login = await this.onLogin()
+      store({ apikey: login.apiKey, role: login.role, login: true })
+      window.location.href = '/login'
+    } catch (error) {
+      
+    }
+  }
+
   render() {
     return (
       <Fragment>
         <div className="d-lg-none">
-          <Navbar/>
+          <Navbar />
         </div>
         <Container fluid>
           <Row className="no-gutter">
@@ -27,7 +52,7 @@ export default class Login extends Component {
                   <Row>
                     <Col md={9} lg={8} className="mx-auto">
                       <h3 className="login-heading mb-4">Welcome back!</h3>
-                      <Form>
+                      <Form onSubmit={this.onSubmit}>
                         <Form.Group className="form-label-group" controlId="inputEmail">
                           <Form.Control type="email" placeholder="Email address" onChange={(e) => this.setState({ email: e.target.value })} required autoFocus />
                           <Form.Label>Email address</Form.Label>

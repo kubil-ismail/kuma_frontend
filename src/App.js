@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import store from 'store2'
 
 // Pages
 import Home from './pages/Home'
@@ -9,15 +10,22 @@ import NotFound from './pages/NotFound'
 import SignUp from './pages/SignUp';
 
 function App() {
+  const hasLogin = store('login')
   return (
     <Router>
       <Switch>
         <Route path='/' exact component={Home} />
 
         {/* Auth */}
-        <Route path='/login' component={Login} />
-        <Route path='/sign-up' component={SignUp} />
-        <Route path='/forget' component={Forget} />
+        {hasLogin
+          ? (<Redirect to="/" />)
+          : (
+            <Fragment>
+              <Route path='/login' component={Login} />
+              <Route path='/sign-up' component={SignUp} />
+              <Route path='/forget' component={Forget} />
+            </Fragment>
+          )}
 
         {/* Not Found */}
         <Route path='*' exact component={NotFound} />
