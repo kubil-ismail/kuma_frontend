@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 export default function Footer() {
   return (
-    <footer className="bg-dark animate__animated animate__fadeIn">
+    <footer className="bg-dark animate__animated animate__fadeIn" >
       <Container>
         <Row>
           <Col lg={12} className="mt-sm-2 text-center text-white py-2">
