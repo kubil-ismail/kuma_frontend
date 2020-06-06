@@ -1,0 +1,33 @@
+.head-title {
+  .divinder {
+    width: 10%;
+    border-bottom: 3px solid $primary;
+    margin: 20px 0px 50px 0px;
+  }
+}
+
+.card-cover {
+  min-height: 180px;
+  max-height: 180px;
+}
+
+@media(min-width: 720px) {
+  .card-cover {
+    min-height: 350px;
+    max-height: 350px;
+  }
+}
+
+.genre-cover {
+  filter:blur(1px);
+}
+.genre-text {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 40%;
+  z-index: 2;
+  text-shadow: black 0.1em 0.1em 0.2em;
+  font-size: 20px;
+  // text-decoration: none;
+}

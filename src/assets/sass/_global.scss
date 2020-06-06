@@ -1,0 +1,21 @@
+h1 {
+  color: $dark;
+}
+
+p {
+  color: $gray;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+section {
+    margin: 100px 0px;
+}
+
+
+.btn-primary,
+.btn-outline-primary:hover {
+  color: white !important;
+}

@@ -1,6 +1,10 @@
-@import './variable';
+@import './variabel';
+@import './global';
+@import './pages/home';
 
-html, body, #root {
-  width: 100%;
-  margin-bottom: 100px;
-}
+$theme-colors: (
+    "primary": $primary,
+    "dark": $dark
+);
+
+@import "~bootstrap/scss/bootstrap";
