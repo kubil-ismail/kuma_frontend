@@ -13,9 +13,11 @@ export default class NotFound extends Component {
         <Container>
           <Row>
             <Col lg={12}>
-              <div className="animate__animated animate__shakeX mt-5">
-                <Alert variant="danger" message="Page not found" />
-              </div>
+              <section>
+                <div className="animate__animated animate__shakeX mt-5">
+                  <Alert variant="danger" message="Page not found" />
+                </div>
+              </section>
             </Col>
           </Row>
         </Container>
