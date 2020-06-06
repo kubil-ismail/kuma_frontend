@@ -8,12 +8,15 @@ import Navbar from '../component/Navbar'
 import Book from '../component/Book'
 import Genre from '../component/Genre'
 import Footer from '../component/Footer'
+import Alert from '../component/Alert'
+import Loader from '../component/Loader'
 
 export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
+      error: false,
       books: [],
       genres: []
     }
@@ -32,39 +35,68 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
-    const book = await this.getbook()
-    const genre = await this.getGenres()
-    console.log(genre)
-    this.setState({ 
-      books: book.data,
-      genres: genre.data
-    })
+    try {
+      const book = await this.getbook()
+      const genre = await this.getGenres()
+      this.setState({ 
+        loading: false,
+        books: book.data,
+        genres: genre.data
+      })
+    } catch (err) {
+      this.setState({
+        loading: false,
+        error: true
+      })
+    }
+  }
+
+  isLoading = (load) => {
+    if(load) {
+      return (
+        <Col lg={12}>
+          <Loader />
+        </Col>
+      )
+    }
+  }
+
+  isError = (err) => {
+    if (err) {
+      return (
+        <Col lg={12}>
+          <Alert variant="danger" message="Failed get data from server" />
+        </Col>
+      )
+    }
   }
 
   render() {
-    const { books, genres } = this.state
+    const { books, genres, error, loading } = this.state
     return (
       <Fragment>
         <Navbar />
 
-        <Container className="mt-5">
-          <Row>
-            <Col lg={6}>
-              <img src={banner} className="w-100 animate__animated animate__pulse animate__infinite" alt="banner" />
-            </Col>
-            <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0 animate__animated animate__fadeInRight">
-              <div className="banner-content">
-                <h1 className="font-weight-bold">Kuma Bookstore</h1>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Etiam condimentum aliquam ultrices. Sed bibendum enim sed congue commodo.
-                  Nunc suscipit quam quis accumsan congue.
-                </p>
-                <Button>More Info</Button>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+        <section>
+          <Container className="mt-5">
+            <Row>
+              <Col lg={6}>
+                <img src={banner} className="w-100 animate__animated animate__pulse animate__infinite" alt="banner" />
+              </Col>
+              <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0 animate__animated animate__fadeInRight">
+                <div className="banner-content">
+                  <h1 className="font-weight-bold">Kuma Bookstore</h1>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Etiam condimentum aliquam ultrices. Sed bibendum enim sed congue commodo.
+                    Nunc suscipit quam quis accumsan congue.
+                  </p>
+                  <Button>More Info</Button>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
 
         <section>
           <Container className="my-5 animate__animated animate__fadeIn">
@@ -73,6 +105,7 @@ export default class Home extends Component {
               <div className="divinder"></div>
             </div>
             <Row>
+              {this.isLoading(loading) || this.isError(error)}
               {books.map((val,index) => (
                 <Col lg={3} md={6} xs={6} key={index} className="mb-5">
                   <Book cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
@@ -89,6 +122,7 @@ export default class Home extends Component {
               <div className="divinder"></div>
             </div>
             <Row>
+              {this.isLoading(loading) || this.isError(error)}
               {genres.map((val, index) => (
                 <Col lg={2} md={4} xs={6} key={index} className="mb-5">
                   <Genre name={val.name}/>
