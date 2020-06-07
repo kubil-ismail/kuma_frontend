@@ -24,7 +24,7 @@ export default class Forget extends Component {
           <Row className="no-gutter">
             <Col md={4} lg={5} className="d-none d-md-flex bg-image"></Col>
             <Col md={12} lg={7}>
-              <div className="login d-flex py-5 mt-5">
+              <div className="login d-lg-flex align-items-center py-5 mt-0 mt-lg-5">
                 <Container>
                   <Row>
                     <Col md={9} lg={8} className="mx-auto">

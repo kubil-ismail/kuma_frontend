@@ -24,19 +24,19 @@ export default class SignUp extends Component {
           <Row className="no-gutter">
             <Col md={4} lg={5} className="d-none d-md-flex bg-image"></Col>
             <Col md={12} lg={7}>
-              <div className="login d-flex py-5 mt-5">
+              <div className="login d-lg-flex align-items-center py-5 mt-0 mt-lg-5">
                 <Container>
                   <Row>
                     <Col md={9} lg={8} className="mx-auto">
                       <h3 className="login-heading mb-4">Sign Up</h3>
                       <Form>
                         <Form.Group className="form-label-group" controlId="inputFullname">
-                          <Form.Control type="text" placeholder="Full Name" onChange={(e) => this.setState({ fullname: e.target.value })} required autoFocus />
+                          <Form.Control type="text" placeholder="Full Name" onChange={(e) => this.setState({ fullname: e.target.value })} required />
                           <Form.Label>Full Name</Form.Label>
                         </Form.Group>
 
                         <Form.Group className="form-label-group" controlId="inputEmail">
-                          <Form.Control type="email" placeholder="Email address" onChange={(e) => this.setState({ email: e.target.value })} required autoFocus />
+                          <Form.Control type="email" placeholder="Email address" onChange={(e) => this.setState({ email: e.target.value })} required />
                           <Form.Label>Email address</Form.Label>
                         </Form.Group>
 
