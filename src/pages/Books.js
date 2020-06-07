@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap'
 import axios from 'axios'
 
 // Component
@@ -68,9 +68,21 @@ export default class Books extends Component {
 
         <section>
           <Container className="mt-5 animate__animated animate__fadeIn">
-            <div className="head-title">
-              <h2 className="font-weight-bold">List Book</h2>
-              <div className="divinder"></div>
+            <div className="d-flex justify-content-between">
+              <div className="head-title">
+                <h2 className="font-weight-bold">List Book</h2>
+                <div className="divinder-book"></div>
+              </div>
+              <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Sort
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item href="#/action-1">Sort by name</Dropdown.Item>
+                  <Dropdown.Item href="#/action-2">Sort by lates</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Sort by popularity</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
             <Row>
               {this.isLoading(loading) || this.isError(error)}
@@ -80,6 +92,15 @@ export default class Books extends Component {
                 </Col>
               ))}
             </Row>
+            <Pagination className="justify-content-center">
+              <div className="shadow-sm d-flex">
+                <Pagination.Prev />
+                <Pagination.Item>{1}</Pagination.Item>
+                <Pagination.Ellipsis disabled/>
+                <Pagination.Item>{20}</Pagination.Item>
+                <Pagination.Next />
+              </div>
+            </Pagination>
           </Container>
         </section>
 
