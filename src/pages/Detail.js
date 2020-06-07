@@ -21,7 +21,7 @@ export default class Detail extends Component {
   }
 
   getSimilarBook = async () => {
-    const result = await axios.get('http://localhost:8000/book?limit=8')
+    const result = await axios.get('http://localhost:8000/book?limit=4')
     const { data } = result
     return data
   }
