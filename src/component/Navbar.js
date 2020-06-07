@@ -39,7 +39,7 @@ export default class Navbars extends Component {
                 {hasLogin
                   ? (
                     <Fragment>
-                      <Link className="nav-link" to="/sign-up">
+                      <Link className="nav-link" to="/profile">
                         <Button className="w-100">Profile</Button>
                       </Link>
                       <Nav.Link>

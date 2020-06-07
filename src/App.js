@@ -4,8 +4,9 @@ import store from 'store2'
 
 // Pages
 import Home from './pages/Home'
-import Detail from './pages/Detail'
 import Books from './pages/Books'
+import Detail from './pages/Detail'
+import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Forget from './pages/Forget'
 import NotFound from './pages/NotFound'
@@ -19,6 +20,7 @@ function App() {
         <Route path='/' exact component={Home} />
         <Route path='/books' component={Books} />
         <Route path='/detail' component={Detail} />
+        <Route path='/profile' component={Profile} />
 
         {/* Auth */}
         {hasLogin
