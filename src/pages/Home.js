@@ -23,7 +23,7 @@ export default class Home extends Component {
   }
 
   getBook = async () => {
-    const result = await axios.get('http://localhost:8000/book?limit=8')
+    const result = await axios.get('http://localhost:8000/book?limit=4')
     const { data } = result
     return data
   }
@@ -32,6 +32,26 @@ export default class Home extends Component {
     const result = await axios.get('http://localhost:8000/genre')
     const { data } = result
     return data
+  }
+
+  isLoading = (load) => {
+    if (load) {
+      return (
+        <Col lg={12}>
+          <Loader />
+        </Col>
+      )
+    }
+  }
+
+  isError = (err) => {
+    if (err) {
+      return (
+        <Col lg={12}>
+          <Alert variant="danger" message="Failed get data from server" />
+        </Col>
+      )
+    }
   }
 
   async componentDidMount() {
@@ -48,26 +68,6 @@ export default class Home extends Component {
         loading: false,
         error: true
       })
-    }
-  }
-
-  isLoading = (load) => {
-    if(load) {
-      return (
-        <Col lg={12}>
-          <Loader />
-        </Col>
-      )
-    }
-  }
-
-  isError = (err) => {
-    if (err) {
-      return (
-        <Col lg={12}>
-          <Alert variant="danger" message="Failed get data from server" />
-        </Col>
-      )
     }
   }
 

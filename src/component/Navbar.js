@@ -30,10 +30,10 @@ export default class Navbars extends Component {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto ml-lg-3 text-center">
                 <Link className="nav-link" to="/">Home</Link>
-                <Link className="nav-link" to="/book">Book</Link>
+                <Link className="nav-link" to="/books">Book</Link>
               </Nav>
               <Nav className="ml-auto">
-                <Form className="d-block-lg d-none" inline>
+                <Form className="d-lg-flex d-none" inline>
                   <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" />
                 </Form>
                 {hasLogin
