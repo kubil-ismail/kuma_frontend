@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Forget from './pages/Forget'
 import NotFound from './pages/NotFound'
 import SignUp from './pages/SignUp';
+import Detail from './pages/Detail';
 
 function App() {
   const hasLogin = store('login')
@@ -15,6 +16,7 @@ function App() {
     <Router>
       <Switch>
         <Route path='/' exact component={Home} />
+        <Route path='/detail' component={Detail} />
 
         {/* Auth */}
         {hasLogin

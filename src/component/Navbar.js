@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Link, Redirect } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Navbar, Nav, Form, FormControl, Container, Button } from 'react-bootstrap'
 import store from 'store2'
 import logo from '../assets/img/logo.png'

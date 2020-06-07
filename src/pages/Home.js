@@ -20,10 +20,9 @@ export default class Home extends Component {
       books: [],
       genres: []
     }
-
   }
 
-  getbook = async () => {
+  getBook = async () => {
     const result = await axios.get('http://localhost:8000/book?limit=8')
     const { data } = result
     return data
@@ -37,7 +36,7 @@ export default class Home extends Component {
 
   async componentDidMount() {
     try {
-      const book = await this.getbook()
+      const book = await this.getBook()
       const genre = await this.getGenres()
       this.setState({ 
         loading: false,
