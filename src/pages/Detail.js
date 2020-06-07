@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Badge, Button } from 'react-bootstrap'
 import Cover from '../assets/img/cover.jpg'
 import axios from 'axios'
 
@@ -90,6 +90,7 @@ export default class Detail extends Component {
                   Sed bibendum arcu eget est molestie tincidunt. Vestibulum sem risus,
                   vehicula sed lectus vel, lobortis volutpat ex.
                 </p>
+                <Button className="text-dark">Add to favorite</Button>
               </Col>
             </Row>
           </Container>
