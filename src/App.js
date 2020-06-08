@@ -19,7 +19,7 @@ function App() {
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/books' component={Books} />
-        <Route path='/detail' component={Detail} />
+        <Route path='/detail/:bookName' component={Detail} />
         <Route path='/profile' component={Profile} />
 
         {/* Auth */}

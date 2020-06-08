@@ -11,7 +11,7 @@ export default function Book(props) {
         <Card.Text>{props.author}</Card.Text>
         <Badge pill variant="primary mr-2 py-2 px-2">{props.genre}</Badge>
         <Badge pill variant="dark py-2 px-2">{props.language}</Badge>
-        <Link to="/detail" className="stretched-link" />
+        <Link to={{ pathname: `/detail/${props.title.replace(/\s/g, '-')}`, query: { id: props.id } }} className="stretched-link" />
       </Card.Body>
     </Card>
   )

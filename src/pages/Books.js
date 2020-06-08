@@ -89,7 +89,7 @@ export default class Books extends Component {
               {this.isLoading(loading) || this.isError(error)}
               {books.map((val, index) => (
                 <Col lg={3} md={6} xs={6} key={index} className="mb-5">
-                  <Book cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
+                  <Book id={val.id} cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
                 </Col>
               ))}
             </Row>
