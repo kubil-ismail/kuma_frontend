@@ -20,7 +20,8 @@ export default class Books extends Component {
   }
 
   getAllBook = async () => {
-    const result = await axios.get('http://localhost:8000/book?limit=8')
+    let search = this.props.location.search
+    const result = await axios.get(`http://localhost:8000/book${search ? search + '&limit=8' : '?limit=8'}`)
     const { data } = result
     return data
   }

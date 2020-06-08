@@ -8,13 +8,19 @@ export default class Navbars extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      hasLogin: store('login') || false
+      hasLogin: store('login') || false,
+      keyword: null
     }
   }
 
   logout = () => {
     store(false)
     window.location.href = '/login'
+  }
+
+  onSearch = (e) => {
+    e.preventDefault()
+    window.location.href = `/books?search=${this.state.keyword}`
   }
 
   render() {
@@ -33,8 +39,8 @@ export default class Navbars extends Component {
                 <Link className="nav-link" to="/books">Book</Link>
               </Nav>
               <Nav className="ml-auto">
-                <Form className="d-lg-flex d-none" inline>
-                  <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" />
+                <Form onSubmit={this.onSearch} className="d-lg-flex d-none" inline>
+                  <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" onChange={(e) => this.setState({ keyword: e.target.value })} />
                 </Form>
                 {hasLogin
                   ? (
@@ -59,8 +65,8 @@ export default class Navbars extends Component {
               </Nav>
             </Navbar.Collapse>
           </Container>
-          <Form className="w-100 mt-4 mb-2 px-2 d-lg-none">
-            <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" />
+          <Form onSubmit={this.onSearch} className="w-100 mt-4 mb-2 px-2 d-lg-none">
+            <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" onChange={(e) => this.setState({ keyword: e.target.value })} />
           </Form>
         </Navbar>
         <div className="nav-margin-md d-lg-none"></div>
