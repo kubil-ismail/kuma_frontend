@@ -51,7 +51,7 @@ export default class SignUp extends Component {
         text: 'Login to continue',
         icon: 'success'
       }).then(() => {
-        window.location.href = '/login'
+        this.props.history.push("/login")
       })
     } catch (error) {
       Swal.fire({
