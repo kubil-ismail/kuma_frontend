@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from "react-router-dom"
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 import axios from 'axios'
 import store from 'store2'
 import Navbar from '../component/Navbar'
@@ -31,9 +32,19 @@ export default class Login extends Component {
     try {
       const login = await this.onLogin()
       store({ apikey: login.apiKey, role: login.role, login: true })
-      window.location.href = '/login'
+      Swal.fire({
+        title: 'Login Success',
+        text: 'Welcome to kuma book',
+        icon: 'success'
+      }).then(() => {
+        window.location.href = '/profile'
+      })
     } catch (error) {
-      
+      Swal.fire({
+        title: 'Account not registered',
+        text: 'Check your email and password',
+        icon: 'error'
+      })
     }
   }
 
