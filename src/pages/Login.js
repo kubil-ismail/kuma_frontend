@@ -4,6 +4,8 @@ import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import store from 'store2'
+
+//Component 
 import Navbar from '../component/Navbar'
 
 export default class Login extends Component {
@@ -37,7 +39,7 @@ export default class Login extends Component {
         text: 'Welcome to kuma book',
         icon: 'success'
       }).then(() => {
-        window.location.href = '/profile'
+        this.props.history.push("/profile")
       })
     } catch (error) {
       Swal.fire({
@@ -81,7 +83,7 @@ export default class Login extends Component {
 
                         <Button className="btn-lg btn-block btn-login mb-2" type="submit">Login</Button>
                         <div className="text-center">
-                          <Link className="small" to="/forget">Forgot password?</Link>
+                          <Link className="small" to="/sign-up">Create new account</Link>
                         </div>
                       </Form>
                     </Col>
