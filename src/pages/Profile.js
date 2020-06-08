@@ -122,7 +122,7 @@ export default class Profile extends Component {
                 <Card className="shadow-sm p-5 mb-5">
                   <h3>Favorites</h3>
                   <hr />
-                  <Table striped bordered hover>
+                  <Table striped bordered hover responsive>
                     <thead>
                       <tr>
                         <th>No</th>
@@ -149,7 +149,7 @@ export default class Profile extends Component {
                     <Button onClick={(e) => this.handleAddShow()}>New</Button>
                   </div>
                   <hr />
-                  <Table striped bordered hover>
+                  <Table striped bordered hover responsive>
                     <thead>
                       <tr>
                         <th>Cover</th>
