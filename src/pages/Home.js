@@ -1,7 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import banner from '../assets/img/banner.png'
-import axios from 'axios'
+
+// Service
+import { bookService } from '../service/bookService'
+import { genreService } from '../service/genreService'
 
 // Component
 import Navbar from '../component/Navbar'
@@ -20,18 +23,9 @@ export default class Home extends Component {
       books: [],
       genres: []
     }
-  }
 
-  getBook = async () => {
-    const result = await axios.get('http://localhost:8000/book?limit=4')
-    const { data } = result
-    return data
-  }
-
-  getGenres = async () => {
-    const result = await axios.get('http://localhost:8000/genre')
-    const { data } = result
-    return data
+    this.bookService = new bookService()
+    this.genreService = new genreService()
   }
 
   isLoading = (load) => {
@@ -56,9 +50,9 @@ export default class Home extends Component {
 
   async componentDidMount() {
     try {
-      const book = await this.getBook()
-      const genre = await this.getGenres()
-      this.setState({ 
+      const book = await this.bookService.getBook()
+      const genre = await this.genreService.getGenre()
+      this.setState({
         loading: false,
         books: book.data,
         genres: genre.data
@@ -106,7 +100,7 @@ export default class Home extends Component {
             </div>
             <Row>
               {this.isLoading(loading) || this.isError(error)}
-              {books.map((val,index) => (
+              {books.map((val, index) => (
                 <Col lg={3} md={6} xs={6} key={index} className="mb-5">
                   <Book id={val.id} cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
                 </Col>
@@ -125,7 +119,7 @@ export default class Home extends Component {
               {this.isLoading(loading) || this.isError(error)}
               {genres.map((val, index) => (
                 <Col lg={2} md={4} xs={6} key={index} className="mb-5">
-                  <Genre name={val.name}/>
+                  <Genre name={val.name} />
                 </Col>
               ))}
             </Row>

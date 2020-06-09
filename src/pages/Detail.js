@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Badge, Button } from 'react-bootstrap'
-import axios from 'axios'
 import store from 'store2'
+
+// Service
+import { bookService } from '../service/bookService'
 
 // Component
 import Navbar from "../component/Navbar"
@@ -19,23 +21,12 @@ export default class Detail extends Component {
       similarBooks: [],
       bookDetail: []
     }
+    
     if (this.props.location.query) {
       store({ bookId: this.props.location.query.id })
     }
 
-    console.log(this.props.location)
-  }
-
-  getSimilarBook = async () => {
-    const result = await axios.get('http://localhost:8000/book?limit=4')
-    const { data } = result
-    return data
-  }
-
-  getBookDetail = async () => {
-    const result = await axios.get(`http://localhost:8000/book/${store('bookId')}`)
-    const { data } = result
-    return data.data[0]
+    this.bookService = new bookService()
   }
 
   isLoading = (load) => {
@@ -60,8 +51,8 @@ export default class Detail extends Component {
 
   async componentDidMount() {
     try {
-      const getBookDetail = await this.getBookDetail()
-      const SimilarBook = await this.getSimilarBook()
+      const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
+      const SimilarBook = await this.bookService.getBook()
       this.setState({
         loading: false,
         similarBooks: SimilarBook.data,

@@ -2,8 +2,12 @@ import React, { Component, Fragment } from 'react'
 import { Link } from "react-router-dom"
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import axios from 'axios'
 import store from 'store2'
+
+// Service
+import { authService } from '../service/authService'
+
+// Component
 import Navbar from '../component/Navbar'
 
 export default class SignUp extends Component {
@@ -17,35 +21,25 @@ export default class SignUp extends Component {
       sendCode: store('sendCode') || false,
       signUp: store('signUp') || false
     }
+    this.authService = new authService()
+    // store(false)
   }
 
   onsignUp = async () => {
-    const { email, password } = this.state
-
-    const url = 'http://localhost:8000/auth/signIn'
-    const login = await axios.post(url, {
-      email: email,
-      password: password
-    })
-
-    const { data } = login.data
-    return data
+    try {
+      const signUp = this.authService.signUp(this.state)
+      const { data } = signUp.data
+      return data
+    } catch (error) {
+      return error
+    }
   }
 
   onActivate = async (e) => {
     e.preventDefault()
-
-    try {
-      const { email, code } = this.state
-      const url = 'http://localhost:8000/auth/activate'
-      
-      await axios.post(url, {
-        email: email,
-        code: code
-      })
-
+    const activate = await this.authService.activate(this.state)
+    if (activate) {
       store({ signUp: true})
-
       Swal.fire({
         title: 'Activate Success',
         text: 'Login to continue',
@@ -53,7 +47,7 @@ export default class SignUp extends Component {
       }).then(() => {
         this.props.history.push("/login")
       })
-    } catch (error) {
+    } else {
       Swal.fire({
         title: 'Activate Failed',
         text: 'Make sure the code is correct',

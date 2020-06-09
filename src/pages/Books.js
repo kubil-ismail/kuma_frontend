@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap'
-import axios from 'axios'
+
+// Service
+import { bookService } from '../service/bookService'
 
 // Component
 import Navbar from "../component/Navbar"
@@ -17,13 +19,7 @@ export default class Books extends Component {
       error: false,
       books: []
     }
-  }
-
-  getAllBook = async () => {
-    let search = this.props.location.search
-    const result = await axios.get(`http://localhost:8000/book${search ? search + '&limit=8' : '?limit=8'}`)
-    const { data } = result
-    return data
+    this.bookService = new bookService()
   }
 
   isLoading = (load) => {
@@ -48,7 +44,8 @@ export default class Books extends Component {
 
   async componentDidMount() {
     try {
-      const book = await this.getAllBook()
+      let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
+      const book = await this.bookService.getAllBook(search)
       this.setState({
         loading: false,
         books: book.data

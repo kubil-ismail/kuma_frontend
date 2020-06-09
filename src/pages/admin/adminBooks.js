@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Card, Table, Button, Form, FormControl, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-
-import axios from 'axios'
-import Navbar from '../../component/Navbar'
 import ImageUploader from 'react-images-upload'
 import Swal from 'sweetalert2'
+
+// Service
+import { bookService } from '../../service/bookService'
+
+import Navbar from '../../component/Navbar'
 
 export default class adminBooks extends Component {
   constructor(props) {
@@ -22,7 +24,7 @@ export default class adminBooks extends Component {
       file: null,
       books: []
     }
-
+    this.bookService = new bookService()
     this.onSubmit = this.onSubmit.bind(this)
     this.onDrop = this.onDrop.bind(this)
   }
@@ -42,47 +44,22 @@ export default class adminBooks extends Component {
     })
   }
 
-  onSubmit = (e) => {
+  onSubmit = async (e) => {
     e.preventDefault()
-    const formData = new FormData()
-    const { bookName, bookDesc, file, bookPublished, bookLanguage } = this.state
-
-    formData.append('name', bookName)
-    formData.append('description', bookDesc)
-    formData.append('picture', file)
-    formData.append('genreId', 1)
-    formData.append('authorId', 1)
-    formData.append('statusId', 1)
-    formData.append('published', bookPublished)
-    formData.append('language', bookLanguage)
-
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }
-
-    axios.post("http://localhost:8000/book", formData, config)
-      .then(() => {
-        Swal.fire({
-          title: 'Add Book Success',
-          text: '',
-          icon: 'success'
-        }).then(() => window.location.reload())
-      }).catch((error) => {
-        Swal.fire({
-          title: 'Add Book Failed',
-          text: '',
-          icon: 'error'
-        })
+    try {
+      await this.bookService.addBook(this.state)
+      Swal.fire({
+        title: 'Add Book Success',
+        text: '',
+        icon: 'success'
+      }).then(() => window.location.reload())
+    } catch (error) {
+      Swal.fire({
+        title: 'Add Book Failed',
+        text: '',
+        icon: 'error'
       })
-  }
-
-  getBook = async () => {
-    let search = this.props.location.search
-    const book = await axios.get(`http://localhost:8000/book${search ? search + '&limit=8' : '?limit=8'}`)
-
-    return book.data
+    }
   }
 
   onSearch = (e) => {
@@ -91,12 +68,19 @@ export default class adminBooks extends Component {
   }
 
   async componentDidMount() {
-    const getBook = await this.getBook()
-
-    this.setState({
-      books: getBook.data,
-      isLoading: false
-    })
+    try {
+      let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
+      const getBook = await this.bookService.getAllBook(search)
+  
+      this.setState({
+        books: getBook.data,
+        isLoading: false
+      })
+    } catch (error) {
+      this.setState({
+        isLoading: false
+      })
+    }
   }
 
   render() {

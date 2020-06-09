@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import store from 'store2'
 
 // Pages
@@ -9,7 +9,7 @@ import Detail from './pages/Detail'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Forget from './pages/Forget'
-import NotFound from './pages/NotFound'
+// import NotFound from './pages/NotFound'
 import SignUp from './pages/SignUp'
 import adminBooks from './pages/admin/adminBooks';
 import adminDetail from './pages/admin/adminDetail';
@@ -21,6 +21,20 @@ function App() {
     <Router>
       <Switch>
         <Route path='/' exact component={Home} />
+
+        {/* Auth */}
+        {hasLogin
+          ? (
+            <Route path='/profile' component={Profile} />
+          ) : (
+            <Fragment>
+              <Route path='/login' component={Login} />
+              <Route path='/sign-up' component={SignUp} />
+              <Route path='/forget' component={Forget} />
+            </Fragment>
+          )}
+      </Switch>
+      <Switch>
         {adminLogin
           ? (
             <Fragment>
@@ -34,22 +48,6 @@ function App() {
             </Fragment>
           )
         }
-
-        <Route path='/profile' component={Profile} />
-
-        {/* Auth */}
-        {hasLogin
-          ? (<Redirect to="/" />)
-          : (
-            <Fragment>
-              <Route path='/login' component={Login} />
-              <Route path='/sign-up' component={SignUp} />
-              <Route path='/forget' component={Forget} />
-            </Fragment>
-          )}
-
-        {/* Not Found */}
-        <Route path='*' exact component={NotFound} />
       </Switch>
     </Router>
   );

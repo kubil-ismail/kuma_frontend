@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Card, ButtonGroup, Button, Table, Badge} from 'react-bootstrap'
+import { Container, Row, Col, Card, ButtonGroup, Button, Table, Badge } from 'react-bootstrap'
 import profile from '../assets/img/profile.png'
-// import axios from 'axios'
+import store from 'store2'
 
 // Component
 import Navbar from '../component/Navbar'
@@ -10,6 +10,11 @@ import Footer from '../component/Footer'
 // import Loader from '../component/Loader'
 
 export default class Profile extends Component {
+  constructor(props) {
+    super(props)
+    // store({ adminLogin: true })
+  }
+
   render() {
     return (
       <Fragment>

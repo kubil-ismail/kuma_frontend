@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Badge, Button, Form } from 'react-bootstrap'
-import axios from 'axios'
 import store from 'store2'
 import ImageUploader from 'react-images-upload'
 import Swal from 'sweetalert2'
+
+// Service
+import { bookService } from '../../service/bookService'
 
 // Component
 import Navbar from "../../component/Navbar"
@@ -23,18 +25,12 @@ export default class adminDetail extends Component {
       bookAuthor: null,
       bookPublished: null,
       bookLanguage: null,
-      file: null,
       bookDetail: []
     }
     if (this.props.location.query) {
       store({ bookId: this.props.location.query.id })
     }
-  }
-
-  getBookDetail = async () => {
-    const result = await axios.get(`http://localhost:8000/book/${store('bookId')}`)
-    const { data } = result
-    return data.data[0]
+    this.bookService = new bookService()
   }
 
   isLoading = (load) => {
@@ -58,21 +54,8 @@ export default class adminDetail extends Component {
   }
 
   onDrop = async (event) => {
-    this.setState({
-      file: event[0]
-    })
-
-    const formData = new FormData()
-    formData.append('picture', event[0])
-
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }
-
     try {
-      axios.patch(`http://localhost:8000/book/cover/${store('bookId')}`, formData, config)
+      await this.bookService.editCover(event[0], store('bookId'))
       Swal.fire({
         title: 'Edit Cover success',
         text: '',
@@ -89,17 +72,8 @@ export default class adminDetail extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
-    const { bookName, bookDesc, bookPublished, bookLanguage } = this.state
     try {
-      axios.patch(`http://localhost:8000/book/${store('bookId')}`, {
-        name: bookName,
-        description: bookDesc,
-        genre_id: 1,
-        author_id: 1,
-        status_id: 1,
-        published: bookPublished,
-        language: bookLanguage
-      })
+      await this.bookService.editBook(this.state, store('bookId'))
       Swal.fire({
         title: 'Edit success',
         text: '',
@@ -116,7 +90,7 @@ export default class adminDetail extends Component {
 
   deleteBook = async () => {
     try {
-      axios.delete(`http://localhost:8000/book/${store('bookId')}`)
+      this.bookService.deletBook(store('bookId'))
       Swal.fire({
         title: 'Delete success',
         text: '',
@@ -133,7 +107,7 @@ export default class adminDetail extends Component {
 
   async componentDidMount() {
     try {
-      const getBookDetail = await this.getBookDetail()
+      const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
       this.setState({
         loading: false,
         bookDetail: getBookDetail

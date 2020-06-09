@@ -2,8 +2,10 @@ import React, { Component, Fragment } from 'react'
 import { Link } from "react-router-dom"
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import Swal from 'sweetalert2'
-import axios from 'axios'
 import store from 'store2'
+
+// Service
+import { authService } from '../service/authService'
 
 //Component 
 import Navbar from '../component/Navbar'
@@ -15,16 +17,12 @@ export default class Login extends Component {
       email: null,
       password: null
     }
+    this.authService = new authService()
   }
 
   onLogin = async () => {
-    const { email, password } = this.state
-    const url = 'http://localhost:8000/auth/login'
-    const login = await axios.post(url, {
-      email: email,
-      password: password
-    })
-
+    const login = await this.authService.login(this.state)
+    
     const { data } = login.data
     return data
   }
@@ -39,7 +37,7 @@ export default class Login extends Component {
         text: 'Welcome to kuma book',
         icon: 'success'
       }).then(() => {
-        this.props.history.push("/profile")
+        window.location.href = "/profile"
       })
     } catch (error) {
       Swal.fire({
