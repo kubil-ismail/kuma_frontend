@@ -1,10 +1,11 @@
 import axios from 'axios'
+const { REACT_APP_REST_URL } = process.env
 
 export class authService {
   async login(input) {
     try {
       const { email, password } = input
-      const login = await axios.post('http://localhost:8000/auth/login', {
+      const login = await axios.post(`${REACT_APP_REST_URL}auth/login`, {
         email: email,
         password: password
       })
@@ -17,7 +18,7 @@ export class authService {
   async signUp(input) {
     try {
       const { email, password } = input
-      const signUp = await axios.post('http://localhost:8000/auth/signIn', {
+      const signUp = await axios.post(`${REACT_APP_REST_URL}auth/signIn`, {
         email: email,
         password: password
       })
@@ -30,7 +31,7 @@ export class authService {
   async activate(input) {
     try {
       const { email, code } = input
-      const activate = await axios.post('http://localhost:8000/auth/activate', {
+      const activate = await axios.post(`${REACT_APP_REST_URL}auth/activate`, {
         email: email,
         code: code
       })

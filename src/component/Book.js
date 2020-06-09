@@ -1,11 +1,11 @@
 import React from 'react'
 import { Card, Badge } from 'react-bootstrap'
-import { Link } from "react-router-dom";
-
+import { Link } from "react-router-dom"
+const url = 'http://localhost:8000/'
 export default function Book(props) {
   return (
     <Card className="border-0 bg-transparent hvr-grow">
-      <Card.Img variant="top" src={`http://localhost:8000/${props.cover}`} className="rounded mx-auto shadow card-cover" />
+      <Card.Img variant="top" src={`${url}${props.cover}`} className="rounded mx-auto shadow card-cover" />
       <Card.Body className="px-0">
         <Card.Title className="font-weight-bold text-truncate">{props.title}</Card.Title>
         <Card.Text>{props.author}</Card.Text>

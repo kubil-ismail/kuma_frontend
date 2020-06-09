@@ -1,23 +1,24 @@
 import axios from 'axios'
+const { REACT_APP_REST_URL } = process.env
 
 export class bookService {
   // Get book limit 4
   async getBook() {
-    const result = await axios.get('http://localhost:8000/book?limit=4')
+    const result = await axios.get(`${REACT_APP_REST_URL}book?limit=4`)
     const { data } = result
     return data
   }
 
   // Get Detail Book
   async getBookDetail(id) {
-    const result = await axios.get(`http://localhost:8000/book/${id}`)
+    const result = await axios.get(`${REACT_APP_REST_URL}book/${id}`)
     const { data } = result
     return data.data[0]
   }
 
   // Get All Books
   async getAllBook(param) {
-    const result = await axios.get(`http://localhost:8000/book${param}`)
+    const result = await axios.get(`${REACT_APP_REST_URL}book${param}`)
     const { data } = result
     return data
   }
@@ -43,7 +44,7 @@ export class bookService {
     }
 
     try {
-      await axios.post("http://localhost:8000/book", formData, config)
+      await axios.post(`${REACT_APP_REST_URL}book`, formData, config)
       return true
     } catch (error) {
       return error
@@ -54,7 +55,7 @@ export class bookService {
   async editBook(data, id) {
     const { bookName, bookDesc, bookPublished, bookLanguage } = data
     try {
-      await axios.patch(`http://localhost:8000/book/${id}`, {
+      await axios.patch(`${REACT_APP_REST_URL}book/${id}`, {
         name: bookName,
         description: bookDesc,
         genre_id: 1,
@@ -80,7 +81,7 @@ export class bookService {
     }
 
     try {
-      await axios.patch(`http://localhost:8000/book/cover/${id}`, formData, config)
+      await axios.patch(`${REACT_APP_REST_URL}book/cover/${id}`, formData, config)
       return true
     } catch (error) {
       return error      
@@ -90,7 +91,7 @@ export class bookService {
   // Delete Book
   async deletBook(id) {
     try {
-      await axios.delete(`http://localhost:8000/book/${id}`)
+      await axios.delete(`${REACT_APP_REST_URL}book/${id}`)
       return true
     } catch (error) {
       return error
