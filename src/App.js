@@ -11,15 +11,30 @@ import Login from './pages/Login'
 import Forget from './pages/Forget'
 import NotFound from './pages/NotFound'
 import SignUp from './pages/SignUp'
+import adminBooks from './pages/admin/adminBooks';
+import adminDetail from './pages/admin/adminDetail';
 
 function App() {
   const hasLogin = store('login')
+  const adminLogin = store('adminLogin')
   return (
     <Router>
       <Switch>
         <Route path='/' exact component={Home} />
-        <Route path='/books' component={Books} />
-        <Route path='/detail/:bookName' component={Detail} />
+        {adminLogin
+          ? (
+            <Fragment>
+              <Route path='/books' component={adminBooks} />
+              <Route path='/detail/:bookName' component={adminDetail} />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Route path='/books' component={Books} />
+              <Route path='/detail/:bookName' component={Detail} />
+            </Fragment>
+          )
+        }
+
         <Route path='/profile' component={Profile} />
 
         {/* Auth */}

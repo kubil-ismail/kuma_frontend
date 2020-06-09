@@ -85,7 +85,7 @@ export default class Detail extends Component {
         <section>
           <Container className="mt-5">
               {this.isLoading(loading) || this.isError(error)}
-              {loading == false && error == false && (
+              {loading === false && error === false && (
                 <Row>
                   <Col lg={3}>
                     <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
