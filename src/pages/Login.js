@@ -33,7 +33,12 @@ export default class Login extends Component {
       const login = await this.onLogin()
       this.setState({ loading: false })
       if (login.status === 200) {
-        store({ apikey: login.apiKey, role: login.role, login: true })
+        const {role, apiKey} = login.data.data
+        if (role == 2) {
+          store({ apikey: apiKey, role: role, login: true, adminLogin: true, pin: '070402' })
+        } else {
+          store({ apikey: apiKey, role: role, login: true })
+        }
         Swal.fire({
           title: 'Login Success',
           text: 'Welcome to kuma book',

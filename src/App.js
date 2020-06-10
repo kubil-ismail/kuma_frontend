@@ -16,6 +16,7 @@ import adminDetail from './pages/admin/adminDetail';
 
 function App() {
   const hasLogin = store('login')
+  const role = store('role')
   const adminLogin = store('adminLogin')
   return (
     <Router>
@@ -35,7 +36,7 @@ function App() {
           )}
       </Switch>
       <Switch>
-        {adminLogin
+        {adminLogin && role === 2
           ? (
             <Fragment>
               <Route path='/books' component={adminBooks} />
