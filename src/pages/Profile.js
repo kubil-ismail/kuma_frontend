@@ -1,21 +1,172 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Card, ButtonGroup, Button, Table, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Card, ButtonGroup, Button, Table, Form } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import profile from '../assets/img/profile.png'
-// import store from 'store2'
+import store from 'store2'
+import Swal from 'sweetalert2'
+
+// Service
+import { profileService } from '../service/profileService'
 
 // Component
 import Navbar from '../component/Navbar'
 import Footer from '../component/Footer'
-// import Alert from '../component/Alert'
+import Alert from '../component/Alert'
 // import Loader from '../component/Loader'
 
 export default class Profile extends Component {
   constructor(props) {
     super(props)
-    // store({ adminLogin: true })
+    this.state = {
+      name: null,
+      role: null,
+      bio: null,
+      facebook: null,
+      instagram: null,
+      twitter: null,
+      email: null,
+      favorites: [],
+      loading: true,
+      error: false
+    }
+
+    this.profileService = new profileService()
+  }
+
+  getProfile = async () => {
+    const profile = await this.profileService.getProfile({ id: store('userId') })
+    const { fullname, bio, role_id, email, facebook, twitter, instagram } = profile.data[0]
+    this.setState({
+      name: fullname,
+      role: role_id === 2 ? 'Admin' : 'Member',
+      bio: bio,
+      facebook: facebook,
+      instagram: instagram,
+      twitter: twitter,
+      email: email,
+      edit: false
+    })
+  }
+
+  getFavorite = async () => {
+    const favorites = await this.profileService.getFavorite({ id: store('userId') })
+    this.setState({
+      favorites: favorites.data
+    })
+  }
+
+  componentDidMount = async () => {
+    try {
+      await this.getProfile()
+      await this.getFavorite()
+      this.setState({
+        loading: false
+      })
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error: true
+      })
+      console.log(error)
+    }
+  }
+
+  showEditForm = () => {
+    this.setState({
+      edit: true
+    })
+  }
+
+  closeEditForm = () => {
+    this.setState({
+      edit: false
+    })
+  }
+
+  editProfile = async () => {
+    const update = await this.profileService.updateProfile(store('userId'), {
+      name: this.state.name,
+      bio: this.state.bio
+    })
+    return update
+  }
+
+  onEdit = async (e) => {
+    e.preventDefault()
+    try {
+      const update = await this.editProfile()
+      if (update.status) {
+        Swal.fire({
+          title: 'Update profile success',
+          text: '',
+          icon: 'success'
+        })
+      } else {
+        Swal.fire({
+          title: 'Update profile gagal',
+          text: '',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  editSosmed = async () => {
+    const update = await this.profileService.updateSosmed(store('userId'), {
+      facebook: this.state.facebook,
+      twitter: this.state.twitter,
+      instagram: this.state.instagram
+    })
+    return update
+  }
+
+  onEdit2 = async (e) => {
+    e.preventDefault()
+    try {
+      const update = await this.editSosmed()
+      if (update.status) {
+        Swal.fire({
+          title: 'Update profile success',
+          text: '',
+          icon: 'success'
+        })
+      } else {
+        Swal.fire({
+          title: 'Update profile gagal',
+          text: '',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  deleteFavorite = async (id) => {
+    try {
+      const deleted = await this.profileService.deleteFavorite({ id: id })
+      if (deleted.data.status) {
+        Swal.fire({
+          title: 'Delete Favorite success',
+          text: '',
+          icon: 'success'
+        }).then(() => window.location.href = '/profile')
+      } else {
+        Swal.fire({
+          title: 'Delete Favorite failed',
+          text: '',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   render() {
+    const { edit, name, bio, role, email, facebook, twitter, instagram, favorites } = this.state
     return (
       <Fragment>
         <Navbar />
@@ -28,48 +179,95 @@ export default class Profile extends Component {
                     <img src={profile} className="w-50 rounded-circle img-thumbnail" alt="profile" />
                   </div>
                   <div className="text-center">
-                    <div className="profile-name font-weight-bold d-block mt-4">Bilkis Ismail</div>
-                    <div className="profile-status text-secondary">Member</div>
+                    <div className="profile-name font-weight-bold d-block mt-4">{name}</div>
+                    <div className="profile-status text-secondary">{role}</div>
                   </div>
-                  <div className="profile-desc text-center mt-2">lorem ipsum sir dolor amet, lorem ipsum sir dolor amet</div>
+                  <div className="profile-desc text-center mt-2">{bio}</div>
                   <ButtonGroup aria-label="edit" className="my-3">
-                    <Button variant="primary">Edit Profile</Button>
-                    <Button variant="dark">Upload Foto</Button>
+                    <Button variant={edit ? 'dark' : 'primary'} onClick={(e) => this.closeEditForm()}>Favorite</Button>
+                    <Button variant={!edit ? 'dark' : 'primary'} onClick={(e) => this.showEditForm()}>Edit Profile</Button>
                   </ButtonGroup>
                   <ul className="px-3">
-                    <li>kumabookstore@Gmail.com</li>
-                    <li>facebook.com</li>
-                    <li>@kumabook</li>
-                    <li>@kumabook</li>
+                    <li>{email}</li>
+                    <li>{facebook}</li>
+                    <li>{instagram}</li>
+                    <li>{twitter}</li>
                   </ul>
                 </Card>
               </Col>
-              <Col lg={8}>
-                <Card className="shadow-sm p-5 mb-5">
-                  <h3>Favorites</h3>
-                  <hr />
-                  <Table striped bordered hover responsive>
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Cover</th>
-                        <th>Name</th>
-                        <th>Manage</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>
-                          <Badge pill variant="primary">Detail</Badge>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Card>
-              </Col>
+              {edit ? (
+                <Col lg={8}>
+                  <Card className="shadow-sm p-5 mb-5">
+                    <h3>Edit Profile</h3>
+                    <hr />
+                    <Form onSubmit={this.onEdit}>
+                      <Form.Group controlId="fullname.ControlInput1">
+                        <Form.Label>Fullname</Form.Label>
+                        <Form.Control type="text" defaultValue={name} onChange={(e) => this.setState({ name: e.target.value })} required />
+                      </Form.Group>
+                      <Form.Group controlId="bio.ControlTextarea1">
+                        <Form.Label>Bio</Form.Label>
+                        <Form.Control as="textarea" rows="3" defaultValue={bio} onChange={(e) => this.setState({ bio: e.target.value })} required />
+                      </Form.Group>
+                      <Button type="submit">Save</Button>
+                    </Form>
+                  </Card>
+
+                  <Card className="shadow-sm p-5 mb-5">
+                    <h3>Social Media</h3>
+                    <hr />
+                    <Form onSubmit={this.onEdit2}>
+                      <Form.Group controlId="fullname.ControlInput1">
+                        <Form.Label>Facebook</Form.Label>
+                        <Form.Control type="text" defaultValue={facebook} onChange={(e) => this.setState({ facebook: e.target.value })} required />
+                      </Form.Group>
+                      <Form.Group controlId="bio.ControlTextarea1">
+                        <Form.Label>Instagram</Form.Label>
+                        <Form.Control type="text" rows="3" defaultValue={instagram} onChange={(e) => this.setState({ instagram: e.target.value })} required />
+                      </Form.Group>
+                      <Form.Group controlId="bio.ControlTextarea1">
+                        <Form.Label>Twitter</Form.Label>
+                        <Form.Control type="text" rows="3" defaultValue={twitter} onChange={(e) => this.setState({ twitter: e.target.value })} required />
+                      </Form.Group>
+                      <Button type="submit">Save</Button>
+                    </Form>
+                  </Card>
+                </Col>
+              ) : (
+                  <Col lg={8}>
+                    <Card className="shadow-sm p-5 mb-5">
+                      <h3>Favorites</h3>
+                      <hr />
+                      {favorites.length === 0 ? 
+                        <Alert variant="warning" message="Favorite book not found" /> 
+                      : 
+                        <Table striped bordered hover responsive>
+                          <thead>
+                            <tr>
+                              <th>No</th>
+                              <th>Cover</th>
+                              <th>Name</th>
+                              <th>Manage</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {favorites.map((res, key) => (
+                              <tr key={key}>
+                                <td>{++key}</td>
+                                <td><img src={`http://localhost:8000/${res.cover}`} alt={res.name} width="50" /></td>
+                                <td>{res.name}</td>
+                                <td>
+                                  <Link className="btn btn-primary mr-2" to={{ pathname: `/detail/${res.name.replace(/\s/g, '-')}`, query: { id: res.id, hasFavorite: true } }}>Detail</Link>
+                                  <Button onClick={(e) => this.deleteFavorite(res.book_favorites_id)} variant="danger">Delete</Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      }
+                    </Card>
+                  </Col>
+                )}
             </Row>
           </Container>
         </section>

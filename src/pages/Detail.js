@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Badge, Button } from 'react-bootstrap'
 import store from 'store2'
+import Swal from 'sweetalert2'
 
 // Service
 import { bookService } from '../service/bookService'
+import { profileService } from '../service/profileService'
 
 // Component
 import Navbar from "../component/Navbar"
@@ -26,6 +28,7 @@ export default class Detail extends Component {
       store({ bookId: this.props.location.query.id })
     }
 
+    this.profileService = new profileService()
     this.bookService = new bookService()
   }
 
@@ -66,6 +69,30 @@ export default class Detail extends Component {
     }
   }
 
+  addFavorite = async () => {
+    try {
+      const favorites = await this.profileService.addFavorite({ 
+        id: store('userId'), 
+        bookId: store('bookId') 
+      })
+      if (favorites.data.status) {
+        Swal.fire({
+          title: 'Add favorite success',
+          text: '',
+          icon: 'success'
+        })
+      } else {
+        Swal.fire({
+          title: 'Add favorite failed',
+          text: '',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     const { similarBooks, bookDetail, loading, error } = this.state
     return (
@@ -87,7 +114,7 @@ export default class Detail extends Component {
                     <Badge pill variant="primary mr-2 py-2 px-2">{bookDetail.genre}</Badge>
                     <Badge pill variant="dark py-2 px-2">{bookDetail.language}</Badge>
                     <p className="mt-3 text-justify text-dark">{bookDetail.description}</p>
-                    <Button className="text-dark">Add to favorite</Button>
+                    {store('login') ? <Button className="text-dark" onClick={(e) => this.addFavorite()}>Add to favorite</Button> : null}
                   </Col>
                 </Row>
               )}

@@ -36,13 +36,13 @@ export default class SignUp extends Component {
     const activate = await this.authService.activate(this.state)
     this.setState({ loading: false })
     if (activate) {
-      // store({ signUp: true})
+      store({ signUp: true})
       Swal.fire({
         title: 'Activate Success',
         text: 'Login to continue',
         icon: 'success'
       }).then(() => {
-        // this.props.history.push("/login")
+        this.props.history.push("/login")
       })
     } else {
       Swal.fire({

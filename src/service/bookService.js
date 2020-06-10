@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from 'store2'
 const { REACT_APP_REST_URL } = process.env
 
 export class bookService {
@@ -39,7 +40,8 @@ export class bookService {
 
     const config = {
       headers: {
-        'content-type': 'multipart/form-data'
+        'content-type': 'multipart/form-data',
+        'Authorization': store('apiKey')
       }
     }
 
@@ -54,6 +56,12 @@ export class bookService {
   // Patch Data Book
   async editBook(data, id) {
     const { bookName, bookDesc, bookPublished, bookLanguage } = data
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'Authorization': store('apikey')
+      }
+    }
     try {
       await axios.patch(`${REACT_APP_REST_URL}book/${id}`, {
         name: bookName,
@@ -63,7 +71,7 @@ export class bookService {
         status_id: 1,
         published: bookPublished,
         language: bookLanguage
-      })
+      }, config)
     } catch (error) {
       return error
     }
@@ -76,7 +84,8 @@ export class bookService {
 
     const config = {
       headers: {
-        'content-type': 'multipart/form-data'
+        'content-type': 'multipart/form-data',
+        'Authorization': store('apiKey')
       }
     }
 
@@ -84,14 +93,19 @@ export class bookService {
       await axios.patch(`${REACT_APP_REST_URL}book/cover/${id}`, formData, config)
       return true
     } catch (error) {
-      return error      
+      return error
     }
   }
 
   // Delete Book
   async deletBook(id) {
+    const config = {
+      headers: {
+        'Authorization': store('apikey')
+      }
+    }
     try {
-      await axios.delete(`${REACT_APP_REST_URL}book/${id}`)
+      await axios.delete(`${REACT_APP_REST_URL}book/${id}`,config)
       return true
     } catch (error) {
       return error

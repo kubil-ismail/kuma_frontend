@@ -33,11 +33,11 @@ export default class Login extends Component {
       const login = await this.onLogin()
       this.setState({ loading: false })
       if (login.status === 200) {
-        const {role, apiKey} = login.data.data
-        if (role == 2) {
-          store({ apikey: apiKey, role: role, login: true, adminLogin: true, pin: '070402' })
+        const { role, apiKey, userId } = login.data.data
+        if (role === 2) {
+          store({ userId: userId, apikey: apiKey, role: role, login: true, adminLogin: true, pin: '070402' })
         } else {
-          store({ apikey: apiKey, role: role, login: true })
+          store({ userId: userId, apikey: apiKey, role: role, login: true })
         }
         Swal.fire({
           title: 'Login Success',
