@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Card, Table, Button, Form, FormControl, Modal } from 'react-bootstrap'
+import { Container, Card, Table, Button, Form, FormControl, Modal, Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ImageUploader from 'react-images-upload'
 import Swal from 'sweetalert2'
@@ -52,7 +52,7 @@ export default class adminBooks extends Component {
         title: 'Add Book Success',
         text: '',
         icon: 'success'
-      }).then(() => window.location.reload())
+      })
     } catch (error) {
       Swal.fire({
         title: 'Add Book Failed',
@@ -71,7 +71,7 @@ export default class adminBooks extends Component {
     try {
       let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
       const getBook = await this.bookService.getAllBook(search)
-  
+
       this.setState({
         books: getBook.data,
         isLoading: false
@@ -129,45 +129,54 @@ export default class adminBooks extends Component {
               </Modal.Header>
               <Form onSubmit={this.onSubmit}>
                 <Modal.Body>
-                  <img src={this.state.bookCover} className="w-100 h-25" alt={this.state.bookCover} />
-                  <ImageUploader
-                    withIcon={true}
-                    singleImage={true}
-                    buttonText='Choose images'
-                    onChange={this.onDrop}
-                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                    maxFileSize={5242880}
-                  />
-                  <Form.Group controlId="bookName">
-                    <Form.Label>Book Name</Form.Label>
-                    <Form.Control type="text" placeholder="Book Name..." onChange={(e) => this.setState({ bookName: e.target.value })} />
-                  </Form.Group>
-                  <Form.Group controlId="bookLanguage">
-                    <Form.Label>Language</Form.Label>
-                    <Form.Control type="text" placeholder="Language..." onChange={(e) => this.setState({ bookLanguage: e.target.value })} />
-                  </Form.Group>
-                  <Form.Group controlId="bookDate">
-                    <Form.Label>Publish Date</Form.Label>
-                    <Form.Control type="date" placeholder="dd/mm/yyyy" onChange={(e) => this.setState({ bookPublished: e.target.value })} />
-                  </Form.Group>
-                  <Form.Group controlId="bookGenre">
-                    <Form.Label>Genre</Form.Label>
-                    <Form.Control as="select" onChange={(e) => this.setState({ bookGenre: e.target.value })} >
-                      <option>1</option>
-                      <option>2</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group controlId="bookAuthor">
-                    <Form.Label>Author</Form.Label>
-                    <Form.Control as="select" onChange={(e) => this.setState({ bookAuthor: e.target.value })} >
-                      <option>1</option>
-                      <option>2</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows="5" onChange={(e) => this.setState({ bookDesc: e.target.value })} />
-                  </Form.Group>
+                  <Row>
+                    <Col lg={4}>
+                      {this.state.bookCover ?
+                        <img src={this.state.bookCover} className="w-100 h-50" alt={this.state.bookCover} />
+                        : null
+                      }
+                      <ImageUploader
+                        withIcon={true}
+                        singleImage={true}
+                        buttonText='Choose images'
+                        onChange={this.onDrop}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                        maxFileSize={5242880}
+                      />
+                    </Col>
+                    <Col lg={8}>
+                      <Form.Group controlId="bookName">
+                        <Form.Label>Book Name</Form.Label>
+                        <Form.Control type="text" placeholder="Book Name..." onChange={(e) => this.setState({ bookName: e.target.value })} />
+                      </Form.Group>
+                      <Form.Group controlId="bookLanguage">
+                        <Form.Label>Language</Form.Label>
+                        <Form.Control type="text" placeholder="Language..." onChange={(e) => this.setState({ bookLanguage: e.target.value })} />
+                      </Form.Group>
+                      <Form.Group controlId="bookDate">
+                        <Form.Label>Publish Date</Form.Label>
+                        <Form.Control type="date" placeholder="dd/mm/yyyy" onChange={(e) => this.setState({ bookPublished: e.target.value })} />
+                      </Form.Group>
+                      <Form.Group controlId="bookGenre">
+                        <Form.Label>Genre</Form.Label>
+                        <Form.Control as="select" onChange={(e) => this.setState({ bookGenre: e.target.value })} >
+                          <option>1</option>
+                          <option>2</option>
+                        </Form.Control>
+                      </Form.Group>
+                      <Form.Group controlId="bookAuthor">
+                        <Form.Label>Author</Form.Label>
+                        <Form.Control as="select" onChange={(e) => this.setState({ bookAuthor: e.target.value })} >
+                          <option>1</option>
+                          <option>2</option>
+                        </Form.Control>
+                      </Form.Group>
+                      <Form.Group controlId="exampleForm.ControlTextarea1">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control as="textarea" rows="5" onChange={(e) => this.setState({ bookDesc: e.target.value })} />
+                      </Form.Group>
+                    </Col>
+                  </Row>
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleAddClose}>

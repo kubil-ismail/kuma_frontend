@@ -41,7 +41,7 @@ export class bookService {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
-        'Authorization': store('apiKey')
+        'Authorization': store('apikey')
       }
     }
 
@@ -85,7 +85,7 @@ export class bookService {
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
-        'Authorization': store('apiKey')
+        'Authorization': store('apikey')
       }
     }
 
