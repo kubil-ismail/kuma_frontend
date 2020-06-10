@@ -11,7 +11,7 @@ export class authService {
       })
       return login
     } catch (error) {
-      return error      
+      return error.response      
     }
   }
 
@@ -24,7 +24,7 @@ export class authService {
       })
       return signUp
     } catch (error) {
-      return error 
+      return error.response 
     }
   }
 

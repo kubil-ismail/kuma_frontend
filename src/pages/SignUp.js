@@ -26,26 +26,20 @@ export default class SignUp extends Component {
   }
 
   onsignUp = async () => {
-    try {
-      const signUp = this.authService.signUp(this.state)
-      const { data } = signUp.data
-      return data
-    } catch (error) {
-      return error
-    }
+    return await this.authService.signUp(this.state)
   }
 
   onActivate = async (e) => {
     e.preventDefault()
     const activate = await this.authService.activate(this.state)
     if (activate) {
-      store({ signUp: true})
+      // store({ signUp: true})
       Swal.fire({
         title: 'Activate Success',
         text: 'Login to continue',
         icon: 'success'
       }).then(() => {
-        this.props.history.push("/login")
+        // this.props.history.push("/login")
       })
     } else {
       Swal.fire({
@@ -62,16 +56,24 @@ export default class SignUp extends Component {
 
     if (password === password2) {
       try {
-        await this.onsignUp()
-        store({ sendCode: true, email: email})
-
-        Swal.fire({
-          title: 'Sign In Success',
-          text: 'Check your email for code activation',
-          icon: 'success'
-        }).then(() => {
-          window.location.href = '/sign-up'
-        })
+        const signUp = await this.onsignUp()
+        if (signUp.status === 200) {
+          store({ sendCode: true, email: email})
+  
+          Swal.fire({
+            title: 'Sign In Success',
+            text: 'Check your email for code activation',
+            icon: 'success'
+          }).then(() => {
+            window.location.href = '/sign-up'
+          })
+        } else {
+          Swal.fire({
+            title: signUp.data.message,
+            text: 'Make sure the data is correct',
+            icon: 'error'
+          })
+        }
       } catch (error) {
         Swal.fire({
           title: 'Sign In Failed',

@@ -22,23 +22,29 @@ export default class Login extends Component {
 
   onLogin = async () => {
     const login = await this.authService.login(this.state)
-    
-    const { data } = login.data
-    return data
+    return login
   }
 
   onSubmit = async (e) => {
     e.preventDefault()
     try {
       const login = await this.onLogin()
-      store({ apikey: login.apiKey, role: login.role, login: true })
-      Swal.fire({
-        title: 'Login Success',
-        text: 'Welcome to kuma book',
-        icon: 'success'
-      }).then(() => {
-        window.location.href = "/profile"
-      })
+      if (login.status === 200) {
+        store({ apikey: login.apiKey, role: login.role, login: true })
+        Swal.fire({
+          title: 'Login Success',
+          text: 'Welcome to kuma book',
+          icon: 'success'
+        }).then(() => {
+          window.location.href = "/profile"
+        })
+      } else {
+        Swal.fire({
+          title: login.data.message,
+          text: 'Check your email and password',
+          icon: 'error'
+        })
+      }
     } catch (error) {
       Swal.fire({
         title: 'Account not registered',
