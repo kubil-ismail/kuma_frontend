@@ -15,7 +15,8 @@ export default class Login extends Component {
     super(props)
     this.state = {
       email: null,
-      password: null
+      password: null,
+      loading: false
     }
     this.authService = new authService()
   }
@@ -27,8 +28,10 @@ export default class Login extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
+    this.setState({ loading: true })
     try {
       const login = await this.onLogin()
+      this.setState({ loading: false })
       if (login.status === 200) {
         store({ apikey: login.apiKey, role: login.role, login: true })
         Swal.fire({
@@ -46,6 +49,7 @@ export default class Login extends Component {
         })
       }
     } catch (error) {
+      this.setState({ loading: false })
       Swal.fire({
         title: 'Account not registered',
         text: 'Check your email and password',
@@ -55,6 +59,7 @@ export default class Login extends Component {
   }
 
   render() {
+    const { loading } = this.state
     return (
       <Fragment>
         <div className="d-lg-none">
@@ -85,7 +90,10 @@ export default class Login extends Component {
                           <label className="custom-control-label" htmlFor="customCheck1">Remember password</label>
                         </div>
 
-                        <Button className="btn-lg btn-block btn-login mb-2" type="submit">Login</Button>
+                        <Button className="btn-lg btn-block btn-login mb-2" type="submit" disabled={loading}>
+                          {loading ? 'Loading…' : 'Login'}
+                        </Button>
+
                         <div className="text-center">
                           <Link className="small" to="/sign-up">Create new account</Link>
                         </div>

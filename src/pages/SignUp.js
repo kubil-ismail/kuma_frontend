@@ -19,7 +19,8 @@ export default class SignUp extends Component {
       password2: null,
       code: null,
       sendCode: store('sendCode') || false,
-      signUp: store('signUp') || false
+      signUp: store('signUp') || false,
+      loading: false
     }
     this.authService = new authService()
     // store(false)
@@ -31,7 +32,9 @@ export default class SignUp extends Component {
 
   onActivate = async (e) => {
     e.preventDefault()
+    this.setState({ loading: true })
     const activate = await this.authService.activate(this.state)
+    this.setState({ loading: false })
     if (activate) {
       // store({ signUp: true})
       Swal.fire({
@@ -52,14 +55,16 @@ export default class SignUp extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
+    this.setState({ loading: true })
     const { email, password, password2 } = this.state
 
     if (password === password2) {
       try {
         const signUp = await this.onsignUp()
+        this.setState({ loading: false })
         if (signUp.status === 200) {
-          store({ sendCode: true, email: email})
-  
+          store({ sendCode: true, email: email })
+
           Swal.fire({
             title: 'Sign In Success',
             text: 'Check your email for code activation',
@@ -75,6 +80,7 @@ export default class SignUp extends Component {
           })
         }
       } catch (error) {
+        this.setState({ loading: false })
         Swal.fire({
           title: 'Sign In Failed',
           text: 'Make sure the data is correct',
@@ -82,6 +88,7 @@ export default class SignUp extends Component {
         })
       }
     } else {
+      this.setState({ loading: false })
       Swal.fire({
         title: 'Password not match',
         text: 'Make sure the data is correct',
@@ -92,7 +99,7 @@ export default class SignUp extends Component {
   }
 
   render() {
-    const { sendCode } = this.state
+    const { sendCode, loading } = this.state
     return (
       <Fragment>
         <div className="d-lg-none">
@@ -115,38 +122,42 @@ export default class SignUp extends Component {
                               <Form.Label>Code</Form.Label>
                             </Form.Group>
 
-                            <Button className="btn-lg btn-block btn-login mb-2" type="submit">Activate</Button>
+                            <Button className="btn-lg btn-block btn-login mb-2" type="submit" disabled={loading}>
+                              {loading ? 'Loading…' : 'Activate'}
+                            </Button>
                             <div className="text-center">
                               <Link className="small" to="/login">Already Have Account ??</Link>
                             </div>
                           </Form>
                         </Fragment>
                       ) : (
-                        <Fragment>
-                          <h3 className="login-heading mb-4">Sign Up</h3>
-                          <Form onSubmit={this.onSubmit}>
-                            <Form.Group className="form-label-group" controlId="inputEmail">
-                              <Form.Control type="email" placeholder="Email address" onChange={(e) => this.setState({ email: e.target.value })} required />
-                              <Form.Label>Email address</Form.Label>
-                            </Form.Group>
+                          <Fragment>
+                            <h3 className="login-heading mb-4">Sign Up</h3>
+                            <Form onSubmit={this.onSubmit}>
+                              <Form.Group className="form-label-group" controlId="inputEmail">
+                                <Form.Control type="email" placeholder="Email address" onChange={(e) => this.setState({ email: e.target.value })} required />
+                                <Form.Label>Email address</Form.Label>
+                              </Form.Group>
 
-                            <Form.Group className="form-label-group" controlId="inputPassword">
-                              <Form.Control type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} required />
-                              <Form.Label>Password</Form.Label>
-                            </Form.Group>
+                              <Form.Group className="form-label-group" controlId="inputPassword">
+                                <Form.Control type="password" placeholder="Password" onChange={(e) => this.setState({ password: e.target.value })} required />
+                                <Form.Label>Password</Form.Label>
+                              </Form.Group>
 
-                            <Form.Group className="form-label-group" controlId="inputPassword2">
-                              <Form.Control type="password" placeholder="Password Confirmation" onChange={(e) => this.setState({ password2: e.target.value })} required />
-                              <Form.Label>Password Confirmation</Form.Label>
-                            </Form.Group>
+                              <Form.Group className="form-label-group" controlId="inputPassword2">
+                                <Form.Control type="password" placeholder="Password Confirmation" onChange={(e) => this.setState({ password2: e.target.value })} required />
+                                <Form.Label>Password Confirmation</Form.Label>
+                              </Form.Group>
 
-                            <Button className="btn-lg btn-block btn-login mb-2" type="submit">Sign Up</Button>
-                            <div className="text-center">
-                              <Link className="small" to="/login">Already Have Account ??</Link>
-                            </div>
-                          </Form>
-                        </Fragment>
-                      )}
+                              <Button className="btn-lg btn-block btn-login mb-2" type="submit" disabled={loading}>
+                                {loading ? 'Loading…' : 'Sign Up'}
+                              </Button>
+                              <div className="text-center">
+                                <Link className="small" to="/login">Already Have Account ??</Link>
+                              </div>
+                            </Form>
+                          </Fragment>
+                        )}
                     </Col>
                   </Row>
                 </Container>

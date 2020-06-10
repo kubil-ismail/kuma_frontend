@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Container, Row, Col, Card, ButtonGroup, Button, Table, Badge } from 'react-bootstrap'
 import profile from '../assets/img/profile.png'
-import store from 'store2'
+// import store from 'store2'
 
 // Component
 import Navbar from '../component/Navbar'
