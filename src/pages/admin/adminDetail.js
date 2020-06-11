@@ -3,9 +3,11 @@ import { Container, Row, Col, Badge, Button, Form } from 'react-bootstrap'
 import store from 'store2'
 import ImageUploader from 'react-images-upload'
 import Swal from 'sweetalert2'
+import Select from 'react-select'
 
 // Service
 import { bookService } from '../../service/bookService'
+import { genreService } from '../../service/genreService'
 
 // Component
 import Navbar from "../../component/Navbar"
@@ -23,14 +25,18 @@ export default class adminDetail extends Component {
       bookDesc: null,
       bookGenre: null,
       bookAuthor: null,
+      bookStatus: null,
       bookPublished: null,
       bookLanguage: null,
-      bookDetail: []
+      bookDetail: [],
+      authors: [],
+      genres: []
     }
     if (this.props.location.query) {
       store({ bookId: this.props.location.query.id })
     }
     this.bookService = new bookService()
+    this.genreService = new genreService()
   }
 
   isLoading = (load) => {
@@ -108,9 +114,13 @@ export default class adminDetail extends Component {
   async componentDidMount() {
     try {
       const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
+      const authors = await this.bookService.getAuthor()
+      const genres = await this.genreService.getGenre()
       this.setState({
         loading: false,
-        bookDetail: getBookDetail
+        bookDetail: getBookDetail,
+        authors: authors.data.data,
+        genres: genres.data
       })
     } catch (err) {
       this.setState({
@@ -118,6 +128,18 @@ export default class adminDetail extends Component {
         error: true
       })
     }
+  }
+
+  changeGenre = (e) => {
+    this.setState({ bookGenre: e })
+  }
+
+  changeAuthor = (e) => {
+    this.setState({ bookAuthor: e })
+  }
+
+  changeStatus = (e) => {
+    this.setState({ bookStatus: e })
   }
 
   render() {
@@ -170,33 +192,70 @@ export default class adminDetail extends Component {
                   <Col lg={7}>
                     <Form.Group controlId="bookName">
                       <Form.Label>Book Name</Form.Label>
-                      <Form.Control type="text" placeholder="Book Name..." onChange={(e) => this.setState({ bookName: e.target.value })} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="Book Name..." 
+                        onChange={(e) => this.setState({ bookName: e.target.value })} 
+                        required
+                      />
                     </Form.Group>
                     <Form.Group controlId="bookLanguage">
                       <Form.Label>Language</Form.Label>
-                      <Form.Control type="text" placeholder="Language..." onChange={(e) => this.setState({ bookLanguage: e.target.value })} />
+                      <Form.Control 
+                        type="text" 
+                        placeholder="Language..." 
+                        onChange={(e) => this.setState({ bookLanguage: e.target.value })} 
+                        required
+                      />
                     </Form.Group>
                     <Form.Group controlId="bookDate">
                       <Form.Label>Publish Date</Form.Label>
-                      <Form.Control type="date" placeholder="dd/mm/yyyy" onChange={(e) => this.setState({ bookPublished: e.target.value })} />
+                      <Form.Control 
+                        type="date" 
+                        placeholder="dd/mm/yyyy"
+                        onChange={(e) => this.setState({ bookPublished: e.target.value })}
+                        required 
+                      />
                     </Form.Group>
                     <Form.Group controlId="bookGenre">
                       <Form.Label>Genre</Form.Label>
-                      <Form.Control as="select" onChange={(e) => this.setState({ bookGenre: e.target.value })} >
-                        <option>1</option>
-                        <option>2</option>
-                      </Form.Control>
+                      <Select
+                        value={this.state.bookGenre}
+                        onChange={this.changeGenre}
+                        options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
+                        required
+                      />
                     </Form.Group>
                     <Form.Group controlId="bookAuthor">
                       <Form.Label>Author</Form.Label>
-                      <Form.Control as="select" onChange={(e) => this.setState({ bookAuthor: e.target.value })} >
-                        <option>1</option>
-                        <option>2</option>
-                      </Form.Control>
+                      <Select
+                        value={this.state.bookAuthor}
+                        onChange={this.changeAuthor}
+                        options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
+                        required
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="bookAuthor">
+                      <Form.Label>Status</Form.Label>
+                      <Select
+                        value={this.state.bookStatus}
+                        onChange={this.changeStatus}
+                        options={[
+                          { value: 1, label: 'Available' },
+                          { value: 2, label: 'Pending' },
+                          { value: 3, label: 'Not Available' }
+                        ]}
+                        required
+                      />
                     </Form.Group>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
                       <Form.Label>Description</Form.Label>
-                      <Form.Control as="textarea" rows="5" onChange={(e) => this.setState({ bookDesc: e.target.value })} />
+                      <Form.Control 
+                        as="textarea" 
+                        rows="5" 
+                        onChange={(e) => this.setState({ bookDesc: e.target.value })} 
+                        required
+                      />
                     </Form.Group>
 
                     <Button className="mb-3 w-25 ml-auto" type="submit">Update</Button>

@@ -2,10 +2,13 @@ import React, { Component, Fragment } from 'react'
 import { Container, Card, Table, Button, Form, FormControl, Modal, Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ImageUploader from 'react-images-upload'
+import Select from 'react-select'
 import Swal from 'sweetalert2'
+import Pagination from "react-js-pagination"
 
 // Service
 import { bookService } from '../../service/bookService'
+import { genreService } from '../../service/genreService'
 
 import Navbar from '../../component/Navbar'
 
@@ -19,12 +22,18 @@ export default class adminBooks extends Component {
       bookCover: null,
       bookGenre: null,
       bookAuthor: null,
+      bookStatus: null,
       bookPublished: null,
       bookLanguage: null,
       file: null,
-      books: []
+      books: [],
+      authors: [],
+      genres: [],
+      options: [],
+      page: 1
     }
     this.bookService = new bookService()
+    this.genreService = new genreService()
     this.onSubmit = this.onSubmit.bind(this)
     this.onDrop = this.onDrop.bind(this)
   }
@@ -52,7 +61,7 @@ export default class adminBooks extends Component {
         title: 'Add Book Success',
         text: '',
         icon: 'success'
-      })
+      }).then(() => window.location.reload())
     } catch (error) {
       Swal.fire({
         title: 'Add Book Failed',
@@ -67,14 +76,30 @@ export default class adminBooks extends Component {
     window.location.href = `/books?search=${this.state.keyword}`
   }
 
+  changeGenre = (e) => {
+    this.setState({ bookGenre: e })
+  }
+
+  changeAuthor = (e) => {
+    this.setState({ bookAuthor: e })
+  }
+
+  changeStatus = (e) => {
+    this.setState({ bookStatus: e })
+  }
+
   async componentDidMount() {
     try {
       let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
       const getBook = await this.bookService.getAllBook(search)
-
+      const authors = await this.bookService.getAuthor()
+      const genres = await this.genreService.getGenre()
       this.setState({
         books: getBook.data,
-        isLoading: false
+        authors: authors.data.data,
+        genres: genres.data,
+        isLoading: false,
+        options: getBook.options
       })
     } catch (error) {
       this.setState({
@@ -83,8 +108,27 @@ export default class adminBooks extends Component {
     }
   }
 
+  handlePageChange = async (pageNumber) => {
+    try {
+      let search = this.props.location.search
+        ? this.props.location.search + `&limit=8&page=${pageNumber}`
+        : `?limit=8&page=${pageNumber}`
+
+      const book = await this.bookService.getAllBook(search)
+      this.setState({
+        page: pageNumber,
+        books: book.data,
+        options: book.options
+      })
+    } catch (error) {
+      this.setState({
+        error: true
+      })
+    }
+  }
+
   render() {
-    const { showAddModal, books } = this.state
+    const { showAddModal, books, options } = this.state
     return (
       <Fragment>
         <Navbar />
@@ -121,6 +165,16 @@ export default class adminBooks extends Component {
                   ))}
                 </tbody>
               </Table>
+              <Pagination
+                activePage={options.page}
+                itemsCountPerPage={options.perPage}
+                totalItemsCount={parseInt(options.totalData, 10)}
+                pageRangeDisplayed={5}
+                onChange={this.handlePageChange.bind(this)}
+                itemClass="page-item"
+                linkClass="page-link"
+                hideNavigation={true}
+              />
             </Card>
 
             <Modal show={showAddModal} onHide={this.handleAddClose} size="lg">
@@ -147,29 +201,55 @@ export default class adminBooks extends Component {
                     <Col lg={8}>
                       <Form.Group controlId="bookName">
                         <Form.Label>Book Name</Form.Label>
-                        <Form.Control type="text" placeholder="Book Name..." onChange={(e) => this.setState({ bookName: e.target.value })} />
+                        <Form.Control
+                          type="text"
+                          placeholder="Book Name..."
+                          onChange={(e) => this.setState({ bookName: e.target.value })}
+                        />
                       </Form.Group>
                       <Form.Group controlId="bookLanguage">
                         <Form.Label>Language</Form.Label>
-                        <Form.Control type="text" placeholder="Language..." onChange={(e) => this.setState({ bookLanguage: e.target.value })} />
+                        <Form.Control
+                          type="text"
+                          placeholder="Language..."
+                          onChange={(e) => this.setState({ bookLanguage: e.target.value })}
+                        />
                       </Form.Group>
                       <Form.Group controlId="bookDate">
                         <Form.Label>Publish Date</Form.Label>
-                        <Form.Control type="date" placeholder="dd/mm/yyyy" onChange={(e) => this.setState({ bookPublished: e.target.value })} />
+                        <Form.Control
+                          type="date"
+                          placeholder="dd/mm/yyyy"
+                          onChange={(e) => this.setState({ bookPublished: e.target.value })}
+                        />
                       </Form.Group>
                       <Form.Group controlId="bookGenre">
                         <Form.Label>Genre</Form.Label>
-                        <Form.Control as="select" onChange={(e) => this.setState({ bookGenre: e.target.value })} >
-                          <option>1</option>
-                          <option>2</option>
-                        </Form.Control>
+                        <Select
+                          value={this.state.bookGenre}
+                          onChange={this.changeGenre}
+                          options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
+                        />
                       </Form.Group>
                       <Form.Group controlId="bookAuthor">
                         <Form.Label>Author</Form.Label>
-                        <Form.Control as="select" onChange={(e) => this.setState({ bookAuthor: e.target.value })} >
-                          <option>1</option>
-                          <option>2</option>
-                        </Form.Control>
+                        <Select
+                          value={this.state.bookAuthor}
+                          onChange={this.changeAuthor}
+                          options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
+                        />
+                      </Form.Group>
+                      <Form.Group controlId="bookAuthor">
+                        <Form.Label>Status</Form.Label>
+                        <Select
+                          value={this.state.bookStatus}
+                          onChange={this.changeStatus}
+                          options={[
+                            { value: 1, label: 'Available' },
+                            { value: 2, label: 'Pending' },
+                            { value: 3, label: 'Not Available' }
+                          ]}
+                        />
                       </Form.Group>
                       <Form.Group controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Description</Form.Label>

@@ -23,7 +23,7 @@ export default class Detail extends Component {
       similarBooks: [],
       bookDetail: []
     }
-    
+
     if (this.props.location.query) {
       store({ bookId: this.props.location.query.id })
     }
@@ -71,9 +71,9 @@ export default class Detail extends Component {
 
   addFavorite = async () => {
     try {
-      const favorites = await this.profileService.addFavorite({ 
-        id: store('userId'), 
-        bookId: store('bookId') 
+      const favorites = await this.profileService.addFavorite({
+        id: store('userId'),
+        bookId: store('bookId')
       })
       if (favorites.data.status) {
         Swal.fire({
@@ -93,6 +93,24 @@ export default class Detail extends Component {
     }
   }
 
+  onSimilarBook = async (id) => {
+    try {
+      store({ 'bookId': id })
+      const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
+      const SimilarBook = await this.bookService.getBook()
+      this.setState({
+        loading: false,
+        similarBooks: SimilarBook.data,
+        bookDetail: getBookDetail
+      })
+    } catch (err) {
+      this.setState({
+        loading: false,
+        error: true
+      })
+    }
+  }
+
   render() {
     const { similarBooks, bookDetail, loading, error } = this.state
     return (
@@ -102,22 +120,22 @@ export default class Detail extends Component {
         <div className="banner-cover" style={{ backgroundImage: `url(http://localhost:8000/${bookDetail.cover})` }}></div>
         <section>
           <Container className="mt-5">
-              {this.isLoading(loading) || this.isError(error)}
-              {loading === false && error === false && (
-                <Row>
-                  <Col lg={3}>
-                    <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
-                  </Col>
-                  <Col lg={9}>
-                    <h2 className="font-weight-bold text-dark">{bookDetail.name}</h2>
-                    <p className="font-weight-bold text-dark">{bookDetail.author}</p>
-                    <Badge pill variant="primary mr-2 py-2 px-2">{bookDetail.genre}</Badge>
-                    <Badge pill variant="dark py-2 px-2">{bookDetail.language}</Badge>
-                    <p className="mt-3 text-justify text-dark">{bookDetail.description}</p>
-                    {store('login') ? <Button className="text-dark" onClick={(e) => this.addFavorite()}>Add to favorite</Button> : null}
-                  </Col>
-                </Row>
-              )}
+            {this.isLoading(loading) || this.isError(error)}
+            {loading === false && error === false && (
+              <Row>
+                <Col lg={3}>
+                  <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
+                </Col>
+                <Col lg={9}>
+                  <h2 className="font-weight-bold text-dark">{bookDetail.name}</h2>
+                  <p className="font-weight-bold text-dark">{bookDetail.author}</p>
+                  <Badge pill variant="primary mr-2 py-2 px-2">{bookDetail.genre}</Badge>
+                  <Badge pill variant="dark py-2 px-2">{bookDetail.language}</Badge>
+                  <p className="mt-3 text-justify text-dark">{bookDetail.description}</p>
+                  {store('login') ? <Button className="text-dark" onClick={(e) => this.addFavorite()}>Add to favorite</Button> : null}
+                </Col>
+              </Row>
+            )}
           </Container>
         </section>
 
@@ -131,7 +149,16 @@ export default class Detail extends Component {
               {this.isLoading(loading) || this.isError(error)}
               {similarBooks.map((val, index) => (
                 <Col lg={3} md={6} xs={6} key={index} className="mb-5">
-                  <Book id={val.id} cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
+                  <div onClick={(e) => this.onSimilarBook(val.id)}>
+                    <Book
+                      id={val.id}
+                      cover={val.cover}
+                      title={val.name}
+                      author={val.author}
+                      genre={val.genre}
+                      language={val.language}
+                    />
+                  </div>
                 </Col>
               ))}
             </Row>

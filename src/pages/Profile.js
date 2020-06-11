@@ -152,7 +152,7 @@ export default class Profile extends Component {
           title: 'Delete Favorite success',
           text: '',
           icon: 'success'
-        }).then(() => window.location.href = '/profile')
+        }).then(() => this.getFavorite())
       } else {
         Swal.fire({
           title: 'Delete Favorite failed',

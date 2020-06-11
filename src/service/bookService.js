@@ -27,14 +27,15 @@ export class bookService {
   // Add New Book
   async addBook(data) {
     const formData = new FormData()
-    const { bookName, bookDesc, file, bookPublished, bookLanguage } = data
+    const { bookName, bookDesc, file, bookPublished, bookLanguage, bookGenre, bookAuthor, bookStatus } = data
 
+    console.log(data)
     formData.append('name', bookName)
     formData.append('description', bookDesc)
     formData.append('picture', file)
-    formData.append('genreId', 1)
-    formData.append('authorId', 1)
-    formData.append('statusId', 1)
+    formData.append('genreId', parseInt(bookGenre.value, 10))
+    formData.append('authorId', parseInt(bookAuthor.value, 10))
+    formData.append('statusId', parseInt(bookStatus.value, 10))
     formData.append('published', bookPublished)
     formData.append('language', bookLanguage)
 
@@ -55,23 +56,24 @@ export class bookService {
 
   // Patch Data Book
   async editBook(data, id) {
-    const { bookName, bookDesc, bookPublished, bookLanguage } = data
+    const { bookName, bookDesc, bookPublished, bookLanguage, bookGenre, bookAuthor, bookStatus, bookDetail } = data
     const config = {
       headers: {
-        'content-type': 'multipart/form-data',
         'Authorization': store('apikey')
       }
     }
     try {
-      await axios.patch(`${REACT_APP_REST_URL}book/${id}`, {
-        name: bookName,
-        description: bookDesc,
-        genre_id: 1,
-        author_id: 1,
-        status_id: 1,
-        published: bookPublished,
-        language: bookLanguage
+      const edit = await axios.patch(`${REACT_APP_REST_URL}book/${id}`, {
+        name: bookName ? bookName : bookDetail.name,
+        description: bookDesc ? bookDesc : bookDetail.description,
+        genre_id: bookGenre.value ? bookGenre.value : bookDetail.genre_id,
+        author_id: bookAuthor.value ? bookAuthor.value : bookDetail.author_id,
+        status_id: bookStatus.value ? bookStatus.value : bookDetail.status_id,
+        published: bookPublished ? bookPublished : bookDetail.published,
+        language: bookLanguage ? bookLanguage : bookDetail.language
       }, config)
+      console.log(edit)
+      return edit
     } catch (error) {
       return error
     }
@@ -105,8 +107,23 @@ export class bookService {
       }
     }
     try {
-      await axios.delete(`${REACT_APP_REST_URL}book/${id}`,config)
+      await axios.delete(`${REACT_APP_REST_URL}book/${id}`, config)
       return true
+    } catch (error) {
+      return error
+    }
+  }
+
+  // Get Author
+  async getAuthor() {
+    const config = {
+      headers: {
+        'Authorization': store('apikey')
+      }
+    }
+    try {
+      const author = axios.get(`${REACT_APP_REST_URL}author`, config)
+      return author
     } catch (error) {
       return error
     }

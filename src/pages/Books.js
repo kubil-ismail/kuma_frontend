@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap'
+import { Container, Row, Col, Dropdown } from 'react-bootstrap'
+import Pagination from "react-js-pagination"
 
 // Service
 import { bookService } from '../service/bookService'
@@ -17,7 +18,9 @@ export default class Books extends Component {
     this.state = {
       loading: true,
       error: false,
-      books: []
+      books: [],
+      options: [],
+      page: 1
     }
     this.bookService = new bookService()
   }
@@ -48,7 +51,8 @@ export default class Books extends Component {
       const book = await this.bookService.getAllBook(search)
       this.setState({
         loading: false,
-        books: book.data
+        books: book.data,
+        options: book.options
       })
     } catch (err) {
       this.setState({
@@ -58,8 +62,27 @@ export default class Books extends Component {
     }
   }
 
+  handlePageChange = async (pageNumber) => {
+    try {
+      let search = this.props.location.search 
+      ? this.props.location.search + `&limit=8&page=${pageNumber}` 
+      : `?limit=8&page=${pageNumber}`
+
+      const book = await this.bookService.getAllBook(search)
+      this.setState({ 
+        page: pageNumber,
+        books: book.data,
+        options: book.options
+      })
+    } catch (error) {
+      this.setState({
+        error: true
+      }) 
+    }
+  }
+
   render() {
-    const { books, error, loading } = this.state
+    const { books, error, loading, options } = this.state
     return (
       <Fragment>
         <Navbar/>
@@ -90,15 +113,16 @@ export default class Books extends Component {
                 </Col>
               ))}
             </Row>
-            <Pagination className="justify-content-center">
-              <div className="shadow-sm d-flex">
-                <Pagination.Prev />
-                <Pagination.Item>{1}</Pagination.Item>
-                <Pagination.Ellipsis disabled/>
-                <Pagination.Item>{20}</Pagination.Item>
-                <Pagination.Next />
-              </div>
-            </Pagination>
+            <Pagination
+              activePage={options.page}
+              itemsCountPerPage={options.perPage}
+              totalItemsCount={parseInt(options.totalData,10)}
+              pageRangeDisplayed={5}
+              onChange={this.handlePageChange.bind(this)}
+              itemClass="page-item"
+              linkClass="page-link"
+              hideNavigation={true}
+            />
           </Container>
         </section>
 
