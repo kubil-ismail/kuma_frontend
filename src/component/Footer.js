@@ -7,7 +7,7 @@ export default function Footer() {
       <Container>
         <Row>
           <Col lg={12} className="mt-sm-2 text-center text-white py-2">
-            <p className="h6">© All right Reversed | Build By <a className="text-green ml-2" href="https://www.sunlimetech.com" >Bilkis Ismail</a></p>
+            <p className="h6">© All right Reversed | Build By <a href="https://github.com/kubil-ismail" >Bilkis Ismail</a></p>
           </Col>
         </Row>
       </Container>

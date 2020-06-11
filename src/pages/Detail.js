@@ -124,9 +124,9 @@ export default class Detail extends Component {
             {loading === false && error === false && (
               <Row>
                 <Col lg={3}>
-                  <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
+                  <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 animate__animated animate__fadeInLeft rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
                 </Col>
-                <Col lg={9}>
+                <Col lg={9} className="animate__animated animate__fadeIn">
                   <h2 className="font-weight-bold text-dark">{bookDetail.name}</h2>
                   <p className="font-weight-bold text-dark">{bookDetail.author}</p>
                   <Badge pill variant="primary mr-2 py-2 px-2">{bookDetail.genre}</Badge>

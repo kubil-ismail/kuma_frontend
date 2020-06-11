@@ -13,6 +13,7 @@ import Forget from './pages/Forget'
 import SignUp from './pages/SignUp'
 import adminBooks from './pages/admin/adminBooks';
 import adminDetail from './pages/admin/adminDetail';
+import Genres from './pages/Genres';
 
 function App() {
   const hasLogin = store('login')
@@ -22,6 +23,7 @@ function App() {
     <Router>
       <Switch>
         <Route path='/' exact component={Home} />
+        <Route path='/books/:genre' exact component={Genres} />
 
         {/* Auth */}
         {hasLogin
@@ -39,12 +41,12 @@ function App() {
         {adminLogin && role === 2
           ? (
             <Fragment>
-              <Route path='/books' component={adminBooks} />
+              <Route path='/books' exact component={adminBooks} />
               <Route path='/detail/:bookName' component={adminDetail} />
             </Fragment>
           ) : (
             <Fragment>
-              <Route path='/books' component={Books} />
+              <Route path='/books' exact component={Books} />
               <Route path='/detail/:bookName' component={Detail} />
             </Fragment>
           )

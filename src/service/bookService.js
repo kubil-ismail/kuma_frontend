@@ -10,6 +10,13 @@ export class bookService {
     return data
   }
 
+  // Get book by genres
+  async getGenreBook(id,param=null) {
+    const result = await axios.get(`${REACT_APP_REST_URL}book/genre/${id}${param?param:'?limit=8'}`)
+    const { data } = result
+    return data
+  }
+
   // Get Detail Book
   async getBookDetail(id) {
     const result = await axios.get(`${REACT_APP_REST_URL}book/${id}`)

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 const url = 'http://localhost:8000/'
 export default function Book(props) {
   return (
-    <Card className="border-0 bg-transparent hvr-grow">
+    <Card className="border-0 bg-transparent animate__animated animate__fadeInUp">
       <Card.Img variant="top" src={`${url}${props.cover}`} className="rounded mx-auto shadow card-cover" />
       <Card.Body className="px-0">
         <Card.Title className="font-weight-bold text-truncate">{props.title}</Card.Title>

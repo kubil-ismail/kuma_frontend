@@ -1,13 +1,14 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 import { Card } from 'react-bootstrap'
-// import genreBook from '../assets/img/genre.jpg'
 
 export default function Genre(props) {
   return (
-    <Card className="border-0 bg-transparent hvr-grow">
-      <Card.Img variant="top" src='https://source.unsplash.com/WEQbe2jBg40/600x1200' className="rounded mx-auto genre-cover" />
-      <Link to="/detail" className="stretched-link text-center font-weight-bold genre-text text-white">{props.name}</Link>
-    </Card>
+    <Link to={{ pathname: `/books/${props.name}`, query: { genreId: props.id } }}>
+      <Card className="border-0 bg-transparent animate__animated animate__fadeInUp">
+        <Card.Img variant="top" src='https://source.unsplash.com/WEQbe2jBg40/600x1200' className="rounded mx-auto genre-cover" />
+        <p className="stretched-link text-center font-weight-bold genre-text text-white">{props.name}</p>
+      </Card>
+    </Link>
   )
 }

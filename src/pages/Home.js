@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import banner from '../assets/img/banner.png'
 
 // Service
@@ -79,13 +79,10 @@ export default class Home extends Component {
               </Col>
               <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0 animate__animated animate__fadeInRight">
                 <div className="banner-content">
-                  <h1 className="font-weight-bold">Kuma Bookstore</h1>
+                  <h1 className="font-weight-bold">Kuma Book</h1>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Etiam condimentum aliquam ultrices. Sed bibendum enim sed congue commodo.
-                    Nunc suscipit quam quis accumsan congue.
+                    The world's largest novel and manga wikipedia and database 100% free
                   </p>
-                  <Button>More Info</Button>
                 </div>
               </Col>
             </Row>
@@ -119,7 +116,7 @@ export default class Home extends Component {
               {this.isLoading(loading) || this.isError(error)}
               {genres.map((val, index) => (
                 <Col lg={2} md={4} xs={6} key={index} className="mb-5">
-                  <Genre name={val.name} />
+                  <Genre name={val.name} id={val.id} />
                 </Col>
               ))}
             </Row>

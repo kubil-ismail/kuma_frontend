@@ -174,7 +174,7 @@ export default class Profile extends Component {
           <Container className="mt-5">
             <Row>
               <Col lg={4} className="mb-5">
-                <Card className="shadow-sm p-5">
+                <Card className="shadow-sm p-5 animate__animated animate__fadeIn">
                   <div className="d-flex justify-content-center">
                     <img src={profile} className="w-50 rounded-circle img-thumbnail" alt="profile" />
                   </div>
@@ -187,17 +187,17 @@ export default class Profile extends Component {
                     <Button variant={edit ? 'dark' : 'primary'} onClick={(e) => this.closeEditForm()}>Favorite</Button>
                     <Button variant={!edit ? 'dark' : 'primary'} onClick={(e) => this.showEditForm()}>Edit Profile</Button>
                   </ButtonGroup>
-                  <ul className="px-3">
-                    <li>{email}</li>
-                    <li>{facebook}</li>
-                    <li>{instagram}</li>
-                    <li>{twitter}</li>
+                  <ul className="pl-3 profile-list">
+                    <li><i class="fa fa-envelope mr-2" aria-hidden="true"/> {email} </li>
+                    <li><i class="fa fa-facebook-official mr-2" aria-hidden="true"/> {facebook}</li>
+                    <li><i class="fa fa-instagram mr-2" aria-hidden="true"/> {instagram}</li>
+                    <li><i class="fa fa-twitter-square mr-2" aria-hidden="true"/> {twitter}</li>
                   </ul>
                 </Card>
               </Col>
               {edit ? (
-                <Col lg={8}>
-                  <Card className="shadow-sm p-5 mb-5">
+                <Col lg={8} className="animate__animated animate__fadeInRight">
+                  <Card className="shadow-sm p-5 mb-5 animate__animated animate__fadeInRight">
                     <h3>Edit Profile</h3>
                     <hr />
                     <Form onSubmit={this.onEdit}>
@@ -213,7 +213,7 @@ export default class Profile extends Component {
                     </Form>
                   </Card>
 
-                  <Card className="shadow-sm p-5 mb-5">
+                  <Card className="shadow-sm p-5 mb-5 animate__animated animate__fadeInRight">
                     <h3>Social Media</h3>
                     <hr />
                     <Form onSubmit={this.onEdit2}>
@@ -235,7 +235,7 @@ export default class Profile extends Component {
                 </Col>
               ) : (
                   <Col lg={8}>
-                    <Card className="shadow-sm p-5 mb-5">
+                    <Card className="shadow-sm p-5 mb-5 animate__animated animate__fadeInRight">
                       <h3>Favorites</h3>
                       <hr />
                       {favorites.length === 0 ? 
