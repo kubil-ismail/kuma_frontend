@@ -6,6 +6,7 @@ import store from 'store2'
 import Swal from 'sweetalert2'
 
 // Service
+import { bookService } from '../service/bookService'
 import { profileService } from '../service/profileService'
 
 // Component
@@ -27,14 +28,17 @@ export default class Profile extends Component {
       email: null,
       favorites: [],
       loading: true,
-      error: false
+      error: false,
+      reviews: []
     }
 
     this.profileService = new profileService()
+    this.bookService = new bookService()
   }
 
   getProfile = async () => {
     const profile = await this.profileService.getProfile({ id: store('userId') })
+    const reviewBook = await this.bookService.getUserReview(store('userId'))
     const { fullname, bio, role_id, email, facebook, twitter, instagram } = profile.data[0]
     this.setState({
       name: fullname,
@@ -44,7 +48,8 @@ export default class Profile extends Component {
       instagram: instagram,
       twitter: twitter,
       email: email,
-      edit: false
+      edit: false,
+      reviews: reviewBook.data.data
     })
   }
 
@@ -165,8 +170,29 @@ export default class Profile extends Component {
     }
   }
 
+  deleteReview = async (id) => {
+    try {
+      const deleted = await this.bookService.deleteReview(id)
+      if (deleted.data.status) {
+        Swal.fire({
+          title: 'Delete Review success',
+          text: '',
+          icon: 'success'
+        }).then(() => this.getProfile())
+      } else {
+        Swal.fire({
+          title: 'Delete Review failed',
+          text: '',
+          icon: 'error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
-    const { edit, name, bio, role, email, facebook, twitter, instagram, favorites } = this.state
+    const { edit, name, bio, role, email, facebook, twitter, instagram, favorites, reviews } = this.state
     return (
       <Fragment>
         <Navbar />
@@ -188,10 +214,10 @@ export default class Profile extends Component {
                     <Button variant={!edit ? 'dark' : 'primary'} onClick={(e) => this.showEditForm()}>Edit Profile</Button>
                   </ButtonGroup>
                   <ul className="pl-3 profile-list">
-                    <li><i class="fa fa-envelope mr-2" aria-hidden="true"/> {email} </li>
-                    <li><i class="fa fa-facebook-official mr-2" aria-hidden="true"/> {facebook}</li>
-                    <li><i class="fa fa-instagram mr-2" aria-hidden="true"/> {instagram}</li>
-                    <li><i class="fa fa-twitter-square mr-2" aria-hidden="true"/> {twitter}</li>
+                    <li><i className="fa fa-envelope mr-2" aria-hidden="true"/> {email} </li>
+                    <li><i className="fa fa-facebook-official mr-2" aria-hidden="true"/> {facebook}</li>
+                    <li><i className="fa fa-instagram mr-2" aria-hidden="true"/> {instagram}</li>
+                    <li><i className="fa fa-twitter-square mr-2" aria-hidden="true"/> {twitter}</li>
                   </ul>
                 </Card>
               </Col>
@@ -264,6 +290,38 @@ export default class Profile extends Component {
                             ))}
                           </tbody>
                         </Table>
+                      }
+                    </Card>
+
+                    <Card className="shadow-sm p-5 mb-5 animate__animated animate__fadeInRight">
+                      <h3>Review</h3>
+                      <hr />
+                      {reviews.length ?
+                        <Table striped bordered hover responsive>
+                          <thead>
+                            <tr>
+                              <th>No</th>
+                              <th>Book</th>
+                              <th>Review</th>
+                              <th>Manage</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {console.log(reviews)}
+                            {reviews.map((res, key) => (
+                              <tr key={key}>
+                                <td>{++key}</td>
+                                <td>{res.name}</td>
+                                <td>{res.review}</td>
+                                <td>
+                                  <Button onClick={(e) => this.deleteReview(res.id)} variant="danger">Delete</Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                        :
+                        <Alert variant="warning" message="Review book not found" />
                       }
                     </Card>
                   </Col>

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap'
+import { Container, Row, Col, Badge, Button, Form, Modal } from 'react-bootstrap'
 import store from 'store2'
 import Swal from 'sweetalert2'
 
@@ -13,6 +13,7 @@ import Footer from '../component/Footer'
 import Alert from '../component/Alert'
 import Loader from '../component/Loader'
 import Book from '../component/Book'
+import Review from '../component/Review'
 
 export default class Detail extends Component {
   constructor(props) {
@@ -20,8 +21,12 @@ export default class Detail extends Component {
     this.state = {
       loading: true,
       error: false,
+      url: 'http://localhost:8000/',
       similarBooks: [],
-      bookDetail: []
+      bookDetail: [],
+      review: [],
+      showAddModal: false,
+      bookReview: null
     }
 
     if (this.props.location.query) {
@@ -55,11 +60,13 @@ export default class Detail extends Component {
   async componentDidMount() {
     try {
       const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
-      const SimilarBook = await this.bookService.getBook()
+      const SimilarBook = await this.bookService.getGenreBook(getBookDetail.genre_id, '?limit=4')
+      const reviewBook = await this.bookService.getReview(store('bookId'))
       this.setState({
         loading: false,
         similarBooks: SimilarBook.data,
-        bookDetail: getBookDetail
+        bookDetail: getBookDetail,
+        review: reviewBook.data.data
       })
     } catch (err) {
       this.setState({
@@ -94,14 +101,17 @@ export default class Detail extends Component {
   }
 
   onSimilarBook = async (id) => {
+    this.setState({ loading: true })
     try {
       store({ 'bookId': id })
       const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
-      const SimilarBook = await this.bookService.getBook()
+      const SimilarBook = await this.bookService.getGenreBook(getBookDetail.genre_id, '?limit=4')
+      const reviewBook = await this.bookService.getReview(store('bookId'))
       this.setState({
         loading: false,
         similarBooks: SimilarBook.data,
-        bookDetail: getBookDetail
+        bookDetail: getBookDetail,
+        review: reviewBook.data.data
       })
     } catch (err) {
       this.setState({
@@ -111,20 +121,59 @@ export default class Detail extends Component {
     }
   }
 
+  handleAddClose = () => {
+    this.setState({ showAddModal: false })
+  }
+
+  handleAddShow = () => {
+    this.setState({ showAddModal: true })
+  }
+
+  onReview = async (e) => {
+    this.setState({ loading: true })
+    try {
+      e.preventDefault()
+      Swal.fire({
+        title: 'Review Book success',
+        text: 'Thanks for review',
+        icon: 'success'
+      })
+      const data = {
+        book_id: store('bookId'),
+        user_id: store('userId'),
+        review: this.state.bookReview,
+        rating: 10
+      }
+      await this.bookService.addReview(data)
+      const reviewBook = await this.bookService.getReview(store('bookId'))
+      this.setState({
+        loading: false,
+        review: reviewBook.data.data,
+        showAddModal: false
+      })
+    } catch (error) {
+      Swal.fire({
+        title: 'Review Book failed',
+        text: 'Please try again later',
+        icon: 'error'
+      })
+    }
+  }
+
   render() {
-    const { similarBooks, bookDetail, loading, error } = this.state
+    const { similarBooks, bookDetail, loading, error, review, showAddModal } = this.state
     return (
       <Fragment>
         <Navbar />
 
-        <div className="banner-cover" style={{ backgroundImage: `url(http://localhost:8000/${bookDetail.cover})` }}></div>
+        <div className="banner-cover" style={{ backgroundImage: `url(${this.state.url}${bookDetail.cover})` }}></div>
         <section>
           <Container className="mt-5">
             {this.isLoading(loading) || this.isError(error)}
             {loading === false && error === false && (
               <Row>
                 <Col lg={3}>
-                  <img src={`http://localhost:8000/${bookDetail.cover}`} className="w-100 animate__animated animate__fadeInLeft rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
+                  <img src={`${this.state.url}${bookDetail.cover}`} className="w-100 animate__animated animate__fadeInLeft rounded shadow-lg mb-5 mb-lg-0" alt="Cover" />
                 </Col>
                 <Col lg={9} className="animate__animated animate__fadeIn">
                   <h2 className="font-weight-bold text-dark">{bookDetail.name}</h2>
@@ -132,10 +181,41 @@ export default class Detail extends Component {
                   <Badge pill variant="primary mr-2 py-2 px-2">{bookDetail.genre}</Badge>
                   <Badge pill variant="dark py-2 px-2">{bookDetail.language}</Badge>
                   <p className="mt-3 text-justify text-dark">{bookDetail.description}</p>
-                  {store('login') ? <Button className="text-dark" onClick={(e) => this.addFavorite()}>Add to favorite</Button> : null}
+                  {
+                    store('login')
+                      ? <div>
+                        <Button className="text-dark" onClick={(e) => this.addFavorite()}>Add to favorite</Button>
+                        <Button variant="dark" className="ml-2" onClick={(e) => this.handleAddShow()}>Add Review</Button>
+                      </div>
+                      : null
+                  }
                 </Col>
               </Row>
             )}
+          </Container>
+        </section>
+
+        <section>
+          <Container className="my-5 animate__animated animate__fadeIn">
+            <div className="head-title">
+              <h2 className="font-weight-bold">Review Book</h2>
+              <div className="divinder"></div>
+            </div>
+            <Row>
+              {this.isLoading(loading) || this.isError(error)}
+              {console.log(review)}
+              {
+                review.length
+                  ? review.map((val, key) => (
+                    <Col lg={12} key={key}>
+                      <Review review={val.review} user={val.fullname} date={val.created_at} />
+                    </Col>
+                  )) :
+                  <Col lg={12}>
+                    <Alert variant="warning" message="Review not found" />
+                  </Col>
+              }
+            </Row>
           </Container>
         </section>
 
@@ -164,6 +244,32 @@ export default class Detail extends Component {
             </Row>
           </Container>
         </section>
+
+        <Modal show={showAddModal} onHide={this.handleAddClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Review Book</Modal.Title>
+          </Modal.Header>
+          <Form onSubmit={this.onReview}>
+            <Modal.Body>
+              <Row>
+                <Col lg={12}>
+                  <Form.Group controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Review</Form.Label>
+                    <Form.Control as="textarea" rows="5" onChange={(e) => this.setState({ bookReview: e.target.value })} />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleAddClose}>
+                Close
+              </Button>
+              <Button variant="primary" type="submit">
+                Add New
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
 
         <Footer />
       </Fragment>

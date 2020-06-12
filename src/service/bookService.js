@@ -11,8 +11,8 @@ export class bookService {
   }
 
   // Get book by genres
-  async getGenreBook(id,param=null) {
-    const result = await axios.get(`${REACT_APP_REST_URL}book/genre/${id}${param?param:'?limit=8'}`)
+  async getGenreBook(id, param = null) {
+    const result = await axios.get(`${REACT_APP_REST_URL}book/genre/${id}${param ? param : '?limit=8'}`)
     const { data } = result
     return data
   }
@@ -36,7 +36,6 @@ export class bookService {
     const formData = new FormData()
     const { bookName, bookDesc, file, bookPublished, bookLanguage, bookGenre, bookAuthor, bookStatus } = data
 
-    console.log(data)
     formData.append('name', bookName)
     formData.append('description', bookDesc)
     formData.append('picture', file)
@@ -134,5 +133,68 @@ export class bookService {
     } catch (error) {
       return error
     }
+  }
+
+  // Get Review Book
+  async getReview(id) {
+    const config = {
+      params: {
+        'book_id': id
+      }
+    }
+    try {
+      const review = axios.get(`${REACT_APP_REST_URL}review`, config)
+      return review
+    } catch (error) {
+      return error
+    }
+  }
+
+  // Get User Review Book
+  async getUserReview(id) {
+    const config = {
+      params: {
+        'userId': id
+      }
+    }
+    try {
+      const review = axios.get(`${REACT_APP_REST_URL}review`, config)
+      return review
+    } catch (error) {
+      return error
+    }
+  }
+
+  // Add new Review
+  async addReview(data) {
+    const { book_id, user_id, review, rating } = data
+    const config = {
+      headers: {
+        'Authorization': store('apikey')
+      }
+    }
+
+    try {
+      await axios.post(`${REACT_APP_REST_URL}review`, {
+        book_id: parseInt(book_id, 10),
+        user_id: parseInt(user_id, 10),
+        review: review,
+        rating: parseInt(rating, 10)
+      }, config)
+      return true
+    } catch (error) {
+      return error
+    }
+  }
+
+  // Delete review User
+  async deleteReview(id) {
+    const config = {
+      headers: {
+        'Authorization': store('apikey')
+      }
+    }
+    const deleteReview = await axios.delete(`${REACT_APP_REST_URL}review/${id}`, config)
+    return deleteReview
   }
 }

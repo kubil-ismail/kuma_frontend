@@ -1,16 +1,22 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from "react-router-dom"
-import { Navbar, Nav, Form, FormControl, Container, Button } from 'react-bootstrap'
+import { Navbar, Nav, Form, FormControl, Container, Button, NavDropdown } from 'react-bootstrap'
 import store from 'store2'
 import logo from '../assets/img/logo.png'
+
+// Service
+import { genreService } from '../service/genreService'
 
 export default class Navbars extends Component {
   constructor(props) {
     super(props)
     this.state = {
       hasLogin: store('login') || false,
-      keyword: null
+      keyword: null,
+      genres: []
     }
+
+    this.genreService = new genreService()
   }
 
   logout = () => {
@@ -23,8 +29,19 @@ export default class Navbars extends Component {
     window.location.href = `/books?search=${this.state.keyword}`
   }
 
+  async componentDidMount() {
+    try {
+      const genre = await this.genreService.getGenre()
+      this.setState({
+        genres: genre.data
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   render() {
-    const { hasLogin } = this.state
+    const { hasLogin, genres } = this.state
     return (
       <Fragment>
         <Navbar bg="white" expand="lg" fixed="top" className="shadow-sm animate__animated animate__fadeInDown">
@@ -37,6 +54,11 @@ export default class Navbars extends Component {
               <Nav className="mr-auto ml-lg-3 text-center">
                 <Link className="nav-link" to="/">Home</Link>
                 <Link className="nav-link" to="/books">Book</Link>
+                <NavDropdown title="Genre" id="basic-nav-dropdown">
+                  {genres ? genres.map((val,key)=>(
+                    <Link key={key} className="dropdown-item" to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
+                  )) : null}
+                </NavDropdown>
               </Nav>
               <Nav className="ml-auto">
                 <Form onSubmit={this.onSearch} className="d-lg-flex d-none" inline>

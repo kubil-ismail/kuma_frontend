@@ -20,7 +20,8 @@ export default class Books extends Component {
       error: false,
       books: [],
       options: [],
-      page: 1
+      page: 1,
+      sort: 1
     }
     this.bookService = new bookService()
   }
@@ -64,12 +65,12 @@ export default class Books extends Component {
 
   handlePageChange = async (pageNumber) => {
     try {
-      let search = this.props.location.search 
-      ? this.props.location.search + `&limit=8&page=${pageNumber}` 
-      : `?limit=8&page=${pageNumber}`
+      let search = this.props.location.search
+        ? this.props.location.search + `&limit=8&page=${pageNumber}`
+        : `?limit=8&page=${pageNumber}`
 
       const book = await this.bookService.getAllBook(search)
-      this.setState({ 
+      this.setState({
         page: pageNumber,
         books: book.data,
         options: book.options
@@ -77,15 +78,30 @@ export default class Books extends Component {
     } catch (error) {
       this.setState({
         error: true
-      }) 
+      })
+    }
+  }
+
+  onSort = (sort) => {
+    const { books } = this.state
+    if (parseInt(sort, 10) === 2) {
+      books.sort(function (a, b) {
+        return a - b
+      })
+      this.setState({ books: books, sort: 2 })
+    } else {
+      books.sort(function (a, b) {
+        return a - b
+      })
+      this.setState({ books: books, sort: 1 })
     }
   }
 
   render() {
-    const { books, error, loading, options } = this.state
+    const { books, error, loading, options, sort } = this.state
     return (
       <Fragment>
-        <Navbar/>
+        <Navbar />
 
         <section>
           <Container className="mt-5 animate__animated animate__fadeIn">
@@ -99,9 +115,8 @@ export default class Books extends Component {
                   Sort
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Sort by name</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">Sort by lates</Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">Sort by popularity</Dropdown.Item>
+                  <Dropdown.Item active={sort === 1 ? true : false} onClick={() => this.onSort('1')}>Sort by name A - Z</Dropdown.Item>
+                  <Dropdown.Item active={sort === 2 ? true : false} onClick={() => this.onSort('2')}>Sort by name Z - A</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -116,7 +131,7 @@ export default class Books extends Component {
             <Pagination
               activePage={options.page}
               itemsCountPerPage={options.perPage}
-              totalItemsCount={parseInt(options.totalData,10)}
+              totalItemsCount={parseInt(options.totalData, 10)}
               pageRangeDisplayed={5}
               onChange={this.handlePageChange.bind(this)}
               itemClass="page-item"
