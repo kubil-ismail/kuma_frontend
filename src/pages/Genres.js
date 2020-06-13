@@ -105,7 +105,7 @@ export default class Genres extends Component {
     const { books, error, loading, options, sort } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
 
         <section>
           <Container className="mt-5 animate__animated animate__fadeIn">

@@ -146,7 +146,7 @@ export default class adminDetail extends Component {
     const { bookDetail, loading, error } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
 
         <div className="banner-cover" style={{ backgroundImage: `url(http://localhost:8000/${bookDetail.cover})` }}></div>
         <section>

@@ -26,15 +26,17 @@ function App() {
         <Route path='/books/:genre' exact component={Genres} />
 
         {/* Auth */}
+        <Route path='/login' component={Login} />
         {hasLogin
           ? (
-            <Route path='/profile' component={Profile} />
+            <div>
+              <Route path='/profile' component={Profile} />
+            </div>
           ) : (
-            <Fragment>
-              <Route path='/login' component={Login} />
+            <div>
               <Route path='/sign-up' component={SignUp} />
               <Route path='/forget' component={Forget} />
-            </Fragment>
+            </div>
           )}
       </Switch>
       <Switch>

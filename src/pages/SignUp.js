@@ -103,7 +103,7 @@ export default class SignUp extends Component {
     return (
       <Fragment>
         <div className="d-lg-none">
-          <Navbar />
+          <Navbar {...this.props} />
         </div>
         <Container fluid>
           <Row className="no-gutter">

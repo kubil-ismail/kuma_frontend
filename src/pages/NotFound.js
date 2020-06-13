@@ -9,7 +9,7 @@ export default class NotFound extends Component {
   render() {
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
         <Container>
           <Row>
             <Col lg={12}>

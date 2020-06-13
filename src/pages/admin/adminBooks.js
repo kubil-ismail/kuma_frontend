@@ -131,7 +131,7 @@ export default class adminBooks extends Component {
     const { showAddModal, books, options } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
         <section>
           <Container className="mt-5">
             <Card className="p-3">

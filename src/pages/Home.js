@@ -69,7 +69,7 @@ export default class Home extends Component {
     const { books, genres, error, loading } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props}/>
 
         <section>
           <Container className="mt-5">

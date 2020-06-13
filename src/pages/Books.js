@@ -24,6 +24,7 @@ export default class Books extends Component {
       sort: 1
     }
     this.bookService = new bookService()
+    console.log(this.props.location)
   }
 
   isLoading = (load) => {
@@ -101,7 +102,7 @@ export default class Books extends Component {
     const { books, error, loading, options, sort } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
 
         <section>
           <Container className="mt-5 animate__animated animate__fadeIn">

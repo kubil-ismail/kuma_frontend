@@ -164,7 +164,7 @@ export default class Detail extends Component {
     const { similarBooks, bookDetail, loading, error, review, showAddModal } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
 
         <div className="banner-cover" style={{ backgroundImage: `url(${this.state.url}${bookDetail.cover})` }}></div>
         <section>

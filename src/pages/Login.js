@@ -19,6 +19,16 @@ export default class Login extends Component {
       loading: false
     }
     this.authService = new authService()
+    console.log(store())
+    if(store('exit')){
+      Swal.fire({
+        title: 'Logout Success',
+        text: '',
+        icon: 'success'
+      }).then(() => {
+        store(false)
+      })
+    }
   }
 
   onLogin = async () => {
@@ -68,7 +78,7 @@ export default class Login extends Component {
     return (
       <Fragment>
         <div className="d-lg-none">
-          <Navbar />
+          <Navbar {...this.props} />
         </div>
         <Container fluid>
           <Row className="no-gutter">

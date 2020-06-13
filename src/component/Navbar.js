@@ -15,18 +15,22 @@ export default class Navbars extends Component {
       keyword: null,
       genres: []
     }
-
     this.genreService = new genreService()
   }
 
   logout = () => {
-    store(false)
-    window.location.href = '/login'
+    store({ exit: true })
+    this.props.history.push({
+      pathname: '/login'
+    })
   }
 
   onSearch = (e) => {
     e.preventDefault()
-    window.location.href = `/books?search=${this.state.keyword}`
+    this.props.history.push({
+      pathname: '/books',
+      search: `?search=${this.state.keyword}`
+    })
   }
 
   async componentDidMount() {
@@ -55,7 +59,7 @@ export default class Navbars extends Component {
                 <Link className="nav-link" to="/">Home</Link>
                 <Link className="nav-link" to="/books">Book</Link>
                 <NavDropdown title="Genre" id="basic-nav-dropdown">
-                  {genres ? genres.map((val,key)=>(
+                  {genres ? genres.map((val, key) => (
                     <Link key={key} className="dropdown-item" to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
                   )) : null}
                 </NavDropdown>

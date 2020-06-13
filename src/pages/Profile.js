@@ -195,7 +195,7 @@ export default class Profile extends Component {
     const { edit, name, bio, role, email, facebook, twitter, instagram, favorites, reviews } = this.state
     return (
       <Fragment>
-        <Navbar />
+        <Navbar {...this.props} />
         <section>
           <Container className="mt-5">
             <Row>
