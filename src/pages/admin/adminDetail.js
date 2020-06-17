@@ -196,7 +196,6 @@ export default class adminDetail extends Component {
                         type="text" 
                         placeholder="Book Name..." 
                         onChange={(e) => this.setState({ bookName: e.target.value })} 
-                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookLanguage">
@@ -205,7 +204,6 @@ export default class adminDetail extends Component {
                         type="text" 
                         placeholder="Language..." 
                         onChange={(e) => this.setState({ bookLanguage: e.target.value })} 
-                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookDate">
@@ -214,7 +212,6 @@ export default class adminDetail extends Component {
                         type="date" 
                         placeholder="dd/mm/yyyy"
                         onChange={(e) => this.setState({ bookPublished: e.target.value })}
-                        required 
                       />
                     </Form.Group>
                     <Form.Group controlId="bookGenre">
@@ -223,7 +220,6 @@ export default class adminDetail extends Component {
                         value={this.state.bookGenre}
                         onChange={this.changeGenre}
                         options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
-                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookAuthor">
@@ -232,7 +228,6 @@ export default class adminDetail extends Component {
                         value={this.state.bookAuthor}
                         onChange={this.changeAuthor}
                         options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
-                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookAuthor">
@@ -245,7 +240,6 @@ export default class adminDetail extends Component {
                           { value: 2, label: 'Pending' },
                           { value: 3, label: 'Not Available' }
                         ]}
-                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -254,7 +248,6 @@ export default class adminDetail extends Component {
                         as="textarea" 
                         rows="5" 
                         onChange={(e) => this.setState({ bookDesc: e.target.value })} 
-                        required
                       />
                     </Form.Group>
 

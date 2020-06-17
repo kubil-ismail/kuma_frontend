@@ -19,7 +19,7 @@ export default class Login extends Component {
       loading: false
     }
     this.authService = new authService()
-    console.log(store())
+    // Logout
     if(store('exit')){
       Swal.fire({
         title: 'Logout Success',
@@ -54,7 +54,7 @@ export default class Login extends Component {
           text: 'Welcome to kuma book',
           icon: 'success'
         }).then(() => {
-          window.location.href = "/profile"
+          this.props.history.push("/profile")
         })
       } else {
         Swal.fire({

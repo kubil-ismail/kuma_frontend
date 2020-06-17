@@ -24,7 +24,6 @@ export default class Books extends Component {
       sort: 1
     }
     this.bookService = new bookService()
-    console.log(this.props.location)
   }
 
   isLoading = (load) => {

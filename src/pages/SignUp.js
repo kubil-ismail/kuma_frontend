@@ -36,7 +36,7 @@ export default class SignUp extends Component {
     const activate = await this.authService.activate(this.state)
     this.setState({ loading: false })
     if (activate) {
-      store({ signUp: true})
+      store({ signUp: true })
       Swal.fire({
         title: 'Activate Success',
         text: 'Login to continue',
@@ -63,14 +63,14 @@ export default class SignUp extends Component {
         const signUp = await this.onsignUp()
         this.setState({ loading: false })
         if (signUp.status === 200) {
+          this.setState({ sendCode: true })
           store({ sendCode: true, email: email })
-
           Swal.fire({
             title: 'Sign In Success',
             text: 'Check your email for code activation',
             icon: 'success'
           }).then(() => {
-            window.location.href = '/sign-up'
+            this.props.history.push("/sign-up")
           })
         } else {
           Swal.fire({
