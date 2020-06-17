@@ -2,6 +2,10 @@ import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import store from 'store2'
 
+// Use Redux
+import { Provider } from 'react-redux'
+import reduxStore from './redux/store'
+
 // Pages
 import Home from './pages/Home'
 import Books from './pages/Books'
@@ -16,46 +20,39 @@ import adminDetail from './pages/admin/adminDetail';
 import Genres from './pages/Genres';
 
 function App() {
-  const hasLogin = store('login')
   const role = store('role')
   const adminLogin = store('adminLogin')
   return (
-    <Router>
-      <Switch>
-        <Route path='/' exact component={Home} />
-        <Route path='/books/:genre' exact component={Genres} />
-
-        {/* Auth */}
-        <Route path='/login' component={Login} />
-        {hasLogin
-          ? (
-            <div>
-              <Route path='/profile' component={Profile} />
-            </div>
-          ) : (
-            <div>
-              <Route path='/sign-up' component={SignUp} />
-              <Route path='/forget' component={Forget} />
-            </div>
-          )}
-      </Switch>
-      <Switch>
-        {adminLogin && role === 2
-          ? (
-            <Fragment>
-              <Route path='/books' exact component={adminBooks} />
-              <Route path='/detail/:bookName' component={adminDetail} />
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Route path='/books' exact component={Books} />
-              <Route path='/detail/:bookName' component={Detail} />
-            </Fragment>
-          )
-        }
-      </Switch>
-    </Router>
-  );
+    <Provider store={reduxStore}>
+      <Router>
+        <Switch>
+          <Route path='/' exact component={Home} />
+          <Route path='/books/:genre' exact component={Genres} />
+          <Route path='/profile' component={Profile} />
+          
+          {/* Auth */}
+          <Route path='/login' component={Login} />
+          <Route path='/sign-up' component={SignUp} />
+          <Route path='/forget' component={Forget} />
+        </Switch>
+        <Switch>
+          {adminLogin && role === 2
+            ? (
+              <Fragment>
+                <Route path='/books' exact component={adminBooks} />
+                <Route path='/detail/:bookName' component={adminDetail} />
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Route path='/books' exact component={Books} />
+                <Route path='/detail/:bookName' component={Detail} />
+              </Fragment>
+            )
+          }
+        </Switch>
+      </Router>
+    </Provider>
+  )
 }
 
-export default App;
+export default App

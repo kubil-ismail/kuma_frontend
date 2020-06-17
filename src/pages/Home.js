@@ -3,6 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 import banner from '../assets/img/banner.png'
 
 // Service
+import { connect } from 'react-redux'
+import { genreList, bookList } from '../redux/actions/startActions'
 import { bookService } from '../service/bookService'
 import { genreService } from '../service/genreService'
 
@@ -14,7 +16,7 @@ import Footer from '../component/Footer'
 import Alert from '../component/Alert'
 import Loader from '../component/Loader'
 
-export default class Home extends Component {
+export class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -23,7 +25,6 @@ export default class Home extends Component {
       books: [],
       genres: []
     }
-
     this.bookService = new bookService()
     this.genreService = new genreService()
   }
@@ -52,10 +53,12 @@ export default class Home extends Component {
     try {
       const book = await this.bookService.getBook()
       const genre = await this.genreService.getGenre()
+      this.props.genreList(genre.data)
+      this.props.bookList(book.data)
       this.setState({
         loading: false,
-        books: book.data,
-        genres: genre.data
+        books: this.props.book,
+        genres: this.props.genre
       })
     } catch (err) {
       this.setState({
@@ -69,7 +72,7 @@ export default class Home extends Component {
     const { books, genres, error, loading } = this.state
     return (
       <Fragment>
-        <Navbar {...this.props}/>
+        <Navbar {...this.props} book={this.props.book}/>
 
         <section>
           <Container className="mt-5">
@@ -128,3 +131,12 @@ export default class Home extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  genre: state.start.genre[0],
+  book: state.start.book[0]
+})
+
+const mapDispatchToProps = { genreList, bookList }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

@@ -21,7 +21,8 @@ export default class Books extends Component {
       books: [],
       options: [],
       page: 1,
-      sort: 1
+      sort: 1,
+      search: null
     }
     this.bookService = new bookService()
   }
@@ -53,12 +54,14 @@ export default class Books extends Component {
       this.setState({
         loading: false,
         books: book.data,
-        options: book.options
+        options: book.options,
+        search: this.props.location.search
       })
     } catch (err) {
       this.setState({
         loading: false,
-        error: true
+        error: true,
+        search: this.props.location.search
       })
     }
   }
@@ -94,6 +97,29 @@ export default class Books extends Component {
         return a - b
       })
       this.setState({ books: books, sort: 1 })
+    }
+  }
+
+  async componentDidUpdate() {
+    if (this.props.location.search && this.state.search !== this.props.location.search) {
+      try {
+        let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
+        const book = await this.bookService.getAllBook(search)
+        this.setState({
+          loading: false,
+          books: book.data,
+          options: book.options,
+          search: this.props.location.search,
+          error: false
+        })
+      } catch (err) {
+        this.setState({
+          loading: false,
+          error: true,
+          books: [],
+          search: this.props.location.search
+        })
+      }
     }
   }
 

@@ -73,7 +73,10 @@ export default class adminBooks extends Component {
 
   onSearch = (e) => {
     e.preventDefault()
-    window.location.href = `/books?search=${this.state.keyword}`
+    this.props.history.push({
+      pathname: '/books',
+      search: `?search=${this.state.keyword}`
+    })
   }
 
   changeGenre = (e) => {
@@ -124,6 +127,29 @@ export default class adminBooks extends Component {
       this.setState({
         error: true
       })
+    }
+  }
+
+  async componentDidUpdate() {
+    if (this.props.location.search && this.state.search !== this.props.location.search) {
+      try {
+        let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
+        const book = await this.bookService.getAllBook(search)
+        this.setState({
+          loading: false,
+          books: book.data,
+          options: book.options,
+          search: this.props.location.search,
+          error: false
+        })
+      } catch (err) {
+        this.setState({
+          loading: false,
+          error: true,
+          books: [],
+          search: this.props.location.search
+        })
+      }
     }
   }
 
