@@ -88,7 +88,7 @@ export default class adminDetail extends Component {
     e.preventDefault()
     try {
       const test = await this.bookService.editBook(this.state, store('bookId'))
-      console.log(test)
+      console.log(this.state)
       Swal.fire({
         title: 'Edit success',
         text: '',
@@ -132,8 +132,9 @@ export default class adminDetail extends Component {
         genres: genres.data,
         bookName: getBookDetail.name,
         bookDesc: getBookDetail.description,
-        bookAuthor: getBookDetail.author,
-        bookStatus: getBookDetail.status,
+        bookAuthor: getBookDetail.author_id,
+        bookStatus: getBookDetail.status_id,
+        bookGenre: getBookDetail.genre_id,
         bookPublished: getBookDetail.published,
         bookLanguage: getBookDetail.language,
         genreNamed: getBookDetail.genre,
