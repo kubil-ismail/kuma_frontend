@@ -28,9 +28,17 @@ export default class adminDetail extends Component {
       bookStatus: null,
       bookPublished: null,
       bookLanguage: null,
+      genreName: null,
+      genreNamed: null,
+      genreId: null,
+      authorName: null,
+      authorId: null,
+      statusName: null,
+      statusId: null,
       bookDetail: [],
       authors: [],
-      genres: []
+      genres: [],
+      addNew: false
     }
     if (this.props.location.query) {
       store({ bookId: this.props.location.query.id })
@@ -66,7 +74,7 @@ export default class adminDetail extends Component {
         title: 'Edit Cover success',
         text: '',
         icon: 'success'
-      }).then(() => window.location.reload())
+      }).then(() => this.getData())
     } catch (error) {
       Swal.fire({
         title: 'Edit Failed',
@@ -84,7 +92,7 @@ export default class adminDetail extends Component {
         title: 'Edit success',
         text: '',
         icon: 'success'
-      }).then(() => window.location.reload())
+      }).then(() => this.getData())
     } catch (error) {
       Swal.fire({
         title: 'Edit Failed',
@@ -111,7 +119,7 @@ export default class adminDetail extends Component {
     }
   }
 
-  async componentDidMount() {
+  getData = async () => {
     try {
       const getBookDetail = await this.bookService.getBookDetail(store('bookId'))
       const authors = await this.bookService.getAuthor()
@@ -120,7 +128,20 @@ export default class adminDetail extends Component {
         loading: false,
         bookDetail: getBookDetail,
         authors: authors.data.data,
-        genres: genres.data
+        genres: genres.data,
+        bookName: getBookDetail.name,
+        bookDesc: getBookDetail.description,
+        bookAuthor: getBookDetail.author_id,
+        bookStatus: getBookDetail.status_id,
+        bookGenre: getBookDetail.genre_id,
+        bookPublished: getBookDetail.published,
+        bookLanguage: getBookDetail.language,
+        genreNamed: getBookDetail.genre,
+        genreId: getBookDetail.genre_id,
+        authorName: getBookDetail.author,
+        authorId: getBookDetail.author_id,
+        statusName: getBookDetail.status,
+        statusId: getBookDetail.status_id
       })
     } catch (err) {
       this.setState({
@@ -130,16 +151,32 @@ export default class adminDetail extends Component {
     }
   }
 
+  componentDidMount() {
+    this.getData()
+  }
+
   changeGenre = (e) => {
-    this.setState({ bookGenre: e })
+    this.setState({ 
+      bookGenre: e,
+      genreNamed: e.label,
+      genreId: e.value
+    })
   }
 
   changeAuthor = (e) => {
-    this.setState({ bookAuthor: e })
+    this.setState({ 
+      bookAuthor: e, 
+      authorName: e.label,
+      authorId: e.value
+    })
   }
 
   changeStatus = (e) => {
-    this.setState({ bookStatus: e })
+    this.setState({ 
+      bookStatus: e,
+      statusName: e.label,
+      statusId: e.value
+    })
   }
 
   render() {
@@ -179,80 +216,80 @@ export default class adminDetail extends Component {
             </div>
             <Form onSubmit={this.onSubmit}>
               <Row>
-                  <Col lg={5}>
-                      <ImageUploader
-                        withIcon={true}
-                        singleImage={true}
-                        buttonText='Choose images'
-                        onChange={this.onDrop}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                        maxFileSize={5242880}
-                      />
-                  </Col>
-                  <Col lg={7}>
-                    <Form.Group controlId="bookName">
-                      <Form.Label>Book Name</Form.Label>
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Book Name..." 
-                        onChange={(e) => this.setState({ bookName: e.target.value })} 
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="bookLanguage">
-                      <Form.Label>Language</Form.Label>
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Language..." 
-                        onChange={(e) => this.setState({ bookLanguage: e.target.value })} 
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="bookDate">
-                      <Form.Label>Publish Date</Form.Label>
-                      <Form.Control 
-                        type="date" 
-                        placeholder="dd/mm/yyyy"
-                        onChange={(e) => this.setState({ bookPublished: e.target.value })}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="bookGenre">
-                      <Form.Label>Genre</Form.Label>
-                      <Select
-                        value={this.state.bookGenre}
-                        onChange={this.changeGenre}
-                        options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="bookAuthor">
-                      <Form.Label>Author</Form.Label>
-                      <Select
-                        value={this.state.bookAuthor}
-                        onChange={this.changeAuthor}
-                        options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="bookAuthor">
-                      <Form.Label>Status</Form.Label>
-                      <Select
-                        value={this.state.bookStatus}
-                        onChange={this.changeStatus}
-                        options={[
-                          { value: 1, label: 'Available' },
-                          { value: 2, label: 'Pending' },
-                          { value: 3, label: 'Not Available' }
-                        ]}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="exampleForm.ControlTextarea1">
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control 
-                        as="textarea" 
-                        rows="5" 
-                        onChange={(e) => this.setState({ bookDesc: e.target.value })} 
-                      />
-                    </Form.Group>
+                <Col lg={5}>
+                  <ImageUploader
+                    withIcon={true}
+                    singleImage={true}
+                    buttonText='Choose images'
+                    onChange={this.onDrop}
+                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                    maxFileSize={5242880}
+                  />
+                </Col>
+                <Col lg={7}>
+                  <Form.Group controlId="bookName">
+                    <Form.Label>Book Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      defaultValue={this.state.bookName}
+                      onChange={(e) => this.setState({ bookName: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bookLanguage">
+                    <Form.Label>Language</Form.Label>
+                    <Form.Control
+                      type="text"
+                      defaultValue={this.state.bookLanguage}
+                      onChange={(e) => this.setState({ bookLanguage: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bookDate">
+                    <Form.Label>Publish Date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      onChange={(e) => this.setState({ bookPublished: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bookGenre">
+                    <Form.Label>Genre</Form.Label>
+                    <Select
+                      onChange={this.changeGenre}
+                      value={{label: this.state.genreNamed, value: this.state.genreId}}
+                      options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bookAuthor">
+                    <Form.Label>Author</Form.Label>
+                    <Select
+                      onChange={this.changeAuthor}
+                      value={{ label: this.state.authorName, value: this.state.authorId }}
+                      options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="bookAuthor">
+                    <Form.Label>Status</Form.Label>
+                    <Select
+                      onChange={this.changeStatus}
+                      value={{ label: this.state.statusName, value: this.state.statusId }}
+                      options={[
+                        { value: 1, label: 'Available' },
+                        { value: 2, label: 'Pending' },
+                        { value: 3, label: 'Not Available' }
+                      ]}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlTextarea1">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows="5"
+                      defaultValue={this.state.bookDesc}
+                      onChange={(e) => this.setState({ bookDesc: e.target.value })}
+                    />
+                  </Form.Group>
 
-                    <Button className="mb-3 w-25 ml-auto" type="submit">Update</Button>
-                  </Col>
+                  <Button className="mb-3 w-25 ml-auto" type="submit">Update</Button>
+                </Col>
               </Row>
             </Form>
           </Container>

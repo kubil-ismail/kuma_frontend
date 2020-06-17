@@ -23,7 +23,6 @@ export default class SignUp extends Component {
       loading: false
     }
     this.authService = new authService()
-    // store(false)
   }
 
   onsignUp = async () => {

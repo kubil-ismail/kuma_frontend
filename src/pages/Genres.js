@@ -101,6 +101,25 @@ export default class Genres extends Component {
     }
   }
 
+  async componentDidUpdate() {
+    if (this.props.location.query && this.props.location.query.genreId !== store('genreId')) {
+      store(this.props.location.query)
+      try {
+        const book = await this.bookService.getGenreBook(store('genreId'))
+        this.setState({
+          loading: false,
+          books: book.data,
+          options: book.options
+        })
+      } catch (err) {
+        this.setState({
+          loading: false,
+          error: true
+        })
+      }
+    }
+  }
+
   render() {
     const { books, error, loading, options, sort } = this.state
     return (

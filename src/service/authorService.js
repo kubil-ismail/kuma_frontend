@@ -2,31 +2,31 @@ import axios from 'axios'
 import store from 'store2'
 const { REACT_APP_REST_URL } = process.env
 
-export class genreService {
-  // Get genre limit 6
-  async getGenre() {
-    const result = await axios.get(`${REACT_APP_REST_URL}genre?limit=6`)
+export class authorService {
+  // Get Author limit 6
+  async getAuthor() {
+    const result = await axios.get(`${REACT_APP_REST_URL}author?limit=6`)
     const { data } = result
     return data
   }
 
-  // Get All genre
-  async getAllGenre() {
-    const result = await axios.get(`${REACT_APP_REST_URL}genre`)
+  // Get All Author
+  async getAllAuthor() {
+    const result = await axios.get(`${REACT_APP_REST_URL}author`)
     const { data } = result
     return data
   }
 
   // Select data
   async getSelectData(id) {
-    const result = await axios.get(`${REACT_APP_REST_URL}genre/${id}`)
+    const result = await axios.get(`${REACT_APP_REST_URL}author/${id}`)
     const { data } = result
     return data.data[0]
   }
 
-  // Add new genre
-  async addGenre(data) {
-    const { genreName } = data
+  // Add new Author
+  async addAuthor(data) {
+    const { authorName } = data
     const config = {
       headers: {
         'Authorization': store('apikey')
@@ -34,8 +34,8 @@ export class genreService {
     }
 
     try {
-      await axios.post(`${REACT_APP_REST_URL}genre`, {
-        name: genreName
+      await axios.post(`${REACT_APP_REST_URL}author`, {
+        name: authorName
       }, config)
       return true
     } catch (error) {
@@ -43,17 +43,17 @@ export class genreService {
     }
   }
 
-  // Edit Genre
-  async editGenre(data) {
-    const { genreName, genreId } = data
+  // Edit Author
+  async editAuthor(data) {
+    const { authorName, authorId } = data
     const config = {
       headers: {
         'Authorization': store('apikey')
       }
     }
     try {
-      await axios.patch(`${REACT_APP_REST_URL}genre/${genreId}`, {
-        name: genreName
+      await axios.patch(`${REACT_APP_REST_URL}author/${authorId}`, {
+        name: authorName
       }, config)
       return true
     } catch (error) {
@@ -61,15 +61,15 @@ export class genreService {
     }
   }
 
-  // Delete genre
-  async deleteGenre(id) {
+  // Delete author
+  async deleteAuthor(id) {
     const config = {
       headers: {
         'Authorization': store('apikey')
       }
     }
     try {
-      await axios.delete(`${REACT_APP_REST_URL}genre/${id}`, config)
+      await axios.delete(`${REACT_APP_REST_URL}author/${id}`, config)
       return true
     } catch (error) {
       return error
