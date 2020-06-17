@@ -13,7 +13,8 @@ export default class Navbars extends Component {
     this.state = {
       hasLogin: store('login') || false,
       keyword: null,
-      genres: []
+      genres: [],
+      admin: store('adminLogin') || false
     }
     this.genreService = new genreService()
   }
@@ -35,7 +36,7 @@ export default class Navbars extends Component {
 
   async componentDidMount() {
     try {
-      const genre = await this.genreService.getGenre()
+      const genre = await this.genreService.getAllGenre()
       this.setState({
         genres: genre.data
       })
@@ -45,7 +46,7 @@ export default class Navbars extends Component {
   }
 
   render() {
-    const { hasLogin, genres } = this.state
+    const { hasLogin, genres, admin } = this.state
     return (
       <Fragment>
         <Navbar bg="white" expand="lg" fixed="top" className="shadow-sm animate__animated animate__fadeInDown">
@@ -57,12 +58,20 @@ export default class Navbars extends Component {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto ml-lg-3 text-center">
                 <Link className="nav-link" to="/">Home</Link>
-                <Link className="nav-link" to="/books">Book</Link>
-                <NavDropdown title="Genre" id="basic-nav-dropdown">
-                  {genres ? genres.map((val, key) => (
-                    <Link key={key} className={store('genreId') === val.id ? "dropdown-item active" : "dropdown-item"} to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
-                  )) : null}
-                </NavDropdown>
+                {admin
+                  ? <>
+                    <Link className="nav-link" to="/dashboard">Dashboard</Link>
+                    <Link className="nav-link" to="/books">Book</Link>
+                    <Link className="nav-link" to="/genres">Genre</Link>
+                  </> : <>
+                    <Link className="nav-link" to="/books">Book</Link>
+                    <NavDropdown title="Genre" id="basic-nav-dropdown">
+                      {genres ? genres.map((val, key) => (
+                        <Link key={key} className={store('genreId') === val.id ? "dropdown-item active" : "dropdown-item"} to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
+                      )) : null}
+                    </NavDropdown>
+                  </>
+                }
               </Nav>
               <Nav className="ml-auto">
                 <Form onSubmit={this.onSearch} className="d-lg-flex d-none" inline>

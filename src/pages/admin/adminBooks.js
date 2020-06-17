@@ -61,7 +61,12 @@ export default class adminBooks extends Component {
         title: 'Add Book Success',
         text: '',
         icon: 'success'
-      }).then(() => window.location.reload())
+      }).then(() => {
+        this.getData()
+        this.setState({
+          showAddModal: false
+        })
+      })
     } catch (error) {
       Swal.fire({
         title: 'Add Book Failed',
@@ -91,7 +96,7 @@ export default class adminBooks extends Component {
     this.setState({ bookStatus: e })
   }
 
-  async componentDidMount() {
+  getData = async () => {
     try {
       let search = this.props.location.search ? this.props.location.search + '&limit=8' : '?limit=8'
       const getBook = await this.bookService.getAllBook(search)
@@ -109,6 +114,10 @@ export default class adminBooks extends Component {
         isLoading: false
       })
     }
+  }
+
+  componentDidMount() {
+    this.getData()
   }
 
   handlePageChange = async (pageNumber) => {
@@ -165,7 +174,7 @@ export default class adminBooks extends Component {
                 <Form onSubmit={this.onSearch}>
                   <FormControl type="text" placeholder="Search book..." className="mr-sm-2 w-100" onChange={(e) => this.setState({ keyword: e.target.value })} />
                 </Form>
-                <Button className="mb-3 w-25 ml-auto" onClick={(e) => this.handleAddShow()}>New</Button>
+                <Button className="mb-3 w-25 ml-auto" onClick={() => this.handleAddShow()}>New</Button>
               </div>
               <Table bordered responsive>
                 <thead>
