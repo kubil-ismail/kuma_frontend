@@ -28,6 +28,13 @@ export default class adminDetail extends Component {
       bookStatus: null,
       bookPublished: null,
       bookLanguage: null,
+      genreName: null,
+      genreNamed: null,
+      genreId: null,
+      authorName: null,
+      authorId: null,
+      statusName: null,
+      statusId: null,
       bookDetail: [],
       authors: [],
       genres: [],
@@ -80,7 +87,8 @@ export default class adminDetail extends Component {
   onSubmit = async (e) => {
     e.preventDefault()
     try {
-      await this.bookService.editBook(this.state, store('bookId'))
+      const test = await this.bookService.editBook(this.state, store('bookId'))
+      console.log(test)
       Swal.fire({
         title: 'Edit success',
         text: '',
@@ -121,7 +129,19 @@ export default class adminDetail extends Component {
         loading: false,
         bookDetail: getBookDetail,
         authors: authors.data.data,
-        genres: genres.data
+        genres: genres.data,
+        bookName: getBookDetail.name,
+        bookDesc: getBookDetail.description,
+        bookAuthor: getBookDetail.author,
+        bookStatus: getBookDetail.status,
+        bookPublished: getBookDetail.published,
+        bookLanguage: getBookDetail.language,
+        genreNamed: getBookDetail.genre,
+        genreId: getBookDetail.genre_id,
+        authorName: getBookDetail.author,
+        authorId: getBookDetail.author_id,
+        statusName: getBookDetail.status,
+        statusId: getBookDetail.status_id
       })
     } catch (err) {
       this.setState({
@@ -136,15 +156,27 @@ export default class adminDetail extends Component {
   }
 
   changeGenre = (e) => {
-    this.setState({ bookGenre: e })
+    this.setState({ 
+      bookGenre: e,
+      genreNamed: e.label,
+      genreId: e.value
+    })
   }
 
   changeAuthor = (e) => {
-    this.setState({ bookAuthor: e })
+    this.setState({ 
+      bookAuthor: e, 
+      authorName: e.label,
+      authorId: e.value
+    })
   }
 
   changeStatus = (e) => {
-    this.setState({ bookStatus: e })
+    this.setState({ 
+      bookStatus: e,
+      statusName: e.label,
+      statusId: e.value
+    })
   }
 
   render() {
@@ -199,7 +231,7 @@ export default class adminDetail extends Component {
                     <Form.Label>Book Name</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Book Name..."
+                      defaultValue={this.state.bookName}
                       onChange={(e) => this.setState({ bookName: e.target.value })}
                     />
                   </Form.Group>
@@ -207,7 +239,7 @@ export default class adminDetail extends Component {
                     <Form.Label>Language</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Language..."
+                      defaultValue={this.state.bookLanguage}
                       onChange={(e) => this.setState({ bookLanguage: e.target.value })}
                     />
                   </Form.Group>
@@ -215,31 +247,30 @@ export default class adminDetail extends Component {
                     <Form.Label>Publish Date</Form.Label>
                     <Form.Control
                       type="date"
-                      placeholder="dd/mm/yyyy"
                       onChange={(e) => this.setState({ bookPublished: e.target.value })}
                     />
                   </Form.Group>
                   <Form.Group controlId="bookGenre">
                     <Form.Label>Genre</Form.Label>
                     <Select
-                      value={this.state.bookGenre}
                       onChange={this.changeGenre}
+                      value={{label: this.state.genreNamed, value: this.state.genreId}}
                       options={this.state.genres.map((val) => ({ value: val.id, label: val.name }))}
                     />
                   </Form.Group>
                   <Form.Group controlId="bookAuthor">
                     <Form.Label>Author</Form.Label>
                     <Select
-                      value={this.state.bookAuthor}
                       onChange={this.changeAuthor}
+                      value={{ label: this.state.authorName, value: this.state.authorId }}
                       options={this.state.authors.map((val) => ({ value: val.id, label: val.name }))}
                     />
                   </Form.Group>
                   <Form.Group controlId="bookAuthor">
                     <Form.Label>Status</Form.Label>
                     <Select
-                      value={this.state.bookStatus}
                       onChange={this.changeStatus}
+                      value={{ label: this.state.statusName, value: this.state.statusId }}
                       options={[
                         { value: 1, label: 'Available' },
                         { value: 2, label: 'Pending' },
@@ -252,6 +283,7 @@ export default class adminDetail extends Component {
                     <Form.Control
                       as="textarea"
                       rows="5"
+                      defaultValue={this.state.bookDesc}
                       onChange={(e) => this.setState({ bookDesc: e.target.value })}
                     />
                   </Form.Group>
