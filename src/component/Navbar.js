@@ -63,6 +63,7 @@ export default class Navbars extends Component {
                     <Link className="nav-link" to="/dashboard">Dashboard</Link>
                     <Link className="nav-link" to="/books">Book</Link>
                     <Link className="nav-link" to="/genres">Genre</Link>
+                    <Link className="nav-link" to="/authors">Author</Link>
                   </> : <>
                     <Link className="nav-link" to="/books">Book</Link>
                     <NavDropdown title="Genre" id="basic-nav-dropdown">

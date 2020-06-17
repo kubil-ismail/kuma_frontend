@@ -19,6 +19,7 @@ import adminBooks from './pages/admin/adminBooks';
 import adminDetail from './pages/admin/adminDetail';
 import Genres from './pages/Genres';
 import adminGenre from './pages/admin/adminGenre';
+import adminAuthor from './pages/admin/adminAuthor';
 
 function App() {
   const role = store('role')
@@ -43,6 +44,7 @@ function App() {
                 <Route path='/dashboard' exact component={Books} />
                 <Route path='/books' exact component={adminBooks} />
                 <Route path='/genres' exact component={adminGenre} />
+                <Route path='/authors' exact component={adminAuthor} />
                 <Route path='/detail/:bookName' component={adminDetail} />
               </Fragment>
             ) : (

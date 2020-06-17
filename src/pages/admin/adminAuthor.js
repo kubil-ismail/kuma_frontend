@@ -4,32 +4,32 @@ import { Container, Card, Table, Button, Form, Modal } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 
 // Service
-import { genreService } from '../../service/genreService'
+import { authorService } from '../../service/authorService'
 
 // Component
 import Navbar from '../../component/Navbar'
 
-export default class adminGenre extends Component {
+export default class adminAuthor extends Component {
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
       error: true,
       showAddModal: false,
-      genres: [],
-      genreName: null,
-      genreId: null,
+      authors: [],
+      authorName: null,
+      authorId: null,
       edit: false
     }
-    this.genreService = new genreService()
+    this.authorService = new authorService()
   }
 
   // Get all data
   getData = async () => {
     try {
-      const genres = await this.genreService.getAllGenre()
+      const authors = await this.authorService.getAllAuthor()
       this.setState({
-        genres: genres.data,
+        authors: authors.data,
         loading: false,
         error: false
       })
@@ -54,7 +54,7 @@ export default class adminGenre extends Component {
   // Delete single data
   deleteData = async (id) => {
     try {
-      await this.genreService.deleteGenre(id)
+      await this.authorService.deleteAuthor(id)
       Swal.fire({
         title: 'Delete Success',
         text: '',
@@ -72,11 +72,11 @@ export default class adminGenre extends Component {
   // Get data on btn edit clicked
   getSelectData = async (id) => {
     try {
-      const select = await this.genreService.getSelectData(id)
+      const select = await this.authorService.getSelectData(id)
       this.setState({
         showAddModal: true,
-        genreName: select.name,
-        genreId: select.id,
+        authorName: select.name,
+        authorId: select.id,
         edit: true
       })
     } catch (error) {
@@ -92,21 +92,22 @@ export default class adminGenre extends Component {
   onEdit = async (e) => {
     e.preventDefault()
     try {
-      await this.genreService.editGenre(this.state)
+      await this.authorService.editAuthor(this.state)
       Swal.fire({
-        title: 'Edit Genre Success',
+        title: 'Edit Author Success',
         text: '',
         icon: 'success'
       }).then(() => {
         this.getData()
         this.setState({
           showAddModal: false,
+          authorName: null,
           edit: false
         })
       })
     } catch (error) {
       Swal.fire({
-        title: 'Edit Genre Failed',
+        title: 'Edit Author Failed',
         text: '',
         icon: 'error'
       })
@@ -123,20 +124,21 @@ export default class adminGenre extends Component {
       this.onEdit(e)
     } else {
       try {
-        await this.genreService.addGenre({ genreName: this.state.genreName })
+        await this.authorService.addAuthor({ authorName: this.state.authorName })
         Swal.fire({
-          title: 'Add Genre Success',
+          title: 'Add Author Success',
           text: '',
           icon: 'success'
         }).then(() => {
           this.getData()
           this.setState({
-            showAddModal: false
+            showAddModal: false,
+            authorName: null
           })
         })
       } catch (error) {
         Swal.fire({
-          title: 'Add Genre Failed',
+          title: 'Add Author Failed',
           text: '',
           icon: 'error'
         })
@@ -145,7 +147,7 @@ export default class adminGenre extends Component {
   }
 
   render() {
-    const { showAddModal, genres } = this.state
+    const { showAddModal, authors } = this.state
     return (
       <Fragment>
         <Navbar {...this.props} />
@@ -156,16 +158,15 @@ export default class adminGenre extends Component {
               <Table bordered responsive>
                 <thead>
                   <tr>
-                    <th width="75%">Genre Name</th>
+                    <th width="75%">Author Name</th>
                     <th>Manage</th>
                   </tr>
                 </thead>
                 <tbody className="bg-light">
-                  {genres.map((val, key) => (
+                  {authors.map((val, key) => (
                     <tr key={key}>
                       <td>{val.name}</td>
                       <td>
-                        <Link className="btn btn-primary" to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>Detail</Link>
                         <Button variant="warning mx-2 my-2" onClick={() => this.getSelectData(val.id)}>Edit</Button>
                         <Button variant="danger" onClick={() => this.deleteData(val.id)}>Delete</Button>
                       </td>
@@ -177,16 +178,16 @@ export default class adminGenre extends Component {
 
             <Modal show={showAddModal} onHide={this.handleAddClose} size="md">
               <Modal.Header closeButton>
-                <Modal.Title>Genres</Modal.Title>
+                <Modal.Title>authors</Modal.Title>
               </Modal.Header>
               <Form onSubmit={this.onSubmit}>
                 <Modal.Body>
                   <Form.Group controlId="bookName">
-                    <Form.Label>Genres Name</Form.Label>
+                    <Form.Label>authors Name</Form.Label>
                     <Form.Control
                       type="text"
-                      defaultValue={this.state.genreName}
-                      onChange={(e) => this.setState({ genreName: e.target.value })}
+                      defaultValue={this.state.authorName}
+                      onChange={(e) => this.setState({ authorName: e.target.value })}
                     />
                   </Form.Group>
                 </Modal.Body>

@@ -87,8 +87,7 @@ export default class adminDetail extends Component {
   onSubmit = async (e) => {
     e.preventDefault()
     try {
-      const test = await this.bookService.editBook(this.state, store('bookId'))
-      console.log(this.state)
+      await this.bookService.editBook(this.state, store('bookId'))
       Swal.fire({
         title: 'Edit success',
         text: '',
