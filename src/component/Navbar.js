@@ -60,7 +60,7 @@ export default class Navbars extends Component {
                 <Link className="nav-link" to="/books">Book</Link>
                 <NavDropdown title="Genre" id="basic-nav-dropdown">
                   {genres ? genres.map((val, key) => (
-                    <Link key={key} className="dropdown-item" to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
+                    <Link key={key} className={store('genreId') === val.id ? "dropdown-item active" : "dropdown-item"} to={{ pathname: `/books/${val.name}`, query: { genreId: val.id } }}>{val.name}</Link>
                   )) : null}
                 </NavDropdown>
               </Nav>
