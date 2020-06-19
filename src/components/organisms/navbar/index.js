@@ -8,7 +8,7 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasLogin: false,
+      hasLogin: true,
     };
   }
 
@@ -18,9 +18,9 @@ export default class Index extends Component {
       <>
         <Navbar bg="white" expand="lg" fixed="top" className="shadow-sm">
           <Container>
-            <Navbar.Brand href="#home">
+            <Link to="/" className="navbar-brand">
               <img src={logo} alt="Logo" width="100" />
-            </Navbar.Brand>
+            </Link>
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
                 <Link className="nav-link " to="/">
@@ -30,20 +30,31 @@ export default class Index extends Component {
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 </NavDropdown>
                 <Form className="mx-2" inline>
-                  <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                  <FormControl
+                    type="text"
+                    placeholder="Search book..."
+                    className="mr-sm-2 bg-light"
+                  />
                 </Form>
               </Nav>
               <Nav className="ml-auto">
                 {hasLogin ? (
                   <>
-                    <Link className="nav-link" to="/sign-up">
-                      <Button className="w-100">Profile</Button>
-                    </Link>
-                    <Link className="nav-link" to="/login">
-                      <Button className="w-100" variant="outline-dark">
+                    <NavDropdown title="Profile Name" id="basic-nav-dropdown">
+                      <Link to="/profile" className="dropdown-item">
+                        Profile
+                      </Link>
+                      <Link to="/profile" className="dropdown-item">
+                        Favorite
+                      </Link>
+                      <Link to="/review" className="dropdown-item">
+                        Review
+                      </Link>
+                      <NavDropdown.Divider />
+                      <Link to="/logout" className="dropdown-item">
                         Logout
-                      </Button>
-                    </Link>
+                      </Link>
+                    </NavDropdown>
                   </>
                 ) : (
                   <>
@@ -52,7 +63,9 @@ export default class Index extends Component {
                       Login
                     </Link>
                     <Link className="nav-link" to="/sign-up">
-                      <Button className="w-100" size="sm">Register</Button>
+                      <Button className="w-100" size="sm">
+                        Register
+                      </Button>
                     </Link>
                   </>
                 )}

@@ -28,12 +28,12 @@ export default function loading() {
       </Col>
       {/* Loader On Mobile */}
       <Col lg={3} md={6} xs={6} className="d-lg-none">
-        <Skeleton height={250} />
+        <Skeleton height={220} />
         <div className="my-3" />
         <Skeleton count={3} />
       </Col>
       <Col lg={3} md={6} xs={6} className="d-lg-none">
-        <Skeleton height={250} />
+        <Skeleton height={220} />
         <div className="my-3" />
         <Skeleton count={3} />
       </Col>

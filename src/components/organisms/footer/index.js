@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 export default function index() {
   return (
@@ -29,5 +29,5 @@ export default function index() {
         <p className="text-white text-center mt-2">@ 2017 All Rights Reserved OYEENok</p>
       </div>
     </footer>
-  )
+  );
 }

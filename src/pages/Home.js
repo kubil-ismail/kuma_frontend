@@ -26,6 +26,7 @@ export default class Home extends Component {
     const { books, error } = this.state;
     return (
       <>
+        {/* Navbar */}
         <Navbar />
 
         {/* Header */}
@@ -53,8 +54,10 @@ export default class Home extends Component {
               <div className="divinder" />
             </div>
 
+            {/* Show if failed fetch */}
             {error ? <Alert message="Can't get book from server" /> : null}
 
+            {/* Fetch books */}
             {!books.length ? (
               <BookLoader />
             ) : (
@@ -99,27 +102,6 @@ export default class Home extends Component {
             )}
           </Container>
         </section>
-
-        {/* Genre */}
-        {/* <section>
-          <Container className="my-5">
-            <div className="head-title">
-              <h3 className="main-title font-weight-bold">Genre</h3>
-              <div className="divinder" />
-            </div>
-            <Row>
-              <Col lg={3}>
-                <Book
-                  cover={cover}
-                  title="Overlord"
-                  author="Maruyama Sensei"
-                  genre="Horror"
-                  languag="Japan"
-                />
-              </Col>
-            </Row>
-          </Container>
-        </section> */}
 
         {/* Banner */}
         {!books.length ? <BannerLoader /> : <Banner />}
