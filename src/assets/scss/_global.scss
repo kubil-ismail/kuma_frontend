@@ -1,0 +1,45 @@
+// Font
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+// Margin
+header, section {
+    margin: 100px 0px;
+}
+
+// Nav Link
+.nav-link {
+  margin: 0 5px;
+}
+
+// Button
+.btn-primary,
+.btn-outline-primary:hover {
+  color: white !important;
+}
+
+// Footer
+footer {
+  background-color: $dark;
+  position: absolute;
+  width: 100%;
+  .head-footer {
+    padding: 40px 0 10px 0;
+  }
+  .bottom-footer {
+    z-index: 999;
+    background-color: #040b1a;
+    margin-bottom: -20px;
+  }
+}
+
+$theme-colors: (
+    "primary": $primary,
+    "dark": $dark
+);
+
+@import "~bootstrap/scss/bootstrap";
