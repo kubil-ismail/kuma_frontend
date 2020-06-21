@@ -2,13 +2,20 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Card, Badge } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
+const url = 'http://localhost:8000/';
 
 export default function index(props) {
   return (
     <Card className="border-0 bg-transparent">
+      <Link
+        to={{ pathname: `/book/${props.title.replace(/\s/g, '-')}`, state: { id: props.id } }}
+        className="stretched-link"
+      />
       <Card.Img
         variant="top"
-        src={props.cover}
+        src={url + props.cover}
         className="rounded mx-auto card-cover"
         alt="cover"
       />

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { get } from '../services';
 
 import header from '../assets/img/header.png';
-import cover from '../assets/img/cover.jpg';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -21,6 +21,22 @@ export default class Home extends Component {
       error: false,
     };
   }
+
+  getPopularBook = async () => {
+    try {
+      const books = await get({ url: 'book?limit=4' });
+      const { data } = books.data;
+      this.setState({
+        books: data,
+      });
+    } catch (error) {
+      this.setState({ error: true });
+    }
+  };
+
+  componentDidMount = () => {
+    this.getPopularBook();
+  };
 
   render() {
     const { books, error } = this.state;
@@ -63,42 +79,18 @@ export default class Home extends Component {
               <BookLoader />
             ) : (
               <Row>
-                <Col lg={3} md={6} xs={6}>
-                  <Book
-                    cover={cover}
-                    title="Overlord"
-                    author="Maruyama Sensei"
-                    genre="Horror"
-                    languag="Japan"
-                  />
-                </Col>
-                <Col lg={3} md={6} xs={6}>
-                  <Book
-                    cover={cover}
-                    title="Overlord"
-                    author="Maruyama Sensei"
-                    genre="Horror"
-                    languag="Japan"
-                  />
-                </Col>
-                <Col lg={3} md={6} xs={6}>
-                  <Book
-                    cover={cover}
-                    title="Overlord"
-                    author="Maruyama Sensei"
-                    genre="Horror"
-                    languag="Japan"
-                  />
-                </Col>
-                <Col lg={3} md={6} xs={6}>
-                  <Book
-                    cover={cover}
-                    title="Overlord"
-                    author="Maruyama Sensei"
-                    genre="Horror"
-                    languag="Japan"
-                  />
-                </Col>
+                {books.map((val) => (
+                  <Col lg={3} md={6} xs={6} key={val.id}>
+                    <Book
+                      id={val.id}
+                      cover={val.cover}
+                      title={val.name}
+                      author={val.author}
+                      genre={val.genre}
+                      languag={val.language}
+                    />
+                  </Col>
+                ))}
               </Row>
             )}
           </Container>

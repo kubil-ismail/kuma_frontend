@@ -5,7 +5,7 @@ const url = 'http://localhost:8000/';
 // Fetch Data
 export const get = async (data) => {
   try {
-    const getData = await axios.delete(url + data.url, data.body, data.config);
+    const getData = await axios.get(url + data.url, data.body, data.config);
     return getData;
   } catch (error) {
     return error;

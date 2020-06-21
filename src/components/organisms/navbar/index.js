@@ -1,16 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl,
-  Container,
-  Button,
-  NavDropdown,
-  ButtonGroup,
-} from 'react-bootstrap';
+import { Navbar, Nav, Form, FormControl, Container, Button, NavDropdown } from 'react-bootstrap';
 import Store from 'store2';
 
 import logo from '../../../assets/img/logo.png';
