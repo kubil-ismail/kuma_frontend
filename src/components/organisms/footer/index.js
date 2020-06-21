@@ -18,7 +18,7 @@ export default function index() {
               <h3 className="font-weight-bold">Contact Us</h3>
               <Form>
                 <Form.Group controlId="exampleForm.ControlTextarea1">
-                  <Form.Control as="textarea" rows="3" />
+                  <Form.Control as="textarea" className="bg-light" rows="3" />
                 </Form.Group>
               </Form>
             </Col>

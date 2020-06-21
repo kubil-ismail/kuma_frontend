@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Form, FormControl, Container, Button, NavDropdown } from 'react-bootstrap';
+import Store from 'store2';
 
 import logo from '../../../assets/img/logo.png';
 
@@ -8,9 +10,15 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasLogin: true,
+      hasLogin: Store('login') || false,
     };
   }
+
+  logout = () => {
+    Store(false);
+    const { history } = this.props;
+    history.push('/login');
+  };
 
   render() {
     const { hasLogin } = this.state;
@@ -26,6 +34,9 @@ export default class Index extends Component {
                 <Link className="nav-link " to="/">
                   Home
                 </Link>
+                <Link className="nav-link " to="/book">
+                  Book
+                </Link>
                 <NavDropdown title="Genre" id="basic-nav-dropdown" className="">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 </NavDropdown>
@@ -40,7 +51,7 @@ export default class Index extends Component {
               <Nav className="ml-auto">
                 {hasLogin ? (
                   <>
-                    <NavDropdown title="Profile Name" id="basic-nav-dropdown">
+                    <NavDropdown title="Profile" id="basic-nav-dropdown">
                       <Link to="/profile" className="dropdown-item">
                         Profile
                       </Link>
@@ -51,9 +62,7 @@ export default class Index extends Component {
                         Review
                       </Link>
                       <NavDropdown.Divider />
-                      <Link to="/logout" className="dropdown-item">
-                        Logout
-                      </Link>
+                      <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
                     </NavDropdown>
                   </>
                 ) : (
@@ -64,7 +73,7 @@ export default class Index extends Component {
                     </Link>
                     <Link className="nav-link" to="/sign-up">
                       <Button className="w-100" size="sm">
-                        Register
+                        Sign Up
                       </Button>
                     </Link>
                   </>

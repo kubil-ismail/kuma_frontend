@@ -1,7 +1,7 @@
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-import header from '../assets/img/header.png';
 import cover from '../assets/img/cover.jpg';
 
 // Component
@@ -9,11 +9,9 @@ import Navbar from '../components/organisms/navbar';
 import Book from '../components/organisms/book';
 import BookLoader from '../components/organisms/book/loading';
 import Alert from '../components/atoms/alert';
-import Banner from '../components/organisms/banner';
-import BannerLoader from '../components/organisms/banner/loading';
 import Footer from '../components/organisms/footer';
 
-export default class Home extends Component {
+export default class Books extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,28 +28,11 @@ export default class Home extends Component {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Navbar {...this.props} />
 
-        {/* Header */}
-        <header>
-          <Container className="my-5">
-            <Row>
-              <Col lg={6}>
-                <img src={header} className="w-100" alt="banner" />
-              </Col>
-              <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0">
-                <div className="banner-content">
-                  <h1 className="font-weight-bold">Kuma Book</h1>
-                  <p>The world&apos;s largest novel and manga wikipedia and database 100% free</p>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </header>
-
         {/* Popular Book */}
         <section>
           <Container className="my-5">
             <div className="head-title">
-              <h3 className="main-title font-weight-bold">Popular Book</h3>
+              <h3 className="main-title font-weight-bold">List Book</h3>
               <div className="divinder" />
             </div>
 
@@ -103,11 +84,6 @@ export default class Home extends Component {
             )}
           </Container>
         </section>
-
-        {/* Banner */}
-        {!books.length ? <BannerLoader /> : <Banner />}
-
-        <div className="my-5" />
 
         {/* Footer */}
         <Footer />

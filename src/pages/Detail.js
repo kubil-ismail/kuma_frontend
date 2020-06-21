@@ -26,7 +26,8 @@ export default class Detail extends Component {
     return (
       <>
         {/* Navbar */}
-        <Navbar />
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Navbar {...this.props} />
 
         {/* Banner Cover */}
         {books.length ? (
