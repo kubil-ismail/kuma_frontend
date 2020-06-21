@@ -24,15 +24,11 @@ header, section {
 
 // Footer
 footer {
-  background-color: $dark;
   position: absolute;
   width: 100%;
-  .head-footer {
-    padding: 40px 0 10px 0;
-  }
   .bottom-footer {
     z-index: 999;
-    background-color: #040b1a;
+    background-color: $dark;
     margin-bottom: -20px;
   }
 }
