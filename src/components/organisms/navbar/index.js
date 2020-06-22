@@ -11,13 +11,33 @@ export default class Index extends Component {
     super(props);
     this.state = {
       hasLogin: Store('login') || false,
+      keyword: null,
     };
   }
+
+  search = (e) => {
+    e.preventDefault();
+
+    const { history } = this.props;
+    const { keyword } = this.state;
+    history.push({
+      pathname: '/book',
+      search: `?search=${keyword}`,
+      state: keyword,
+    });
+  };
 
   logout = () => {
     Store(false);
     const { history } = this.props;
     history.push('/login');
+  };
+
+  bookPage = () => {
+    const { history } = this.props;
+    history.push({
+      pathname: '/book',
+    });
   };
 
   render() {
@@ -35,20 +55,19 @@ export default class Index extends Component {
                 <Link className="nav-link " to="/">
                   Home
                 </Link>
-                <Link className="nav-link " to="/book">
-                  Book
-                </Link>
+                <Nav.Link onClick={this.bookPage}>Book</Nav.Link>
                 <NavDropdown title="Genre" id="basic-nav-dropdown" className="">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Nav className="ml-auto">
                 <NavDropdown.Divider className="d-lg-none" />
-                <Form className="mx-2 my-2 my-lg-0" inline>
+                <Form className="mx-2 my-2 my-lg-0" onSubmit={this.search} inline>
                   <FormControl
                     type="text"
                     placeholder="Search book..."
                     className="mr-sm-2 bg-light"
+                    onChange={(e) => this.setState({ keyword: e.target.value })}
                   />
                 </Form>
                 {hasLogin ? (

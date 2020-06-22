@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
@@ -24,7 +26,13 @@ export default class Books extends Component {
 
   getAllBooks = async () => {
     try {
-      const books = await get({ url: 'book?limit=8' });
+      const { state } = this.props.location;
+      let books;
+      if (state) {
+        books = await get({ url: `book?search=${state}&limit=8` });
+      } else {
+        books = await get({ url: 'book?limit=8' });
+      }
       const { data, options } = books.data;
       this.setState({
         books: data,
@@ -67,6 +75,12 @@ export default class Books extends Component {
 
   componentDidMount = () => {
     this.getAllBooks();
+  };
+
+  componentDidUpdate = (props) => {
+    if (props.location.search !== this.props.location.search) {
+      this.getAllBooks();
+    }
   };
 
   render() {

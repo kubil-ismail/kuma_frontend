@@ -84,7 +84,7 @@ export default class Detail extends Component {
     this.getDetailBook();
   };
 
-  componentDidUpdate = (props) => {
+  componentDidUpdate = () => {
     const { id } = this.props.location.state;
     if (Store('bookId') !== id) {
       this.getDetailBook();
