@@ -43,11 +43,14 @@ export default class Index extends Component {
   };
 
   getGenre = async () => {
-    const genre = await get({
-      url: 'genre',
-    });
-    const { data } = genre.data;
-    this.setState({ genre: data });
+    try {
+      const genre = await get({
+        url: 'genre',
+      });
+      const { data } = genre.data;
+      this.setState({ genre: data });
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
 
   componentDidMount = () => {

@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
-import { get } from '../services';
+import { get, post } from '../services';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -80,6 +80,26 @@ export default class Detail extends Component {
     }
   };
 
+  addFavorite = async () => {
+    try {
+      const { id } = this.props.location.state;
+      await post({
+        url: 'favorite',
+        body: {
+          book_id: id,
+          user_id: Store('userId'),
+        },
+        config: {
+          headers: {
+            Authorization: Store('apikey'),
+          },
+        },
+      });
+    } catch (error) {
+      this.setState({ error: true });
+    }
+  };
+
   componentDidMount = () => {
     this.getDetailBook();
   };
@@ -127,7 +147,6 @@ export default class Detail extends Component {
                     {error ? <Alert message="Can't get book from server" /> : null}
                     <Skeleton height={50} className="mb-4" />
                     <Skeleton count={5} />
-                    {/* Show if failed fetch */}
                   </div>
                 ) : (
                   <>
@@ -142,7 +161,9 @@ export default class Detail extends Component {
                     <p className="mt-3 text-justify text-dark">{book.description}</p>
                     {Store('login') ? (
                       <>
-                        <Button className="text-dark">Add to favorite</Button>
+                        <Button className="text-dark" onClick={() => this.addFavorite()}>
+                          Add to favorite
+                        </Button>
                         <Button variant="dark" className="ml-2">
                           Add Review
                         </Button>
