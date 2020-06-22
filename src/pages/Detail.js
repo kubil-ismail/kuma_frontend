@@ -195,7 +195,7 @@ export default class Detail extends Component {
                       title={val.name}
                       author={val.author}
                       genre={val.genre}
-                      languag={val.language}
+                      language={val.language}
                     />
                   </Col>
                 ))}
