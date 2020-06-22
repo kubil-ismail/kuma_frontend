@@ -68,8 +68,8 @@ export default class Detail extends Component {
     try {
       const { id } = this.props.location.state;
       const review = await get({
-        url: `review/${id}?limit=4`,
-        config: {
+        url: `review`,
+        body: {
           params: { book_id: id },
         },
       });
@@ -140,10 +140,14 @@ export default class Detail extends Component {
                       {book.language}
                     </Badge>
                     <p className="mt-3 text-justify text-dark">{book.description}</p>
-                    <Button className="text-dark">Add to favorite</Button>
-                    <Button variant="dark" className="ml-2">
-                      Add Review
-                    </Button>
+                    {Store('login') ? (
+                      <>
+                        <Button className="text-dark">Add to favorite</Button>
+                        <Button variant="dark" className="ml-2">
+                          Add Review
+                        </Button>
+                      </>
+                    ) : null}
                   </>
                 )}
               </Col>
