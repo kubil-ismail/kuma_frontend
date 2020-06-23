@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
+import Swal from 'sweetalert2';
 import Store from 'store2';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
@@ -33,6 +34,7 @@ export default class Activate extends Component {
       const { status } = activate;
       if (status) {
         const { history } = this.props;
+        Swal.fire('Activate success', 'successfully activate account', 'success');
         history.push('/login');
       } else {
         const { message } = activate.response.data;

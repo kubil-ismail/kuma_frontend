@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Store from 'store2';
 import Pagination from 'react-js-pagination';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { get, remove } from '../../services';
@@ -80,6 +81,7 @@ export default class Favorite extends Component {
           },
         },
       });
+      Swal.fire('Deleted favorites', 'successfully deleted favorites', 'success');
       this.getFavoriteBook();
     } catch (error) {
       this.setState({ error: true });

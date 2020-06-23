@@ -98,7 +98,6 @@ export default class Login extends Component {
                     placeholder="Email address..."
                     onChange={(e) => this.setState({ email: e.target.value })}
                     required
-                    autoFocus
                   />
                 </Form.Group>
 

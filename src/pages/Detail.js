@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
+import Swal from 'sweetalert2';
 import { get, post } from '../services';
 
 // Component
@@ -95,6 +96,7 @@ export default class Detail extends Component {
           },
         },
       });
+      Swal.fire('Added to favorites', 'successfully added to favorites', 'success');
     } catch (error) {
       this.setState({ error: true });
     }

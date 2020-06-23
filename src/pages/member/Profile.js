@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
 import Store from 'store2';
+import Swal from 'sweetalert2';
 import { Container, Row, Col, Button, Form, Alert } from 'react-bootstrap';
 import { get, patch } from '../../services';
 
@@ -77,6 +78,7 @@ export default class Profile extends Component {
           },
         },
       });
+      Swal.fire('Update profile success', 'successfully update profile', 'success');
       this.setState({ error: false });
     } catch (error) {
       this.setState({ error: true });

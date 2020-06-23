@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
+import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Form, FormControl, Container, Button, NavDropdown } from 'react-bootstrap';
 import Store from 'store2';
@@ -30,6 +31,7 @@ export default class Index extends Component {
   };
 
   logout = () => {
+    Swal.fire('Logout success', 'successfully logout', 'success');
     Store(false);
     const { history } = this.props;
     history.push('/login');
