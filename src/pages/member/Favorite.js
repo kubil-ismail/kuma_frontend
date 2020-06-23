@@ -23,6 +23,8 @@ export default class Favorite extends Component {
     this.state = {
       books: [],
       options: [],
+      fullname: null,
+      email: null,
       error: false,
     };
   }
@@ -88,12 +90,34 @@ export default class Favorite extends Component {
     }
   };
 
+  getProfile = async () => {
+    try {
+      const profile = await get({
+        url: `profile/${Store('userId')}`,
+        body: {
+          headers: {
+            Authorization: Store('apikey'),
+          },
+        },
+      });
+
+      const { data } = profile.data;
+      this.setState({
+        fullname: data[0].fullname,
+        email: data[0].email,
+      });
+    } catch (error) {
+      this.setState({ error: true });
+    }
+  };
+
   componentDidMount = () => {
+    this.getProfile();
     this.getFavoriteBook();
   };
 
   render() {
-    const { books, options, error } = this.state;
+    const { fullname, email, books, options, error } = this.state;
     return (
       <>
         {/* Navbar */}
@@ -108,8 +132,8 @@ export default class Favorite extends Component {
                 className="rounded-circle img-thumbnail d-block mx-auto"
                 alt="Profile Name"
               />
-              <h2 className="font-weight-bold text-center mt-4">Wik Wik</h2>
-              <p className="text-center">sovianbasecamp@gmail.com</p>
+              <h2 className="font-weight-bold text-center mt-4">{fullname}</h2>
+              <p className="text-center">{email}</p>
             </div>
             <div className="head-title text-center">
               <h3 className="main-title font-weight-bold">Favorite Book</h3>
