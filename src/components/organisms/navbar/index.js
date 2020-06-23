@@ -105,7 +105,7 @@ export default class Index extends Component {
                       <Link to="/profile" className="dropdown-item">
                         Profile
                       </Link>
-                      <Link to="/profile" className="dropdown-item">
+                      <Link to="/favorite" className="dropdown-item">
                         Favorite
                       </Link>
                       <Link to="/review" className="dropdown-item">

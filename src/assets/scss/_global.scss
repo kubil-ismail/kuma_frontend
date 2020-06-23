@@ -39,6 +39,14 @@ footer {
   }
 }
 
+// react-date
+.react-datepicker-wrapper {
+  display: block !important;
+}
+.react-date {
+  width: 100% !important;
+}
+
 $theme-colors: (
     "primary": $primary,
     "dark": $dark
