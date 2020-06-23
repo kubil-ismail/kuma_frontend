@@ -17,7 +17,7 @@ export default function index(props) {
         variant="top"
         src={url + props.cover}
         className="rounded mx-auto card-cover animate__animated animate__fadeIn"
-        alt="cover"
+        alt={props.title}
       />
       <Card.Body className="px-0">
         <Card.Title className="font-weight-bold text-truncate">
