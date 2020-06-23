@@ -21,7 +21,7 @@ export const getReview = (request) => {
     payload: get({
       url: 'review',
       body: {
-        params: { request },
+        params: { book_id: request.id },
       },
     }),
   };

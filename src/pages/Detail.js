@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 // Service
 import { connect } from 'react-redux';
 import { getBook, getSimilar, getReview } from '../redux/actions/bookActions';
-import { post } from '../services';
+import { get, post } from '../services';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -68,7 +68,7 @@ export class Detail extends Component {
   getReviewBook = async () => {
     try {
       const { id } = this.props.location.state;
-      await this.props.getReview({ book_id: id });
+      await this.props.getReview({ id });
       const { review } = this.props.books;
       this.setState({ review });
     } catch (error) {
