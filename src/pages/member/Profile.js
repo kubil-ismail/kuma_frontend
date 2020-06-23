@@ -100,7 +100,7 @@ export default class Profile extends Component {
 
         <section>
           <Container>
-            <div className="profile mb-5">
+            <div className="profile animate__animated animate__fadeIn mb-5">
               <img
                 src={icon}
                 className="rounded-circle img-thumbnail d-block mx-auto"

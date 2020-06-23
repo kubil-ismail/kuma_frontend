@@ -53,14 +53,14 @@ export class Home extends Component {
         <Navbar {...this.props} />
 
         {/* Header */}
-        <header>
+        <header className="animate__animated animate__bounceInLeft">
           <Container className="my-5">
             <Row>
               <Col lg={6}>
                 <img src={header} className="w-100" alt="banner" />
               </Col>
               <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0">
-                <div className="banner-content">
+                <div className="banner-content d-none d-lg-block">
                   <h1 className="font-weight-bold">Kuma Book</h1>
                   <p>The world&apos;s largest novel and manga wikipedia and database 100% free</p>
                 </div>

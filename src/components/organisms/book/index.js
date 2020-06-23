@@ -16,7 +16,7 @@ export default function index(props) {
       <Card.Img
         variant="top"
         src={url + props.cover}
-        className="rounded mx-auto card-cover"
+        className="rounded mx-auto card-cover animate__animated animate__fadeIn"
         alt="cover"
       />
       <Card.Body className="px-0">

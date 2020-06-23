@@ -124,7 +124,7 @@ export default class Favorite extends Component {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Navbar {...this.props} />
 
-        <section>
+        <section className="animate__animated animate__fadeIn">
           <Container>
             <div className="profile mb-5">
               <img
@@ -163,7 +163,7 @@ export default class Favorite extends Component {
                           <Card.Img
                             variant="top"
                             src={url + val.cover}
-                            className="rounded mx-auto card-cover"
+                            className="rounded mx-auto card-cover animate__animated animate__fadeIn"
                             alt="cover"
                           />
                         </Link>

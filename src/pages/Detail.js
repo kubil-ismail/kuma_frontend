@@ -8,11 +8,12 @@ import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
 import Swal from 'sweetalert2';
+import ScrollToTop from 'react-scroll-up';
 
 // Service
 import { connect } from 'react-redux';
 import { getBook, getSimilar, getReview } from '../redux/actions/bookActions';
-import { get, post } from '../services';
+import { post } from '../services';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -118,7 +119,10 @@ export class Detail extends Component {
 
         {/* Banner Cover */}
         {book ? (
-          <div className="banner-cover" style={{ backgroundImage: `url(${url + book.cover})` }} />
+          <div
+            className="banner-cover animate__animated animate__fadeIn"
+            style={{ backgroundImage: `url(${url + book.cover})` }}
+          />
         ) : null}
 
         {/* Book Detail */}
@@ -133,7 +137,7 @@ export class Detail extends Component {
                 ) : (
                   <img
                     src={url + book.cover}
-                    className="w-100 rounded shadow-lg mb-5 mb-lg-0"
+                    className="w-100 animate__animated animate__fadeIn animate__slow rounded shadow-lg mb-5 mb-lg-0"
                     alt={book.name}
                   />
                 )}
@@ -209,14 +213,16 @@ export class Detail extends Component {
               <Row>
                 {similar.map((val) => (
                   <Col lg={3} md={6} xs={6} key={val.id}>
-                    <Book
-                      id={val.id}
-                      cover={val.cover}
-                      title={val.name}
-                      author={val.author}
-                      genre={val.genre}
-                      language={val.language}
-                    />
+                    <ScrollToTop style={{ position: 'relative !important' }} showUnder={0}>
+                      <Book
+                        id={val.id}
+                        cover={val.cover}
+                        title={val.name}
+                        author={val.author}
+                        genre={val.genre}
+                        language={val.language}
+                      />
+                    </ScrollToTop>
                   </Col>
                 ))}
               </Row>

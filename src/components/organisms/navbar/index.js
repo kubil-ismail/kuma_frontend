@@ -63,7 +63,12 @@ export default class Index extends Component {
     const { genre, hasLogin } = this.state;
     return (
       <>
-        <Navbar bg="white" expand="lg" fixed="top" className="shadow-sm">
+        <Navbar
+          bg="white"
+          expand="lg"
+          fixed="top"
+          className="shadow-sm animate__animated animate__fadeInDown"
+        >
           <Container>
             <Link to="/" className="navbar-brand">
               <img src={logo} alt="Logo" width="100" />

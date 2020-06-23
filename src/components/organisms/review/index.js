@@ -6,7 +6,7 @@ import { Card } from 'react-bootstrap';
 
 export default function Review(props) {
   return (
-    <Card className="m-3 shadow-sm">
+    <Card className="m-3 shadow-sm animate__animated animate__fadeInUp">
       <Card.Body>
         <blockquote className="blockquote mb-0" />
         <strong>{props.user || 'anonim'}</strong>
