@@ -4,7 +4,10 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import Pagination from 'react-js-pagination';
-import { get } from '../services';
+
+// Service
+import { connect } from 'react-redux';
+import { getBook } from '../redux/actions/bookActions';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -13,7 +16,7 @@ import BookLoader from '../components/organisms/book/loading';
 import Alert from '../components/atoms/alert';
 import Footer from '../components/organisms/footer';
 
-export default class Genre extends Component {
+export class Genre extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,11 +35,11 @@ export default class Genre extends Component {
   getAllBooks = async () => {
     try {
       const { genreId } = this.props.location.state;
-      const books = await get({ url: `book/genre/${genreId}?limit=8` });
-      const { data, options, status } = books.data;
-      if (status) {
+      await this.props.getBook(`/genre/${genreId}?limit=8`);
+      const { result, options } = this.props.books;
+      if (result) {
         this.setState({
-          books: data,
+          books: result,
           options,
           error: false,
         });
@@ -68,10 +71,10 @@ export default class Genre extends Component {
   handlePageChange = async (page) => {
     try {
       const { genreId } = this.props.location.state;
-      const books = await get({ url: `book/genre/${genreId}?limit=8&page=${page}` });
-      const { data, options } = books.data;
+      await this.props.getBook(`/genre/${genreId}?limit=8&page=${page}`);
+      const { result, options } = this.props.books;
       this.setState({
-        books: data,
+        books: result,
         options,
       });
     } catch (error) {
@@ -163,3 +166,11 @@ export default class Genre extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books,
+});
+
+const mapDispatchToProps = { getBook };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Genre);

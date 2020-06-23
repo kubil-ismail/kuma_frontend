@@ -1,7 +1,13 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { get } from '../services';
 
+// Service
+import { connect } from 'react-redux';
+import { getBook } from '../redux/actions/bookActions';
+
+// Assets
 import header from '../assets/img/header.png';
 
 // Component
@@ -13,7 +19,7 @@ import Banner from '../components/organisms/banner';
 import BannerLoader from '../components/organisms/banner/loading';
 import Footer from '../components/organisms/footer';
 
-export default class Home extends Component {
+export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,10 +30,10 @@ export default class Home extends Component {
 
   getPopularBook = async () => {
     try {
-      const books = await get({ url: 'book?limit=4' });
-      const { data } = books.data;
+      await this.props.getBook('?limit=4');
+      const { result } = this.props.books;
       this.setState({
-        books: data,
+        books: result,
       });
     } catch (error) {
       this.setState({ error: true });
@@ -107,3 +113,11 @@ export default class Home extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books,
+});
+
+const mapDispatchToProps = { getBook };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

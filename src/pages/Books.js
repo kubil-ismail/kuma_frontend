@@ -4,7 +4,10 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import Pagination from 'react-js-pagination';
-import { get } from '../services';
+
+// Service
+import { connect } from 'react-redux';
+import { getBook } from '../redux/actions/bookActions';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -13,7 +16,7 @@ import BookLoader from '../components/organisms/book/loading';
 import Alert from '../components/atoms/alert';
 import Footer from '../components/organisms/footer';
 
-export default class Books extends Component {
+export class Books extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,15 +30,14 @@ export default class Books extends Component {
   getAllBooks = async () => {
     try {
       const { state } = this.props.location;
-      let books;
       if (state) {
-        books = await get({ url: `book?search=${state}&limit=8` });
+        await this.props.getBook(`?search=${state}&limit=8`);
       } else {
-        books = await get({ url: 'book?limit=8' });
+        await this.props.getBook('?limit=8');
       }
-      const { data, options } = books.data;
+      const { result, options } = this.props.books;
       this.setState({
-        books: data,
+        books: result,
         options,
       });
     } catch (error) {
@@ -62,10 +64,10 @@ export default class Books extends Component {
 
   handlePageChange = async (page) => {
     try {
-      const books = await get({ url: `book?limit=8&page=${page}` });
-      const { data, options } = books.data;
+      await this.props.getBook(`?limit=8&page=${page}`);
+      const { result, options } = this.props.books;
       this.setState({
-        books: data,
+        books: result,
         options,
       });
     } catch (error) {
@@ -157,3 +159,11 @@ export default class Books extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books,
+});
+
+const mapDispatchToProps = { getBook };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Books);

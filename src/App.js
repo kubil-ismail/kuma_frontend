@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
+// Use Redux
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
 // Pages
 import Home from './pages/Home';
 import Books from './pages/Books';
@@ -16,23 +20,25 @@ import Activate from './pages/auth/Activate';
 
 export default function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/book" exact component={Books} />
-        <Route path="/book/:id" component={Detail} />
-        <Route path="/genre/:id" component={Genre} />
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/book" exact component={Books} />
+          <Route path="/book/:id" component={Detail} />
+          <Route path="/genre/:id" component={Genre} />
 
-        {/* Profile */}
-        <Route path="/profile" component={Profile} />
-        <Route path="/favorite" component={Favorite} />
-        <Route path="/review" component={Favorite} />
+          {/* Profile */}
+          <Route path="/profile" component={Profile} />
+          <Route path="/favorite" component={Favorite} />
+          <Route path="/review" component={Favorite} />
 
-        {/* Auth */}
-        <Route path="/login" component={Login} />
-        <Route path="/sign-up" component={SignUp} />
-        <Route path="/activate" component={Activate} />
-      </Switch>
-    </Router>
+          {/* Auth */}
+          <Route path="/login" component={Login} />
+          <Route path="/sign-up" component={SignUp} />
+          <Route path="/activate" component={Activate} />
+        </Switch>
+      </Router>
+    </Provider>
   );
 }

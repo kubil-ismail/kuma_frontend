@@ -8,7 +8,11 @@ import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
 import Swal from 'sweetalert2';
-import { get, post } from '../services';
+
+// Service
+import { connect } from 'react-redux';
+import { getBook, getSimilar, getReview } from '../redux/actions/bookActions';
+import { post } from '../services';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -20,7 +24,7 @@ import Footer from '../components/organisms/footer';
 
 const url = 'http://localhost:8000/';
 
-export default class Detail extends Component {
+export class Detail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,11 +44,9 @@ export default class Detail extends Component {
     try {
       const { id } = this.props.location.state;
       Store('bookId', id);
-      const detail = await get({
-        url: `book/${id}`,
-      });
-      const { data } = detail.data;
-      this.setState({ book: data[0] });
+      await this.props.getBook(`/${id}`);
+      const { result } = this.props.books;
+      this.setState({ book: result[0] });
       this.getSimilarBook();
       this.getReviewBook();
     } catch (error) {
@@ -55,11 +57,9 @@ export default class Detail extends Component {
   getSimilarBook = async () => {
     try {
       const { genre_id } = this.state.book;
-      const similar = await get({
-        url: `book/genre/${genre_id}?limit=4`,
-      });
-      const { data } = similar.data;
-      this.setState({ similar: data });
+      await this.props.getSimilar(`/genre/${genre_id}?limit=4`);
+      const { similar } = this.props.books;
+      this.setState({ similar });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -68,14 +68,9 @@ export default class Detail extends Component {
   getReviewBook = async () => {
     try {
       const { id } = this.props.location.state;
-      const review = await get({
-        url: `review`,
-        body: {
-          params: { book_id: id },
-        },
-      });
-      const { data } = review.data;
-      this.setState({ review: data });
+      await this.props.getReview({ book_id: id });
+      const { review } = this.props.books;
+      this.setState({ review });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -191,7 +186,9 @@ export default class Detail extends Component {
             {!review.length ? (
               <Alert message="Review not found" variant="warning" />
             ) : (
-              review.map((val) => <Review key={val.id} review={val.review} user={val.fullname} />)
+              review.map((val) => (
+                <Review key={val.id} review={val.review} rating={val.rating} user={val.fullname} />
+              ))
             )}
           </Container>
         </section>
@@ -233,3 +230,11 @@ export default class Detail extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books,
+});
+
+const mapDispatchToProps = { getBook, getSimilar, getReview };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);
