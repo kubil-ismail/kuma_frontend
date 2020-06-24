@@ -2,9 +2,11 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
+import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import { post } from '../../services';
+import { googleProvider, facebookProvider } from './auth';
 
 import logo from '../../assets/img/logo.png';
 
@@ -71,6 +73,50 @@ export default class Login extends Component {
     this.setState({ error: false });
   };
 
+  googleAuth = () => {
+    firebase
+      .auth()
+      .signInWithPopup(googleProvider)
+      .then((res) => {
+        const { email, uid } = res.user;
+        this.setState({ email, password: uid, loading: true });
+        this.onLogin();
+      })
+      .catch(() => {
+        this.setState({
+          error: true,
+          errorMsg: 'Oopp.. something wrong',
+          loading: false,
+        });
+      });
+  };
+
+  facebookAuth = () => {
+    firebase
+      .auth()
+      .signInWithPopup(facebookProvider)
+      .then((res) => {
+        const { email, uid } = res.user;
+        if (email) {
+          this.setState({ email, password: uid, loading: true });
+          this.onLogin();
+        } else {
+          this.setState({
+            error: true,
+            errorMsg: 'Email not found',
+            loading: false,
+          });
+        }
+      })
+      .catch(() => {
+        this.setState({
+          error: true,
+          errorMsg: 'Oopp.. something wrong',
+          loading: false,
+        });
+      });
+  };
+
   render() {
     const { loading, error, errorMsg } = this.state;
     return (
@@ -115,7 +161,29 @@ export default class Login extends Component {
                   {loading ? 'Loading…' : 'Log in'}
                 </Button>
               </Form>
-              <div className="text-bottom text-center">
+              <hr className="my-4" />
+              <Button variant="danger" className="btn-google" onClick={this.googleAuth} block>
+                {loading ? (
+                  'Loading…'
+                ) : (
+                  <>
+                    <i className="fab fa-google mr-2" aria-hidden="true" />
+                    <span>Log In with Google</span>
+                  </>
+                )}
+              </Button>
+              <div className="my-2" />
+              <Button variant="dark" className="btn-facebook" onClick={this.facebookAuth} block>
+                {loading ? (
+                  'Loading…'
+                ) : (
+                  <>
+                    <i className="fab fa-facebook mr-2" aria-hidden="true" />
+                    <span>Log In with Facebook</span>
+                  </>
+                )}
+              </Button>
+              <div className="text-bottom text-center mt-4">
                 <p className="font-weight-light text-dark d-inline mr-1">
                   Don&apos;t have an account?
                 </p>

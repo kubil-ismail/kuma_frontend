@@ -2,8 +2,10 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
+import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { googleProvider, facebookProvider } from './auth';
 import { post } from '../../services';
 
 import logo from '../../assets/img/logo.png';
@@ -68,6 +70,50 @@ export default class SignUp extends Component {
     this.setState({ error: false });
   };
 
+  googleAuth = () => {
+    firebase
+      .auth()
+      .signInWithPopup(googleProvider)
+      .then((res) => {
+        const { email, uid } = res.user;
+        this.setState({ email, password: uid, password2: uid, loading: true });
+        this.onSignUp();
+      })
+      .catch(() => {
+        this.setState({
+          error: true,
+          errorMsg: 'Oopp.. something wrong',
+          loading: false,
+        });
+      });
+  };
+
+  facebookAuth = () => {
+    firebase
+      .auth()
+      .signInWithPopup(facebookProvider)
+      .then((res) => {
+        const { email, uid } = res.user;
+        if (email) {
+          this.setState({ email, password: uid, loading: true });
+          this.onLogin();
+        } else {
+          this.setState({
+            error: true,
+            errorMsg: 'Email not found',
+            loading: false,
+          });
+        }
+      })
+      .catch(() => {
+        this.setState({
+          error: true,
+          errorMsg: 'Oopp.. something wrong',
+          loading: false,
+        });
+      });
+  };
+
   render() {
     const { loading, error, errorMsg } = this.state;
     return (
@@ -125,7 +171,17 @@ export default class SignUp extends Component {
                   {loading ? 'Loading…' : 'Sign Up'}
                 </Button>
               </Form>
-              <div className="text-bottom text-center">
+              <hr className="my-4" />
+              <Button variant="danger" className="btn-google" onClick={this.googleAuth} block>
+                <i className="fab fa-google mr-2" aria-hidden="true" />
+                <span>Sign Up with Google</span>
+              </Button>
+              <div className="my-2" />
+              <Button variant="dark" className="btn-facebook" onClick={this.facebookAuth} block>
+                <i className="fab fa-facebook mr-2" aria-hidden="true" />
+                <span>Sign Up with Facebook</span>
+              </Button>
+              <div className="text-bottom text-center mt-4">
                 <p className="font-weight-light text-dark d-inline mr-1">
                   Already have an account?
                 </p>
