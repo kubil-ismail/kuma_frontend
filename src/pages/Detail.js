@@ -1,12 +1,14 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Button, Modal, Form } from 'react-bootstrap';
 import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
 import ScrollToTop from 'react-scroll-up';
 
@@ -33,6 +35,9 @@ export class Detail extends Component {
       similar: [],
       review: [],
       error: false,
+      modal: false,
+      ratingInput: 0,
+      reviewInput: null,
     };
     const { state } = this.props.location;
     if (!state) {
@@ -98,6 +103,49 @@ export class Detail extends Component {
     }
   };
 
+  addReview = async (e) => {
+    e.preventDefault();
+    try {
+      const { id } = this.props.location.state;
+      const { ratingInput, reviewInput } = this.state;
+      await post({
+        url: 'review',
+        body: {
+          book_id: id,
+          user_id: Store('userId'),
+          rating: parseInt(ratingInput.value, 10),
+          review: reviewInput,
+        },
+        config: {
+          headers: {
+            Authorization: Store('apikey'),
+          },
+        },
+      });
+      Swal.fire('Review successfully', 'successfully added review', 'success');
+      this.getReviewBook();
+      this.setState({
+        modal: false,
+        ratingInput: 0,
+        reviewInput: null,
+      });
+    } catch (error) {
+      Swal.fire('Opps something Wrong', 'failed added review', 'failed');
+    }
+  };
+
+  showModal = () => {
+    this.setState({ modal: true });
+  };
+
+  hideModal = () => {
+    this.setState({ modal: false });
+  };
+
+  changeRating = (e) => {
+    this.setState({ ratingInput: e });
+  };
+
   componentDidMount = () => {
     this.getDetailBook();
   };
@@ -110,7 +158,11 @@ export class Detail extends Component {
   };
 
   render() {
-    const { book, similar, review, error } = this.state;
+    const { book, similar, review, ratingInput, reviewInput, error, modal } = this.state;
+    const rating = [];
+    for (let index = 1; index <= 10; index++) {
+      rating.push({ value: index, label: index });
+    }
     return (
       <>
         {/* Navbar */}
@@ -165,7 +217,7 @@ export class Detail extends Component {
                         <Button className="text-dark" onClick={() => this.addFavorite()}>
                           Add to favorite
                         </Button>
-                        <Button variant="dark" className="ml-2">
+                        <Button variant="dark" className="ml-2" onClick={this.showModal}>
                           Add Review
                         </Button>
                       </>
@@ -229,6 +281,41 @@ export class Detail extends Component {
             )}
           </Container>
         </section>
+
+        <Modal show={modal} onHide={this.hideModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Review Book</Modal.Title>
+          </Modal.Header>
+          <Form onSubmit={this.addReview}>
+            <Modal.Body>
+              <Form.Group controlId="formBasicBook">
+                <Form.Label>Book Name</Form.Label>
+                <Form.Control defaultValue={book ? book.name : 'Unknown'} readOnly />
+              </Form.Group>
+              <Form.Group controlId="formBasicRating">
+                <Form.Label>Rating</Form.Label>
+                <Select value={ratingInput} onChange={this.changeRating} options={rating} />
+              </Form.Group>
+              <Form.Group controlId="formBasicReview">
+                <Form.Label>Review</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  onChange={(e) => this.setState({ reviewInput: e.target.value })}
+                  rows="3"
+                  defaultValue={reviewInput}
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.hideModal}>
+                Close
+              </Button>
+              <Button variant="primary" type="submit">
+                Save
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
 
         {/* Footer */}
         <Footer />

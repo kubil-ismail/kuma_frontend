@@ -30,7 +30,7 @@ export class Home extends Component {
 
   getPopularBook = async () => {
     try {
-      await this.props.getBook('?limit=4');
+      await this.props.getBook('?limit=8');
       const { result } = this.props.books;
       this.setState({
         books: result,
@@ -86,7 +86,7 @@ export class Home extends Component {
             ) : (
               <Row>
                 {books.map((val) => (
-                  <Col lg={3} md={6} xs={6} key={val.id}>
+                  <Col lg={3} md={6} xs={6} key={val.id} className="mb-5">
                     <Book
                       id={val.id}
                       cover={val.cover}

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ import Genre from './pages/Genre';
 
 import Profile from './pages/member/Profile';
 import Favorite from './pages/member/Favorite';
+import Review from './pages/member/Review';
 
 import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
@@ -31,7 +33,7 @@ export default function App() {
           {/* Profile */}
           <Route path="/profile" component={Profile} />
           <Route path="/favorite" component={Favorite} />
-          <Route path="/review" component={Favorite} />
+          <Route path="/review" component={Review} />
 
           {/* Auth */}
           <Route path="/login" component={Login} />

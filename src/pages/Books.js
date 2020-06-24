@@ -36,7 +36,6 @@ export class Books extends Component {
         await this.props.getBook('?limit=8');
       }
       const { result, options } = this.props.books;
-      console.log(this.props.books);
       this.setState({
         books: result,
         options,
