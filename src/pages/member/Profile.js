@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Select from 'react-select';
@@ -23,6 +24,10 @@ export default class Profile extends Component {
       bio: null,
       error: false,
     };
+    if (!Store('login')) {
+      const { history } = this.props;
+      history.push('/');
+    }
   }
 
   componentDidMount() {

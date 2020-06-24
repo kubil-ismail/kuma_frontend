@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
@@ -27,6 +28,10 @@ export default class Favorite extends Component {
       email: null,
       error: false,
     };
+    if (!Store('login')) {
+      const { history } = this.props;
+      history.push('/');
+    }
   }
 
   getFavoriteBook = async () => {

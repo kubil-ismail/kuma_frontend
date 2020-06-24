@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
@@ -22,6 +23,10 @@ export default class Review extends Component {
       options: [],
       error: false,
     };
+    if (!Store('login')) {
+      const { history } = this.props;
+      history.push('/');
+    }
   }
 
   componentDidMount() {
