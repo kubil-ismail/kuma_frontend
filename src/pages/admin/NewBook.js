@@ -48,10 +48,12 @@ export default class newBook extends Component {
   };
 
   onDrop = (event) => {
-    this.setState({
-      bookCover: URL.createObjectURL(event[0]),
-      file: event[0],
-    });
+    if (event[0]) {
+      this.setState({
+        bookCover: URL.createObjectURL(event[0]),
+        file: event[0],
+      });
+    }
   };
 
   onSubmit = async (e) => {
