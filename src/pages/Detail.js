@@ -15,6 +15,7 @@ import ScrollToTop from 'react-scroll-up';
 // Service
 import { connect } from 'react-redux';
 import { getBook, getSimilar, getReview } from '../redux/actions/bookActions';
+import { addFavorite } from '../redux/actions/favoritesActions';
 import { post } from '../services';
 
 // Component
@@ -85,17 +86,10 @@ export class Detail extends Component {
   addFavorite = async () => {
     try {
       const { id } = this.props.location.state;
-      await post({
-        url: 'favorite',
-        body: {
-          book_id: id,
-          user_id: Store('userId'),
-        },
-        config: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      this.props.addFavorite({
+        id,
+        userId: Store('userId'),
+        apikey: Store('apikey'),
       });
       Swal.fire('Added to favorites', 'successfully added to favorites', 'success');
     } catch (error) {
@@ -328,6 +322,6 @@ const mapStateToProps = (state) => ({
   books: state.books,
 });
 
-const mapDispatchToProps = { getBook, getSimilar, getReview };
+const mapDispatchToProps = { getBook, getSimilar, getReview, addFavorite };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Detail);

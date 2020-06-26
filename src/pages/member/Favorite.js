@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
@@ -6,7 +7,11 @@ import Pagination from 'react-js-pagination';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { get, remove } from '../../services';
+
+// Service
+import { connect } from 'react-redux';
+import { getFavorite, deleteFavorite } from '../../redux/actions/favoritesActions';
+import { get } from '../../services';
 
 import icon from '../../assets/img/icon.png';
 
@@ -18,7 +23,7 @@ import Footer from '../../components/organisms/footer';
 
 const url = 'http://localhost:8000/';
 
-export default class Favorite extends Component {
+export class Favorite extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,17 +41,13 @@ export default class Favorite extends Component {
 
   getFavoriteBook = async () => {
     try {
-      const books = await get({
-        url: `profile/favorite/${Store('userId')}?limit=12`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.getFavorite({
+        id: Store('userId'),
+        apikey: Store('apikey'),
       });
-      const { data, options } = books.data;
+      const { result, options } = this.props.favorite;
       this.setState({
-        books: data,
+        books: result,
         options,
       });
     } catch (error) {
@@ -78,15 +79,11 @@ export default class Favorite extends Component {
     }
   };
 
-  deleteBook = async (id) => {
+  deleteFavorite = async (id) => {
     try {
-      await remove({
-        url: `favorite/${id}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      this.props.deleteFavorite({
+        id,
+        apikey: Store('apikey'),
       });
       Swal.fire('Deleted favorites', 'successfully deleted favorites', 'success');
       this.getFavoriteBook();
@@ -179,7 +176,7 @@ export default class Favorite extends Component {
                           <Button
                             variant="danger"
                             size="sm"
-                            onClick={() => this.deleteBook(val.book_favorites_id)}
+                            onClick={() => this.deleteFavorite(val.book_favorites_id)}
                             block
                           >
                             Delete
@@ -210,3 +207,12 @@ export default class Favorite extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  books: state.books,
+  favorite: state.favorites,
+});
+
+const mapDispatchToProps = { getFavorite, deleteFavorite };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Favorite);
