@@ -14,6 +14,7 @@ export default class Index extends Component {
     super(props);
     this.state = {
       hasLogin: Store('login') || false,
+      adminLogin: Store('adminLogin') || false,
       keyword: null,
       genre: [],
     };
@@ -62,7 +63,7 @@ export default class Index extends Component {
   };
 
   render() {
-    const { genre, hasLogin } = this.state;
+    const { genre, hasLogin, adminLogin } = this.state;
     return (
       <>
         <Navbar
@@ -97,6 +98,19 @@ export default class Index extends Component {
                       </Link>
                     ))}
                 </NavDropdown>
+                {adminLogin ? (
+                  <NavDropdown title="Manage" id="basic-nav-dropdown">
+                    <Link to="/admin/book" className="dropdown-item">
+                      Book Manage
+                    </Link>
+                    <Link to="/admin/genre" className="dropdown-item">
+                      Genre Manage
+                    </Link>
+                    <Link to="/admin/author" className="dropdown-item">
+                      Author Manage
+                    </Link>
+                  </NavDropdown>
+                ) : null}
               </Nav>
               <Nav className="ml-auto">
                 <NavDropdown.Divider className="d-lg-none" />

@@ -173,7 +173,7 @@ export class Detail extends Component {
 
         {/* Book Detail */}
         <section>
-          <Container className="mt-5">
+          <Container className="my-5">
             <Row>
               <Col lg={3}>
                 {!book ? (

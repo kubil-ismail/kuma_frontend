@@ -16,9 +16,13 @@ import Profile from './pages/member/Profile';
 import Favorite from './pages/member/Favorite';
 import Review from './pages/member/Review';
 
+import AdminBook from './pages/admin/Books';
+import AdminDetail from './pages/admin/Detail';
+
 import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
 import Activate from './pages/auth/Activate';
+import NewBook from './pages/admin/NewBook';
 
 export default function App() {
   return (
@@ -34,6 +38,13 @@ export default function App() {
           <Route path="/profile" component={Profile} />
           <Route path="/favorite" component={Favorite} />
           <Route path="/review" component={Review} />
+
+          {/* Admin */}
+          <Route path="/admin/book" exact component={AdminBook} />
+          <Route path="/admin/book/new" component={NewBook} />
+          <Route path="/admin/book/detail/:id" component={AdminDetail} />
+          <Route path="/admin/genre" component={AdminBook} />
+          <Route path="/admin/author" component={AdminBook} />
 
           {/* Auth */}
           <Route path="/login" component={Login} />
