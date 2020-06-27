@@ -3,14 +3,15 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
-import { Container, Table, Dropdown, Alert } from 'react-bootstrap';
 import Pagination from 'react-js-pagination';
 import { Link } from 'react-router-dom';
+import { Container, Table, Dropdown, Alert } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { getBook } from '../../redux/actions/bookActions';
+import { fetchBook } from '../../redux/actions/bookActions';
 
+// Component
 import Navbar from '../../components/organisms/navbar';
 import Footer from '../../components/organisms/footer';
 
@@ -34,16 +35,12 @@ export class Books extends Component {
     try {
       const { state } = this.props.location;
       if (state) {
-        await this.props.getBook(`?search=${state}&limit=8`);
+        await this.props.fetchBook(`?search=${state}&limit=8`);
       } else {
-        await this.props.getBook('?limit=8');
+        await this.props.fetchBook('?limit=8');
       }
-      const { result, options } = this.props.books;
-      this.setState({
-        books: result,
-        options,
-        error: false,
-      });
+      const { books, options } = this.props.books;
+      this.setState({ books, options, error: false });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -68,12 +65,9 @@ export class Books extends Component {
 
   handlePageChange = async (page) => {
     try {
-      await this.props.getBook(`?limit=8&page=${page}`);
-      const { result, options } = this.props.books;
-      this.setState({
-        books: result,
-        options,
-      });
+      await this.props.fetchBook(`?limit=8&page=${page}`);
+      const { books, options } = this.props.books;
+      this.setState({ books, options });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -183,6 +177,6 @@ const mapStateToProps = (state) => ({
   books: state.books,
 });
 
-const mapDispatchToProps = { getBook };
+const mapDispatchToProps = { fetchBook };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Books);

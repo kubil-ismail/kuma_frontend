@@ -10,8 +10,8 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
+import { selectProfile } from '../../redux/actions/profileActions';
 import { getFavorite, deleteFavorite } from '../../redux/actions/favoritesActions';
-import { get } from '../../services';
 
 import icon from '../../assets/img/icon.png';
 
@@ -43,6 +43,8 @@ export class Favorite extends Component {
     try {
       await this.props.getFavorite({
         id: Store('userId'),
+        limit: 1,
+        page: 1,
         apikey: Store('apikey'),
       });
       const { result, options } = this.props.favorite;
@@ -61,17 +63,15 @@ export class Favorite extends Component {
 
   handlePageChange = async (page) => {
     try {
-      const books = await get({
-        url: `profile/favorite/${Store('userId')}?limit=12&page=${page}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.getFavorite({
+        id: Store('userId'),
+        limit: 1,
+        page,
+        apikey: Store('apikey'),
       });
-      const { data, options } = books.data;
+      const { result, options } = this.props.favorite;
       this.setState({
-        books: data,
+        books: result,
         options,
       });
     } catch (error) {
@@ -94,19 +94,14 @@ export class Favorite extends Component {
 
   getProfile = async () => {
     try {
-      const profile = await get({
-        url: `profile/${Store('userId')}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.selectProfile({
+        id: Store('userId'),
+        apikey: Store('apikey'),
       });
-
-      const { data } = profile.data;
+      const { result } = this.props.profile;
       this.setState({
-        fullname: data[0].fullname,
-        email: data[0].email,
+        fullname: result.fullname,
+        email: result.email,
       });
     } catch (error) {
       this.setState({ error: true });
@@ -209,10 +204,10 @@ export class Favorite extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  books: state.books,
   favorite: state.favorites,
+  profile: state.profile,
 });
 
-const mapDispatchToProps = { getFavorite, deleteFavorite };
+const mapDispatchToProps = { selectProfile, getFavorite, deleteFavorite };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Favorite);

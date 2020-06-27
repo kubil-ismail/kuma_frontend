@@ -1,19 +1,25 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Store from 'store2';
 import Swal from 'sweetalert2';
-import { Container, Row, Col, Button, Alert, Table } from 'react-bootstrap';
 import Pagination from 'react-js-pagination';
-import { get, remove } from '../../services';
+import { Container, Row, Col, Button, Alert, Table } from 'react-bootstrap';
 
+// Service
+import { connect } from 'react-redux';
+import { selectProfile } from '../../redux/actions/profileActions';
+import { fetchReview, deleteReview } from '../../redux/actions/reviewActions';
+
+// Assets
 import icon from '../../assets/img/icon.png';
 
 // Component
 import Navbar from '../../components/organisms/navbar';
 import Footer from '../../components/organisms/footer';
 
-export default class Review extends Component {
+export class Review extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,19 +42,14 @@ export default class Review extends Component {
 
   getProfile = async () => {
     try {
-      const profile = await get({
-        url: `profile/${Store('userId')}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.selectProfile({
+        id: Store('userId'),
+        apikey: Store('apikey'),
       });
-
-      const { data } = profile.data;
+      const { result } = this.props.profile;
       this.setState({
-        fullname: data[0].fullname,
-        email: data[0].email,
+        fullname: result.fullname,
+        email: result.email,
       });
     } catch (error) {
       this.setState({ error: true });
@@ -57,17 +58,9 @@ export default class Review extends Component {
 
   getReview = async () => {
     try {
-      const review = await get({
-        url: 'review?limit=5',
-        body: {
-          params: {
-            userId: Store('userId'),
-          },
-        },
-      });
-
-      const { data, options } = review.data;
-      this.setState({ review: data, options });
+      await this.props.fetchReview({ limit: 5, page: 1 });
+      const { detail, options } = this.props.reviews;
+      this.setState({ review: detail, options });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -75,17 +68,9 @@ export default class Review extends Component {
 
   handlePageChange = async (page) => {
     try {
-      const review = await get({
-        url: `review?limit=5`,
-        body: {
-          params: {
-            userId: Store('userId'),
-            page,
-          },
-        },
-      });
-      const { data, options } = review.data;
-      this.setState({ review: data, options });
+      await this.props.fetchReview({ limit: 5, page });
+      const { detail, options } = this.props.reviews;
+      this.setState({ review: detail, options });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -93,14 +78,7 @@ export default class Review extends Component {
 
   deleteReview = async (id) => {
     try {
-      await remove({
-        url: `review/${id}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
-      });
+      await this.props.deleteReview({ id, apikey: Store('apikey') });
       Swal.fire('Delete review success', 'successfully delete review', 'success');
       this.getReview();
     } catch (error) {
@@ -179,3 +157,12 @@ export default class Review extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+  reviews: state.reviews,
+});
+
+const mapDispatchToProps = { selectProfile, fetchReview, deleteReview };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Review);

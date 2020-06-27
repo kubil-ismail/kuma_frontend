@@ -18,11 +18,13 @@ import Review from './pages/member/Review';
 
 import AdminBook from './pages/admin/Books';
 import AdminDetail from './pages/admin/Detail';
+import NewBook from './pages/admin/NewBook';
+import AdminGenre from './pages/admin/Genres';
+import AdminAuthor from './pages/admin/Authors';
 
 import Login from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
 import Activate from './pages/auth/Activate';
-import NewBook from './pages/admin/NewBook';
 
 export default function App() {
   return (
@@ -43,8 +45,8 @@ export default function App() {
           <Route path="/admin/book" exact component={AdminBook} />
           <Route path="/admin/book/new" component={NewBook} />
           <Route path="/admin/book/detail/:id" component={AdminDetail} />
-          <Route path="/admin/genre" component={AdminBook} />
-          <Route path="/admin/author" component={AdminBook} />
+          <Route path="/admin/genre" component={AdminGenre} />
+          <Route path="/admin/author" component={AdminAuthor} />
 
           {/* Auth */}
           <Route path="/login" component={Login} />

@@ -1,18 +1,25 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import Select from 'react-select';
 import Store from 'store2';
 import Swal from 'sweetalert2';
-import Select from 'react-select';
 import ImageUploader from 'react-images-upload';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-import { get, addBook } from '../../services';
+// Service
+import { connect } from 'react-redux';
+import { postBook } from '../../redux/actions/bookActions';
+import { fetchGenre } from '../../redux/actions/genreActions';
+import { fetchAuthor } from '../../redux/actions/authorActions';
 
+// Component
 import Navbar from '../../components/organisms/navbar';
 import Footer from '../../components/organisms/footer';
 
-export default class newBook extends Component {
+export class newBook extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,9 +65,8 @@ export default class newBook extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await addBook(this.state, Store('apikey'));
+      this.props.postBook({ data: this.state, apikey: Store('apikey') });
       Swal.fire({
         title: 'Add New Book success',
         text: '',
@@ -76,11 +82,11 @@ export default class newBook extends Component {
   };
 
   componentDidMount = async () => {
-    const genre = await get({ url: 'genre' });
-    const author = await get({ url: 'author' });
+    await this.props.fetchGenre();
+    await this.props.fetchAuthor();
     this.setState({
-      genres: genre.data.data,
-      authors: author.data.data,
+      genres: this.props.genres.result,
+      authors: this.props.authors.result,
     });
   };
 
@@ -193,3 +199,12 @@ export default class newBook extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  genres: state.genres,
+  authors: state.authors,
+});
+
+const mapDispatchToProps = { postBook, fetchGenre, fetchAuthor };
+
+export default connect(mapStateToProps, mapDispatchToProps)(newBook);

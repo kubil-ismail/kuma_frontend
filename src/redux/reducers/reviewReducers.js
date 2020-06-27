@@ -1,23 +1,24 @@
 const defaultState = {
-  loading: true,
-  result: [],
+  loading: false,
+  detail: [],
   options: [],
 };
 
-const genre = (state = defaultState, action) => {
+const review = (state = defaultState, action) => {
   switch (action.type) {
-    // FETCH
-    case 'FETCH_GENRE_PENDING': {
+    // REVIEW
+    case 'FETCH_REVIEW_PENDING': {
       return {
         ...defaultState,
+        loading: true,
       };
     }
-    case 'FETCH_GENRE_FULFILLED': {
+    case 'FETCH_REVIEW_FULFILLED': {
       const { data, options } = action.payload.data;
       return {
         ...defaultState,
         loading: false,
-        result: data,
+        detail: data,
         options,
       };
     }
@@ -30,4 +31,4 @@ const genre = (state = defaultState, action) => {
   }
 };
 
-export default genre;
+export default review;

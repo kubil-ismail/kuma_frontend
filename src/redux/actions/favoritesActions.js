@@ -5,8 +5,12 @@ export const getFavorite = (request) => {
   return {
     type: 'GET_FAVORITE',
     payload: get({
-      url: `profile/favorite/${request.id}?limit=12`,
+      url: `profile/favorite/${request.id}`,
       body: {
+        params: {
+          limit: request.limit,
+          page: request.page,
+        },
         headers: {
           Authorization: request.apikey,
         },

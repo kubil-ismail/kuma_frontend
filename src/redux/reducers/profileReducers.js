@@ -4,20 +4,20 @@ const defaultState = {
   options: [],
 };
 
-const genre = (state = defaultState, action) => {
+const profile = (state = defaultState, action) => {
   switch (action.type) {
     // FETCH
-    case 'FETCH_GENRE_PENDING': {
+    case 'FETCH_PROFILE_PENDING': {
       return {
         ...defaultState,
       };
     }
-    case 'FETCH_GENRE_FULFILLED': {
+    case 'FETCH_PROFILE_FULFILLED': {
       const { data, options } = action.payload.data;
       return {
         ...defaultState,
         loading: false,
-        result: data,
+        result: data[0],
         options,
       };
     }
@@ -30,4 +30,4 @@ const genre = (state = defaultState, action) => {
   }
 };
 
-export default genre;
+export default profile;

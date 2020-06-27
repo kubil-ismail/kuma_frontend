@@ -1,22 +1,20 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable camelcase */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Container, Row, Col, Badge, Button, Modal, Form } from 'react-bootstrap';
-import Store from 'store2';
 import Skeleton from 'react-loading-skeleton';
+import Store from 'store2';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import ScrollToTop from 'react-scroll-up';
+import { Container, Row, Col, Badge, Button, Modal, Form } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { getBook, getSimilar, getReview } from '../redux/actions/bookActions';
+import { selectBook, fetchSimilar } from '../redux/actions/bookActions';
+import { selectReview, postReview } from '../redux/actions/reviewActions';
 import { addFavorite } from '../redux/actions/favoritesActions';
-import { post } from '../services';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -51,9 +49,10 @@ export class Detail extends Component {
     try {
       const { id } = this.props.location.state;
       Store('bookId', id);
-      await this.props.getBook(`/${id}`);
-      const { result } = this.props.books;
-      this.setState({ book: result[0] });
+      await this.props.selectBook(`/${id}`);
+      const { detail } = this.props.books;
+      this.setState({ book: detail });
+
       this.getSimilarBook();
       this.getReviewBook();
     } catch (error) {
@@ -64,7 +63,7 @@ export class Detail extends Component {
   getSimilarBook = async () => {
     try {
       const { genre_id } = this.state.book;
-      await this.props.getSimilar(`/genre/${genre_id}?limit=4`);
+      await this.props.fetchSimilar(`/genre/${genre_id}?limit=4`);
       const { similar } = this.props.books;
       this.setState({ similar });
     } catch (error) {
@@ -75,9 +74,9 @@ export class Detail extends Component {
   getReviewBook = async () => {
     try {
       const { id } = this.props.location.state;
-      await this.props.getReview({ id });
-      const { review } = this.props.books;
-      this.setState({ review });
+      await this.props.selectReview({ id });
+      const { detail } = this.props.reviews;
+      this.setState({ review: detail });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -102,19 +101,12 @@ export class Detail extends Component {
     try {
       const { id } = this.props.location.state;
       const { ratingInput, reviewInput } = this.state;
-      await post({
-        url: 'review',
-        body: {
-          book_id: id,
-          user_id: Store('userId'),
-          rating: parseInt(ratingInput.value, 10),
-          review: reviewInput,
-        },
-        config: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.postReview({
+        id,
+        userId: Store('userId'),
+        ratingInput,
+        reviewInput,
+        apikey: Store('apikey'),
       });
       Swal.fire('Review successfully', 'successfully added review', 'success');
       this.getReviewBook();
@@ -124,7 +116,7 @@ export class Detail extends Component {
         reviewInput: null,
       });
     } catch (error) {
-      Swal.fire('Opps something Wrong', 'failed added review', 'failed');
+      Swal.fire('Opps something Wrong', 'failed added review', 'error');
     }
   };
 
@@ -320,8 +312,9 @@ export class Detail extends Component {
 
 const mapStateToProps = (state) => ({
   books: state.books,
+  reviews: state.reviews,
 });
 
-const mapDispatchToProps = { getBook, getSimilar, getReview, addFavorite };
+const mapDispatchToProps = { selectBook, fetchSimilar, selectReview, addFavorite, postReview };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Detail);

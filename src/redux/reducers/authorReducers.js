@@ -4,15 +4,15 @@ const defaultState = {
   options: [],
 };
 
-const genre = (state = defaultState, action) => {
+const authors = (state = defaultState, action) => {
   switch (action.type) {
     // FETCH
-    case 'FETCH_GENRE_PENDING': {
+    case 'FETCH_AUTHOR_PENDING': {
       return {
         ...defaultState,
       };
     }
-    case 'FETCH_GENRE_FULFILLED': {
+    case 'FETCH_AUTHOR_FULFILLED': {
       const { data, options } = action.payload.data;
       return {
         ...defaultState,
@@ -30,4 +30,4 @@ const genre = (state = defaultState, action) => {
   }
 };
 
-export default genre;
+export default authors;

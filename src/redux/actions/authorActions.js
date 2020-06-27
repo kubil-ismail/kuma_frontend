@@ -1,20 +1,20 @@
 /* eslint-disable import/prefer-default-export */
 import { get, post, patch, remove } from '../../services';
 
-// Get all genre
-export const fetchGenre = (request) => {
+// Get all author
+export const fetchAuthor = (request) => {
   return {
-    type: 'FETCH_GENRE',
-    payload: get({ url: `genre/${request ? request.id : ''}` }),
+    type: 'FETCH_AUTHOR',
+    payload: get({ url: `author/${request ? request.id : ''}` }),
   };
 };
 
-// Add New genre
-export const postGenre = (request) => {
+// Add New author
+export const postAuthor = (request) => {
   return {
-    type: 'POST_GENRE',
+    type: 'POST_AUTHOR',
     payload: post({
-      url: 'genre',
+      url: 'author',
       body: {
         name: request.name,
       },
@@ -27,12 +27,12 @@ export const postGenre = (request) => {
   };
 };
 
-// Edit Selected genre
-export const updateGenre = (request) => {
+// Edit Selected author
+export const updateAuthor = (request) => {
   return {
-    type: 'UPDATE_GENRE',
+    type: 'UPDATE_AUTHOR',
     payload: patch({
-      url: `genre/${request.id}`,
+      url: `author/${request.id}`,
       body: {
         name: request.name,
       },
@@ -45,12 +45,12 @@ export const updateGenre = (request) => {
   };
 };
 
-// Delete Selected genre
-export const deleteGenre = (request) => {
+// Delete Selected author
+export const deleteAuthor = (request) => {
   return {
-    type: 'DELETE_GENRE',
+    type: 'DELETE_AUTHOR',
     payload: remove({
-      url: `genre/${request.id}`,
+      url: `author/${request.id}`,
       body: {
         headers: {
           Authorization: request.apikey,

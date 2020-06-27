@@ -1,64 +1,62 @@
-const initialState = {
+const defaultState = {
   loading: false,
-  result: [],
+  books: [],
+  detail: [],
+  options: [],
+  similar: [],
 };
 
-const book = (state = initialState, action) => {
+const book = (state = defaultState, action) => {
   switch (action.type) {
     // BOOK
     case 'FETCH_BOOK_PENDING': {
       return {
-        ...initialState,
+        ...defaultState,
         loading: true,
-        result: [],
-        options: [],
       };
     }
     case 'FETCH_BOOK_FULFILLED': {
       const { data, options } = action.payload.data;
       return {
-        ...initialState,
+        ...defaultState,
         loading: false,
-        result: data,
+        books: data,
         options,
       };
     }
-    // SIMILAR BOOK
+    // DETAIL
+    case 'FETCH_DETAIL_PENDING': {
+      return {
+        ...defaultState,
+        loading: true,
+      };
+    }
+    case 'FETCH_DETAIL_FULFILLED': {
+      const { data, options } = action.payload.data;
+      return {
+        ...defaultState,
+        loading: false,
+        detail: data[0],
+        options,
+      };
+    }
+    // SIMILAR
     case 'FETCH_SIMILAR_PENDING': {
       return {
-        ...initialState,
+        ...defaultState,
         loading: true,
-        similar: [],
-        options: [],
       };
     }
     case 'FETCH_SIMILAR_FULFILLED': {
       const { data, options } = action.payload.data;
       return {
-        ...initialState,
+        ...defaultState,
         loading: false,
         similar: data,
         options,
       };
     }
-    // REVIEW BOOK
-    case 'FETCH_REVIEW_PENDING': {
-      return {
-        ...initialState,
-        loading: true,
-        review: [],
-        options: [],
-      };
-    }
-    case 'FETCH_REVIEW_FULFILLED': {
-      const { data, options } = action.payload.data;
-      return {
-        ...initialState,
-        loading: false,
-        review: data,
-        options,
-      };
-    }
+    // DEFAULT
     default: {
       return {
         ...state,

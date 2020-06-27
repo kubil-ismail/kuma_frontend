@@ -2,12 +2,12 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 import Pagination from 'react-js-pagination';
+import { Container, Row, Col, Dropdown } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { getBook } from '../redux/actions/bookActions';
+import { fetchBook } from '../redux/actions/bookActions';
 
 // Component
 import Navbar from '../components/organisms/navbar';
@@ -35,14 +35,10 @@ export class Genre extends Component {
   getAllBooks = async () => {
     try {
       const { genreId } = this.props.location.state;
-      await this.props.getBook(`/genre/${genreId}?limit=8`);
-      const { result, options } = this.props.books;
-      if (result) {
-        this.setState({
-          books: result,
-          options,
-          error: false,
-        });
+      await this.props.fetchBook(`/genre/${genreId}?limit=8`);
+      const { books, options } = this.props.books;
+      if (books) {
+        this.setState({ books, options, error: false });
       } else {
         this.setState({ error: true });
       }
@@ -71,7 +67,7 @@ export class Genre extends Component {
   handlePageChange = async (page) => {
     try {
       const { genreId } = this.props.location.state;
-      await this.props.getBook(`/genre/${genreId}?limit=8&page=${page}`);
+      await this.props.fetchBook(`/genre/${genreId}?limit=8&page=${page}`);
       const { result, options } = this.props.books;
       this.setState({
         books: result,
@@ -171,6 +167,6 @@ const mapStateToProps = (state) => ({
   books: state.books,
 });
 
-const mapDispatchToProps = { getBook };
+const mapDispatchToProps = { fetchBook };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Genre);

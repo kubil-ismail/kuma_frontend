@@ -2,21 +2,24 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Container, Row, Col, Badge, Alert, Form, Button } from 'react-bootstrap';
-import Store from 'store2';
 import Select from 'react-select';
 import Skeleton from 'react-loading-skeleton';
+import Store from 'store2';
 import Swal from 'sweetalert2';
 import ImageUploader from 'react-images-upload';
+import { Container, Row, Col, Badge, Alert, Form, Button } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { getBook } from '../../redux/actions/bookActions';
-import { cover, get, patch, remove } from '../../services';
+import { selectBook, updateBook, updateCover, removeBook } from '../../redux/actions/bookActions';
+import { fetchGenre } from '../../redux/actions/genreActions';
+import { fetchAuthor } from '../../redux/actions/authorActions';
 
+// Component
 import Navbar from '../../components/organisms/navbar';
 import Footer from '../../components/organisms/footer';
 
+// Base URL
 const url = 'http://localhost:8000/';
 
 export class Detail extends Component {
@@ -52,27 +55,22 @@ export class Detail extends Component {
     try {
       const { id } = this.props.location.state;
       Store('bookId', id);
-      await this.props.getBook(`/${id}`);
-      const { result } = this.props.books;
-
-      const genre = await get({ url: 'genre' });
-      const author = await get({ url: 'author' });
-
+      await this.props.selectBook(`/${id}`);
+      await this.props.fetchAuthor();
+      await this.props.fetchGenre();
+      const { detail } = this.props.book;
       this.setState({
-        book: result[0],
-        bookName: result[0].name,
-        bookLanguage: result[0].language,
-        bookPublished: result[0].published,
-        bookGenre: result[0].genre,
-        bookAuthor: result[0].author,
-        bookStatus: result[0].status,
-        bookDesc: result[0].description,
-        genres: genre.data.data,
-        authors: author.data.data,
+        book: detail,
+        bookName: detail.name,
+        bookLanguage: detail.language,
+        bookPublished: detail.published,
+        bookGenre: detail.genre,
+        bookAuthor: detail.author,
+        bookStatus: detail.status,
+        bookDesc: detail.description,
+        genres: this.props.genres.result,
+        authors: this.props.authors.result,
       });
-
-      this.getSimilarBook();
-      this.getReviewBook();
     } catch (error) {
       this.setState({ error: true });
     }
@@ -95,16 +93,12 @@ export class Detail extends Component {
       try {
         const { id } = this.props.location.state;
         const picture = event[0];
-        await cover(id, {
-          image: picture,
-          apikey: Store('apikey'),
-        });
-        this.getDetailBook();
+        this.props.updateCover({ id, picture, apikey: Store('apikey') });
         Swal.fire({
           title: 'Edit Cover success',
           text: '',
           icon: 'success',
-        });
+        }).then(() => this.getDetailBook());
       } catch (error) {
         Swal.fire({
           title: 'Edit Failed',
@@ -115,47 +109,16 @@ export class Detail extends Component {
     }
   };
 
-  onSubmit = async (e) => {
+  onUpdate = async (e) => {
     e.preventDefault();
-
     try {
       const { id } = this.props.location.state;
-      const {
-        book,
-        bookName,
-        bookDesc,
-        bookPublished,
-        bookLanguage,
-        bookGenre,
-        bookAuthor,
-        bookStatus,
-      } = this.state;
-
-      await patch({
-        url: `book/${id}`,
-        body: {
-          name: bookName || book.name,
-          description: bookDesc || book.description,
-          genre_id: bookGenre.value ? bookGenre.value : book.genre_id,
-          author_id: bookAuthor.value ? bookAuthor.value : book.author_id,
-          status_id: bookStatus.value ? bookStatus.value : book.status_id,
-          published: bookPublished || book.published,
-          language: bookLanguage || book.language,
-        },
-        config: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
-      });
-
-      this.getDetailBook();
-
+      await this.props.updateBook(id, this.state, Store('apikey'));
       Swal.fire({
         title: 'Edit Book success',
         text: '',
         icon: 'success',
-      });
+      }).then(() => this.getDetailBook());
     } catch (error) {
       Swal.fire({
         title: 'Edit Book failed',
@@ -168,14 +131,7 @@ export class Detail extends Component {
   onDelete = async () => {
     try {
       const { id } = this.props.location.state;
-      await remove({
-        url: `book/${id}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
-      });
+      this.props.removeBook({ id, apikey: Store('apikey') });
       Swal.fire({
         title: 'Delete Book success',
         text: '',
@@ -282,13 +238,14 @@ export class Detail extends Component {
               </Col>
               {book ? (
                 <Col lg={8}>
-                  <Form onSubmit={this.onSubmit}>
+                  <Form onSubmit={this.onUpdate}>
                     <Form.Group controlId="bookName">
                       <Form.Label>Book Name</Form.Label>
                       <Form.Control
                         type="text"
                         defaultValue={book.name}
                         onChange={(e) => this.setState({ bookName: e.target.value })}
+                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookLanguage">
@@ -297,6 +254,7 @@ export class Detail extends Component {
                         type="text"
                         defaultValue={book.language}
                         onChange={(e) => this.setState({ bookLanguage: e.target.value })}
+                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookDate">
@@ -305,6 +263,7 @@ export class Detail extends Component {
                         type="date"
                         defaultValue={book.published}
                         onChange={(e) => this.setState({ bookPublished: e.target.value })}
+                        required
                       />
                     </Form.Group>
                     <Form.Group controlId="bookGenre">
@@ -348,6 +307,7 @@ export class Detail extends Component {
                         rows="5"
                         defaultValue={book.description}
                         onChange={(e) => this.setState({ bookDesc: e.target.value })}
+                        required
                       />
                     </Form.Group>
                     <Button className="mb-3 w-25 ml-auto" type="submit">
@@ -368,9 +328,18 @@ export class Detail extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  books: state.books,
+  authors: state.authors,
+  book: state.books,
+  genres: state.genres,
 });
 
-const mapDispatchToProps = { getBook };
+const mapDispatchToProps = {
+  selectBook,
+  fetchGenre,
+  fetchAuthor,
+  updateBook,
+  updateCover,
+  removeBook,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Detail);

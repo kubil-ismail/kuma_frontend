@@ -5,7 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { getBook } from '../redux/actions/bookActions';
+import { fetchBook } from '../redux/actions/bookActions';
 
 // Assets
 import header from '../assets/img/header.png';
@@ -30,11 +30,9 @@ export class Home extends Component {
 
   getPopularBook = async () => {
     try {
-      await this.props.getBook('?limit=8');
-      const { result } = this.props.books;
-      this.setState({
-        books: result,
-      });
+      await this.props.fetchBook('?limit=8');
+      const { books } = this.props.books;
+      this.setState({ books, error: false });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -118,6 +116,6 @@ const mapStateToProps = (state) => ({
   books: state.books,
 });
 
-const mapDispatchToProps = { getBook };
+const mapDispatchToProps = { fetchBook };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

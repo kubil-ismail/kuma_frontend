@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
@@ -5,15 +6,19 @@ import Select from 'react-select';
 import Store from 'store2';
 import Swal from 'sweetalert2';
 import { Container, Row, Col, Button, Form, Alert } from 'react-bootstrap';
-import { get, patch } from '../../services';
 
+// Service
+import { connect } from 'react-redux';
+import { selectProfile, updateProfile } from '../../redux/actions/profileActions';
+
+// Assets
 import icon from '../../assets/img/icon.png';
 
 // Component
 import Navbar from '../../components/organisms/navbar';
 import Footer from '../../components/organisms/footer';
 
-export default class Profile extends Component {
+export class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,22 +41,17 @@ export default class Profile extends Component {
 
   getProfile = async () => {
     try {
-      const profile = await get({
-        url: `profile/${Store('userId')}`,
-        body: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      await this.props.selectProfile({
+        id: Store('userId'),
+        apikey: Store('apikey'),
       });
-
-      const { data } = profile.data;
+      const { result } = this.props.profile;
       this.setState({
-        fullname: data[0].fullname,
-        email: data[0].email,
-        birthday: data[0].birthdate,
-        gender: data[0].gender,
-        bio: data[0].bio,
+        fullname: result.fullname,
+        email: result.email,
+        birthday: result.birthdate,
+        gender: result.gender,
+        bio: result.bio,
       });
     } catch (error) {
       this.setState({ error: true });
@@ -69,19 +69,13 @@ export default class Profile extends Component {
   updateProfile = async () => {
     try {
       const { fullname, birthday, gender, bio } = this.state;
-      await patch({
-        url: `profile/${Store('userId')}`,
-        body: {
-          fullname,
-          birthdate: birthday,
-          gender: gender.value,
-          bio,
-        },
-        config: {
-          headers: {
-            Authorization: Store('apikey'),
-          },
-        },
+      this.props.updateProfile({
+        userId: Store('userId'),
+        fullname,
+        birthday,
+        gender: gender.value,
+        bio,
+        apikey: Store('apikey'),
       });
       Swal.fire('Update profile success', 'successfully update profile', 'success');
       this.setState({ error: false });
@@ -183,3 +177,11 @@ export default class Profile extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+});
+
+const mapDispatchToProps = { selectProfile, updateProfile };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
