@@ -1,0 +1,64 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+// Font
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+// Margin
+header, section {
+  margin: 100px 0px;
+}
+
+// Nav Link
+.nav-link {
+  margin: 0 5px;
+}
+
+// Button
+.btn-primary,
+.btn-outline-primary:hover {
+  color: white !important;
+}
+
+.btn-google {
+  background-color: #d8001e !important;
+}
+
+.btn-facebook {
+  background-color: #3b5998 !important;
+  border: none !important;
+}
+
+// Footer
+footer {
+  position: absolute;
+  width: 100%;
+  .bottom-footer {
+    z-index: 999;
+    background-color: $dark;
+    margin-bottom: -20px;
+  }
+}
+
+// react-date
+.react-datepicker-wrapper {
+  display: block !important;
+}
+.react-date {
+  width: 100% !important;
+}
+
+$theme-colors: (
+    "primary": $primary,
+    "dark": $dark
+);
+
+@import "~bootstrap/scss/bootstrap";

@@ -9,6 +9,9 @@
 /coverage
 
 # production
+/.firebase
+.firebaserc
+firebase.json
 /build
 
 # misc

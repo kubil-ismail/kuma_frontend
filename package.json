@@ -2,6 +2,7 @@
   "name": "kuma_frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://github.com/kubil-ismail/kuma_frontend",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -9,32 +10,33 @@
     "animate.css": "^4.1.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
-    "env-cmd": "^10.1.0",
-    "hover.css": "^2.3.2",
+    "firebase": "^7.15.4",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
-    "react-flip-move": "^3.0.4",
     "react-images-upload": "^1.2.8",
     "react-js-pagination": "^3.0.3",
+    "react-loading-skeleton": "^2.1.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-scroll-up": "^1.3.3",
     "react-select": "^3.1.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
     "redux-promise-middleware": "^6.1.2",
+    "save": "^2.4.0",
     "store2": "^2.11.2",
-    "sweetalert2": "^9.14.2"
+    "sweetalert2": "^9.15.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:staging": "env-cmd -f .env.staging react-scripts start",
-    "start:prod": "env-cmd -f .env.production react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "yarn build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,5 +52,17 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "eslint-config-airbnb": "18.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "7.19.0",
+    "eslint-plugin-react-hooks": "2.5.0",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.0.5"
   }
 }

@@ -2,19 +2,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import Store from 'store2';
 import Pagination from 'react-js-pagination';
-import { Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Container, Table, Dropdown, Alert } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
-import { fetchBook } from '../redux/actions/bookActions';
+import { fetchBook } from '../../redux/actions/bookActions';
 
 // Component
-import Navbar from '../components/organisms/navbar';
-import Book from '../components/organisms/book';
-import BookLoader from '../components/organisms/book/loading';
-import Alert from '../components/atoms/alert';
-import Footer from '../components/organisms/footer';
+import Navbar from '../../components/organisms/navbar';
+import Footer from '../../components/organisms/footer';
 
 export class Books extends Component {
   constructor(props) {
@@ -25,6 +24,11 @@ export class Books extends Component {
       error: false,
       sort: 1,
     };
+
+    if (!Store('login') && !Store('adminLogin') && !Store('pin')) {
+      const { history } = this.props;
+      history.push('/');
+    }
   }
 
   getAllBooks = async () => {
@@ -87,13 +91,17 @@ export class Books extends Component {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Navbar {...this.props} />
 
-        {/* Popular Book */}
         <section>
-          <Container className="my-5">
-            <div className="d-flex justify-content-between">
-              <div className="head-title">
-                <h3 className="main-title font-weight-bold">List Book</h3>
-                <div className="divinder w-50" />
+          <Container>
+            <div className="head-title">
+              <h3 className="main-title font-weight-bold">List Book</h3>
+              <div className="divinder" />
+            </div>
+            <div className="d-flex justify-content-between mb-3">
+              <div>
+                <Link className="btn btn-primary" to="/admin/book/new">
+                  New Book
+                </Link>
               </div>
               <Dropdown>
                 <Dropdown.Toggle variant="primary" id="dropdown-basic">
@@ -113,37 +121,48 @@ export class Books extends Component {
             {/* Show if failed fetch */}
             {error ? <Alert message="Can't get book from server" /> : null}
 
-            {/* Fetch books */}
-            {!books.length ? (
-              <BookLoader />
-            ) : (
-              <>
-                <Row>
-                  {books.map((val) => (
-                    <Col className="mb-5" lg={3} md={6} xs={6} key={val.id}>
-                      <Book
-                        id={val.id}
-                        cover={val.cover}
-                        title={val.name}
-                        author={val.author}
-                        genre={val.genre}
-                        language={val.language}
-                      />
-                    </Col>
-                  ))}
-                </Row>
-                <Pagination
-                  activePage={options.page}
-                  itemsCountPerPage={options.perPage}
-                  totalItemsCount={parseInt(options.totalData, 10)}
-                  pageRangeDisplayed={5}
-                  onChange={this.handlePageChange}
-                  itemClass="page-item"
-                  linkClass="page-link"
-                  hideNavigation
-                />
-              </>
-            )}
+            <Table bordered responsive>
+              <thead>
+                <tr>
+                  <th>Cover</th>
+                  <th>Book Name</th>
+                  <th>Status</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {books.map((val) => (
+                  <tr key={val.id}>
+                    <td>
+                      <img src={`http://localhost:8000/${val.cover}`} alt={val.name} width="50" />
+                    </td>
+                    <td>{val.name}</td>
+                    <td>{val.status}</td>
+                    <td>
+                      <Link
+                        to={{
+                          pathname: `/admin/book/detail/${val.name.replace(/\s/g, '-')}`,
+                          state: { id: val.id },
+                        }}
+                        className="btn btn-primary"
+                      >
+                        Detail
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Pagination
+              activePage={options.page}
+              itemsCountPerPage={options.perPage}
+              totalItemsCount={parseInt(options.totalData, 10)}
+              pageRangeDisplayed={5}
+              onChange={this.handlePageChange}
+              itemClass="page-item"
+              linkClass="page-link"
+              hideNavigation
+            />
           </Container>
         </section>
 

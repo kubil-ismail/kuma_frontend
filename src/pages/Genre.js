@@ -1,6 +1,6 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import Pagination from 'react-js-pagination';
 import { Container, Row, Col, Dropdown } from 'react-bootstrap';
@@ -16,7 +16,7 @@ import BookLoader from '../components/organisms/book/loading';
 import Alert from '../components/atoms/alert';
 import Footer from '../components/organisms/footer';
 
-export class Books extends Component {
+export class Genre extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,18 +25,23 @@ export class Books extends Component {
       error: false,
       sort: 1,
     };
+    const { state } = this.props.location;
+    if (!state) {
+      const { history } = this.props;
+      history.push('/');
+    }
   }
 
   getAllBooks = async () => {
     try {
-      const { state } = this.props.location;
-      if (state) {
-        await this.props.fetchBook(`?search=${state}&limit=8`);
-      } else {
-        await this.props.fetchBook('?limit=8');
-      }
+      const { genreId } = this.props.location.state;
+      await this.props.fetchBook(`/genre/${genreId}?limit=8`);
       const { books, options } = this.props.books;
-      this.setState({ books, options, error: false });
+      if (books) {
+        this.setState({ books, options, error: false });
+      } else {
+        this.setState({ error: true });
+      }
     } catch (error) {
       this.setState({ error: true });
     }
@@ -61,9 +66,13 @@ export class Books extends Component {
 
   handlePageChange = async (page) => {
     try {
-      await this.props.fetchBook(`?limit=8&page=${page}`);
-      const { books, options } = this.props.books;
-      this.setState({ books, options });
+      const { genreId } = this.props.location.state;
+      await this.props.fetchBook(`/genre/${genreId}?limit=8&page=${page}`);
+      const { result, options } = this.props.books;
+      this.setState({
+        books: result,
+        options,
+      });
     } catch (error) {
       this.setState({ error: true });
     }
@@ -74,7 +83,7 @@ export class Books extends Component {
   };
 
   componentDidUpdate = (props) => {
-    if (props.location.search !== this.props.location.search) {
+    if (props.location.state.name !== this.props.location.state.name) {
       this.getAllBooks();
     }
   };
@@ -160,4 +169,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = { fetchBook };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Books);
+export default connect(mapStateToProps, mapDispatchToProps)(Genre);

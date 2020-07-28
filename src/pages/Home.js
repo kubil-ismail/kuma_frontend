@@ -1,142 +1,121 @@
-import React, { Component, Fragment } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import banner from '../assets/img/banner.png'
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+import React, { Component } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 
 // Service
-import { connect } from 'react-redux'
-import { genreList, bookList } from '../redux/actions/startActions'
-import { bookService } from '../service/bookService'
-import { genreService } from '../service/genreService'
+import { connect } from 'react-redux';
+import { fetchBook } from '../redux/actions/bookActions';
+
+// Assets
+import header from '../assets/img/header.png';
 
 // Component
-import Navbar from '../component/Navbar'
-import Book from '../component/Book'
-import Genre from '../component/Genre'
-import Footer from '../component/Footer'
-import Alert from '../component/Alert'
-import Loader from '../component/Loader'
+import Navbar from '../components/organisms/navbar';
+import Book from '../components/organisms/book';
+import BookLoader from '../components/organisms/book/loading';
+import Alert from '../components/atoms/alert';
+import Banner from '../components/organisms/banner';
+import BannerLoader from '../components/organisms/banner/loading';
+import Footer from '../components/organisms/footer';
 
 export class Home extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      loading: true,
-      error: false,
       books: [],
-      genres: []
-    }
-    this.bookService = new bookService()
-    this.genreService = new genreService()
+      error: false,
+    };
   }
 
-  isLoading = (load) => {
-    if (load) {
-      return (
-        <Col lg={12}>
-          <Loader />
-        </Col>
-      )
-    }
-  }
-
-  isError = (err) => {
-    if (err) {
-      return (
-        <Col lg={12}>
-          <Alert variant="danger" message="Failed get data from server" />
-        </Col>
-      )
-    }
-  }
-
-  async componentDidMount() {
+  getPopularBook = async () => {
     try {
-      const book = await this.bookService.getBook()
-      const genre = await this.genreService.getGenre()
-      this.props.genreList(genre.data)
-      this.props.bookList(book.data)
-      this.setState({
-        loading: false,
-        books: this.props.book,
-        genres: this.props.genre
-      })
-    } catch (err) {
-      this.setState({
-        loading: false,
-        error: true
-      })
+      await this.props.fetchBook('?limit=8');
+      const { books } = this.props.books;
+      this.setState({ books, error: false });
+    } catch (error) {
+      this.setState({ error: true });
     }
-  }
+  };
+
+  componentDidMount = () => {
+    this.getPopularBook();
+  };
 
   render() {
-    const { books, genres, error, loading } = this.state
+    const { books, error } = this.state;
     return (
-      <Fragment>
-        <Navbar {...this.props} book={this.props.book}/>
+      <>
+        {/* Navbar */}
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Navbar {...this.props} />
 
-        <section>
-          <Container className="mt-5">
+        {/* Header */}
+        <header className="animate__animated animate__bounceInLeft">
+          <Container className="my-5">
             <Row>
               <Col lg={6}>
-                <img src={banner} className="w-100 animate__animated animate__pulse animate__infinite" alt="banner" />
+                <img src={header} className="w-100" alt="banner" />
               </Col>
-              <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0 animate__animated animate__fadeInRight">
-                <div className="banner-content">
+              <Col lg={{ span: 5, offset: 1 }} className="d-flex align-items-center mt-5 mt-lg-0">
+                <div className="banner-content d-none d-lg-block">
                   <h1 className="font-weight-bold">Kuma Book</h1>
-                  <p>
-                    The world's largest novel and manga wikipedia and database 100% free
-                  </p>
+                  <p>The world&apos;s largest novel and manga wikipedia and database 100% free</p>
                 </div>
               </Col>
             </Row>
           </Container>
-        </section>
+        </header>
 
+        {/* Popular Book */}
         <section>
-          <Container className="my-5 animate__animated animate__fadeIn">
+          <Container className="my-5">
             <div className="head-title">
-              <h2 className="font-weight-bold">Popular Book</h2>
-              <div className="divinder"></div>
+              <h3 className="main-title font-weight-bold">Popular Book</h3>
+              <div className="divinder" />
             </div>
-            <Row>
-              {this.isLoading(loading) || this.isError(error)}
-              {books.map((val, index) => (
-                <Col lg={3} md={6} xs={6} key={index} className="mb-5">
-                  <Book id={val.id} cover={val.cover} title={val.name} author={val.author} genre={val.genre} language={val.language} />
-                </Col>
-              ))}
-            </Row>
+
+            {/* Show if failed fetch */}
+            {error ? <Alert message="Can't get book from server" /> : null}
+
+            {/* Fetch books */}
+            {!books.length ? (
+              <BookLoader />
+            ) : (
+              <Row>
+                {books.map((val) => (
+                  <Col lg={3} md={6} xs={6} key={val.id} className="mb-5">
+                    <Book
+                      id={val.id}
+                      cover={val.cover}
+                      title={val.name}
+                      author={val.author}
+                      genre={val.genre}
+                      language={val.language}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            )}
           </Container>
         </section>
 
-        <section>
-          <Container className="my-5 animate__animated animate__fadeIn">
-            <div className="head-title">
-              <h2 className="font-weight-bold">Genre Book</h2>
-              <div className="divinder"></div>
-            </div>
-            <Row>
-              {this.isLoading(loading) || this.isError(error)}
-              {genres.map((val, index) => (
-                <Col lg={2} md={4} xs={6} key={index} className="mb-5">
-                  <Genre name={val.name} id={val.id} />
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
+        {/* Banner */}
+        {!books.length ? <BannerLoader /> : <Banner />}
 
+        <div className="my-5" />
+
+        {/* Footer */}
         <Footer />
-      </Fragment>
-    )
+      </>
+    );
   }
 }
 
-const mapStateToProps = state => ({
-  genre: state.start.genre[0],
-  book: state.start.book[0]
-})
+const mapStateToProps = (state) => ({
+  books: state.books,
+});
 
-const mapDispatchToProps = { genreList, bookList }
+const mapDispatchToProps = { fetchBook };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

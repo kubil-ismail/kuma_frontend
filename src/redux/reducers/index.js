@@ -1,8 +1,18 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import start from './startReducers'
-// import book from './bookReducers'
+// Reducers
+import authors from './authorReducers';
+import books from './bookReducers';
+import favorites from './favoriteReducers';
+import genres from './genreReducers';
+import reviews from './reviewReducers';
+import profile from './profileReducers';
 
 export default combineReducers({
-  start
-})
+  authors,
+  books,
+  favorites,
+  genres,
+  reviews,
+  profile,
+});
