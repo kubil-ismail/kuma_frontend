@@ -9,7 +9,6 @@
 /coverage
 
 # production
-/build
 /.firebase
 .firebaserc
 firebase.json
