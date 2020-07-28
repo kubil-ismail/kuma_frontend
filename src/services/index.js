@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://18.209.178.237:8000/';
+const url = 'https://kuma-server.herokuapp.com/';
 
 // Fetch Data
 export const get = async (data) => {

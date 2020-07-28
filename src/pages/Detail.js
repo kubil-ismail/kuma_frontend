@@ -24,7 +24,7 @@ import BookLoader from '../components/organisms/book/loading';
 import Alert from '../components/atoms/alert';
 import Footer from '../components/organisms/footer';
 
-const url = 'http://18.209.178.237:8000/';
+const url = 'https://kuma-server.herokuapp.com/';
 
 export class Detail extends Component {
   constructor(props) {
