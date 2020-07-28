@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 // Service
 import { connect } from 'react-redux';
@@ -42,6 +42,10 @@ export class Home extends Component {
     this.getPopularBook();
   };
 
+  download = () => {
+    window.location = "https://bit.ly/2P3xgX2"
+  }
+
   render() {
     const { books, error } = this.state;
     return (
@@ -61,6 +65,7 @@ export class Home extends Component {
                 <div className="banner-content d-none d-lg-block">
                   <h1 className="font-weight-bold">Kuma Book</h1>
                   <p>The world&apos;s largest novel and manga wikipedia and database 100% free</p>
+                  <Button onClick={() => this.download()}>Download Mobile App</Button>
                 </div>
               </Col>
             </Row>
