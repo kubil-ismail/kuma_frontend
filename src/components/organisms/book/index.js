@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const url = 'http://18.209.178.237:8000/';
+const url = 'https://kuma-server.herokuapp.com/';
 
 export default function index(props) {
   return (
