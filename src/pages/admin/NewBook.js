@@ -61,8 +61,6 @@ export class newBook extends Component {
         file: event[0],
       });
     }
-
-    console.log(event[0])
   };
 
   onSubmit = async (e) => {

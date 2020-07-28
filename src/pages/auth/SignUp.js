@@ -38,8 +38,7 @@ export default class SignUp extends Component {
         const { status } = signUp;
         if (status === 200) {
           const { history } = this.props;
-          Store('email', email);
-          history.push('/activate');
+          history.push('/login');
         } else {
           const { message } = signUp.response.data;
           this.setState({
